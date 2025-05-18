@@ -1,0 +1,26 @@
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.pricing-section {
+  background-color: var(--light-gray);
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.faq-section {
+  padding-bottom: 80px;
+}
+
+@media (max-width: 768px) {
+  .services-grid,
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
+}

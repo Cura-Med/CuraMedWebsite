@@ -1,0 +1,10 @@
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  text-align: center;
+}
+
+.features-overview {
+  padding-top: 0;
+}
