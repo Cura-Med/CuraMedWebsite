@@ -3,6 +3,9 @@
 Please see readme from https://github.com/Cura-Med/GoogleCloudDeployReactStarter on how to deploy the website to google cloud
 
 Commands:
+npnm install
+to install all libraries and dependencies
+
 pnpm run dev         
 to run it locally
 
