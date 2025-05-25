@@ -1,4 +1,3 @@
-/*
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
@@ -31,9 +30,9 @@ function App() {
 }
 
 export default App;
-*/
 
 // src/App.jsx
+/*
 import React from 'react';
 import VideoCall from './components/VideoCall';
 
@@ -45,4 +44,4 @@ function App() {
     );
 }
 
-export default App;
+export default App;*/
