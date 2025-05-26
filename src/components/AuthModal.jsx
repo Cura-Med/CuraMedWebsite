@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { FaTimes, FaGoogle, FaCalendarAlt, FaChevronLeft, FaChevronRight, FaUpload, FaUser } from 'react-icons/fa';
+import { FaTimes, FaGoogle, FaCalendarAlt, FaChevronLeft, FaChevronRight, FaUpload, FaUser, FaClock, FaGraduationCap, FaCertificate, FaPaypal, FaCreditCard, FaUniversity, FaGlobe, FaMoneyBillWave, FaFileInvoiceDollar, FaShieldAlt, FaUserMd, FaClipboardCheck, FaIdCard } from 'react-icons/fa';
 import './AuthModal.css';
 
 const AuthModal = ({ isOpen, onClose }) => {
@@ -23,9 +23,40 @@ const AuthModal = ({ isOpen, onClose }) => {
     yearsOfExperience: '',
     languagesSpoken: '',
     country: '',
-    city: ''
+    city: '',
+    shortBio: '',
+    clinicAddress: '',
+    timeZone: '',
+    availabilitySlots: {
+      monday: [],
+      tuesday: [],
+      wednesday: [],
+      thursday: [],
+      friday: [],
+      saturday: [],
+      sunday: []
+    },
+    medicalSchool: '',
+    graduationYear: '',
+    postGraduateTraining: '',
+    certifications: '',
+    payoutMethod: '',
+    paypalEmail: '',
+    bankName: '',
+    accountNumber: '',
+    routingNumber: '',
+    swiftCode: '',
+    taxIdentificationNumber: '',
+    billingCurrency: 'USD',
+    taxResidenceCountry: '',
+    consentTelehealth: false,
+    consentHIPAA: false,
+    consentPlatformRules: false,
+    consentBackgroundCheck: false
   });
   const [profilePhotoPreview, setProfilePhotoPreview] = useState(null);
+  const [selectedDay, setSelectedDay] = useState('monday');
+  const [timeSlot, setTimeSlot] = useState({ start: '09:00', end: '10:00' });
   const fileInputRef = useRef(null);
 
   if (!isOpen) return null;
@@ -97,8 +128,76 @@ const AuthModal = ({ isOpen, onClose }) => {
       yearsOfExperience: '',
       languagesSpoken: '',
       country: '',
-      city: ''
+      city: '',
+      shortBio: '',
+      clinicAddress: '',
+      timeZone: '',
+      availabilitySlots: {
+        monday: [],
+        tuesday: [],
+        wednesday: [],
+        thursday: [],
+        friday: [],
+        saturday: [],
+        sunday: []
+      },
+      medicalSchool: '',
+      graduationYear: '',
+      postGraduateTraining: '',
+      certifications: '',
+      payoutMethod: '',
+      paypalEmail: '',
+      bankName: '',
+      accountNumber: '',
+      routingNumber: '',
+      swiftCode: '',
+      taxIdentificationNumber: '',
+      billingCurrency: 'USD',
+      taxResidenceCountry: '',
+      consentTelehealth: false,
+      consentHIPAA: false,
+      consentPlatformRules: false,
+      consentBackgroundCheck: false
     });
+  };
+
+  const handleDaySelect = (day) => {
+    setSelectedDay(day);
+  };
+
+  const handleTimeSlotChange = (e) => {
+    const { name, value } = e.target;
+    setTimeSlot(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const addTimeSlot = () => {
+    if (timeSlot.start && timeSlot.end) {
+      const newSlot = `${timeSlot.start} - ${timeSlot.end}`;
+      
+      // Check if this slot already exists for the selected day
+      if (!formData.availabilitySlots[selectedDay].includes(newSlot)) {
+        setFormData(prev => ({
+          ...prev,
+          availabilitySlots: {
+            ...prev.availabilitySlots,
+            [selectedDay]: [...prev.availabilitySlots[selectedDay], newSlot]
+          }
+        }));
+      }
+    }
+  };
+
+  const removeTimeSlot = (day, slot) => {
+    setFormData(prev => ({
+      ...prev,
+      availabilitySlots: {
+        ...prev.availabilitySlots,
+        [day]: prev.availabilitySlots[day].filter(s => s !== slot)
+      }
+    }));
   };
 
   // Validation for each step
@@ -123,10 +222,49 @@ const AuthModal = ({ isOpen, onClose }) => {
   const validateStep3 = () => {
     if (userType === 'doctor') {
       return formData.profilePhoto && formData.specialty && 
-             formData.yearsOfExperience && formData.languagesSpoken &&
-             formData.country && formData.city;
+             formData.yearsOfExperience && formData.languagesSpoken;
     }
     return formData.country && formData.city;
+  };
+
+  const validateStep4 = () => {
+    // Require country, city, and short bio for doctors
+    // Clinic address is optional
+    return formData.country && formData.city && formData.shortBio;
+  };
+
+  const validateStep5 = () => {
+    // Require time zone, medical school, graduation year
+    // At least one availability slot
+    const hasTimeSlots = Object.values(formData.availabilitySlots).some(slots => slots.length > 0);
+    return formData.timeZone && formData.medicalSchool && 
+           formData.graduationYear && hasTimeSlots;
+  };
+
+  const validateStep6 = () => {
+    // Validate based on selected payout method
+    const baseValidation = formData.payoutMethod && formData.taxIdentificationNumber && 
+                          formData.billingCurrency && formData.taxResidenceCountry;
+    
+    if (formData.payoutMethod === 'paypal') {
+      return baseValidation && formData.paypalEmail;
+    } else if (formData.payoutMethod === 'bank') {
+      return baseValidation && formData.bankName && formData.accountNumber && 
+             formData.routingNumber;
+    } else if (formData.payoutMethod === 'stripe') {
+      // For Stripe, we'll assume additional setup happens later
+      return baseValidation;
+    }
+    
+    return false;
+  };
+
+  const validateStep7 = () => {
+    // All consent checkboxes must be checked
+    return formData.consentTelehealth && 
+           formData.consentHIPAA && 
+           formData.consentPlatformRules && 
+           formData.consentBackgroundCheck;
   };
 
   // Render sign-in form
@@ -394,8 +532,8 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   // Render sign-up step 3
   const renderSignUpStep3 = () => (
-    <form onSubmit={handleSubmit} className="auth-form">
-      {userType === 'doctor' && (
+    <form className="auth-form">
+      {userType === 'doctor' ? (
         <>
           <div className="form-group">
             <label htmlFor="profilePhoto" className="select-label">Profile Photo</label>
@@ -491,9 +629,84 @@ const AuthModal = ({ isOpen, onClose }) => {
             />
           </div>
         </>
+      ) : (
+        <>
+          <div className="form-group">
+            <input
+              type="text"
+              id="country"
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
+              placeholder="Country"
+              required
+            />
+          </div>
+          
+          <div className="form-group">
+            <input
+              type="text"
+              id="city"
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              placeholder="City"
+              required
+            />
+          </div>
+        </>
       )}
       
+      <div className="step-navigation">
+        <button 
+          type="button" 
+          className="prev-button"
+          onClick={prevStep}
+        >
+          <FaChevronLeft className="button-icon" /> Previous
+        </button>
+        {userType === 'doctor' ? (
+          <button 
+            type="button" 
+            className="next-button"
+            onClick={nextStep}
+            disabled={!validateStep3()}
+          >
+            Next <FaChevronRight className="button-icon" />
+          </button>
+        ) : (
+          <button 
+            type="submit" 
+            className="submit-button"
+            onClick={handleSubmit}
+            disabled={!validateStep3()}
+          >
+            Sign Up
+          </button>
+        )}
+      </div>
+    </form>
+  );
+
+  // Render sign-up step 4 (for doctors only)
+  const renderSignUpStep4 = () => (
+    <form className="auth-form">
       <div className="form-group">
+        <label htmlFor="shortBio" className="select-label">Short biography</label>
+        <textarea
+          id="shortBio"
+          name="shortBio"
+          value={formData.shortBio}
+          onChange={handleChange}
+          placeholder="Tell us about your professional background and approach to patient care..."
+          className="textarea-input"
+          rows="4"
+          required
+        ></textarea>
+      </div>
+      
+      <div className="form-group">
+        <label htmlFor="country" className="select-label">Practice Location</label>
         <input
           type="text"
           id="country"
@@ -517,6 +730,577 @@ const AuthModal = ({ isOpen, onClose }) => {
         />
       </div>
       
+      <div className="form-group">
+        <label htmlFor="clinicAddress" className="select-label">Clinic Address <span className="optional-label">(optional)</span></label>
+        <input
+          type="text"
+          id="clinicAddress"
+          name="clinicAddress"
+          value={formData.clinicAddress}
+          onChange={handleChange}
+          placeholder="Street address of your clinic or practice"
+        />
+      </div>
+      
+      <div className="step-navigation">
+        <button 
+          type="button" 
+          className="prev-button"
+          onClick={prevStep}
+        >
+          <FaChevronLeft className="button-icon" /> Previous
+        </button>
+        <button 
+          type="button" 
+          className="next-button"
+          onClick={nextStep}
+          disabled={!validateStep4()}
+        >
+          Next <FaChevronRight className="button-icon" />
+        </button>
+      </div>
+    </form>
+  );
+
+  // Render sign-up step 5 (for doctors only)
+  const renderSignUpStep5 = () => (
+    <form className="auth-form">
+      <div className="form-group">
+        <label htmlFor="timeZone" className="select-label">
+          <FaClock className="field-icon" /> Time Zone
+        </label>
+        <select
+          id="timeZone"
+          name="timeZone"
+          value={formData.timeZone}
+          onChange={handleChange}
+          className="select-input"
+          required
+        >
+          <option value="" disabled>Select your time zone</option>
+          <option value="UTC-12:00">(UTC-12:00) International Date Line West</option>
+          <option value="UTC-11:00">(UTC-11:00) Coordinated Universal Time-11</option>
+          <option value="UTC-10:00">(UTC-10:00) Hawaii</option>
+          <option value="UTC-09:00">(UTC-09:00) Alaska</option>
+          <option value="UTC-08:00">(UTC-08:00) Pacific Time (US & Canada)</option>
+          <option value="UTC-07:00">(UTC-07:00) Mountain Time (US & Canada)</option>
+          <option value="UTC-06:00">(UTC-06:00) Central Time (US & Canada)</option>
+          <option value="UTC-05:00">(UTC-05:00) Eastern Time (US & Canada)</option>
+          <option value="UTC-04:00">(UTC-04:00) Atlantic Time (Canada)</option>
+          <option value="UTC-03:00">(UTC-03:00) Brasilia</option>
+          <option value="UTC-02:00">(UTC-02:00) Coordinated Universal Time-02</option>
+          <option value="UTC-01:00">(UTC-01:00) Azores</option>
+          <option value="UTC+00:00">(UTC+00:00) London, Dublin, Edinburgh</option>
+          <option value="UTC+01:00">(UTC+01:00) Berlin, Paris, Rome, Madrid</option>
+          <option value="UTC+02:00">(UTC+02:00) Athens, Istanbul, Helsinki</option>
+          <option value="UTC+03:00">(UTC+03:00) Moscow, St. Petersburg</option>
+          <option value="UTC+04:00">(UTC+04:00) Dubai, Abu Dhabi</option>
+          <option value="UTC+05:00">(UTC+05:00) Islamabad, Karachi</option>
+          <option value="UTC+05:30">(UTC+05:30) New Delhi, Mumbai</option>
+          <option value="UTC+06:00">(UTC+06:00) Dhaka</option>
+          <option value="UTC+07:00">(UTC+07:00) Bangkok, Jakarta</option>
+          <option value="UTC+08:00">(UTC+08:00) Beijing, Hong Kong, Singapore</option>
+          <option value="UTC+09:00">(UTC+09:00) Tokyo, Seoul</option>
+          <option value="UTC+10:00">(UTC+10:00) Sydney, Melbourne</option>
+          <option value="UTC+11:00">(UTC+11:00) Vladivostok</option>
+          <option value="UTC+12:00">(UTC+12:00) Auckland, Wellington</option>
+        </select>
+      </div>
+      
+      <div className="form-group">
+        <label className="select-label">
+          <FaClock className="field-icon" /> Consultation Availability
+        </label>
+        <div className="availability-container">
+          <div className="day-selector">
+            {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(day => (
+              <button
+                key={day}
+                type="button"
+                className={`day-button ${selectedDay === day ? 'selected' : ''}`}
+                onClick={() => handleDaySelect(day)}
+              >
+                {day.charAt(0).toUpperCase() + day.slice(1, 3)}
+              </button>
+            ))}
+          </div>
+          
+          <div className="time-slot-selector">
+            <div className="time-inputs">
+              <div className="time-input-group">
+                <label>Start</label>
+                <input
+                  type="time"
+                  name="start"
+                  value={timeSlot.start}
+                  onChange={handleTimeSlotChange}
+                  className="time-input"
+                />
+              </div>
+              <div className="time-input-group">
+                <label>End</label>
+                <input
+                  type="time"
+                  name="end"
+                  value={timeSlot.end}
+                  onChange={handleTimeSlotChange}
+                  className="time-input"
+                />
+              </div>
+              <button
+                type="button"
+                className="add-slot-button"
+                onClick={addTimeSlot}
+              >
+                Add
+              </button>
+            </div>
+            
+            <div className="selected-slots">
+              <h4>Selected time slots for {selectedDay.charAt(0).toUpperCase() + selectedDay.slice(1)}</h4>
+              {formData.availabilitySlots[selectedDay].length > 0 ? (
+                <ul className="slot-list">
+                  {formData.availabilitySlots[selectedDay].map((slot, index) => (
+                    <li key={index} className="slot-item">
+                      <span>{slot}</span>
+                      <button
+                        type="button"
+                        className="remove-slot-button"
+                        onClick={() => removeTimeSlot(selectedDay, slot)}
+                      >
+                        ×
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="no-slots-message">No time slots added yet</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="form-group">
+        <label htmlFor="medicalSchool" className="select-label">
+          <FaGraduationCap className="field-icon" /> Medical School
+        </label>
+        <input
+          type="text"
+          id="medicalSchool"
+          name="medicalSchool"
+          value={formData.medicalSchool}
+          onChange={handleChange}
+          placeholder="e.g., Harvard Medical School"
+          required
+        />
+      </div>
+      
+      <div className="form-group">
+        <label htmlFor="graduationYear" className="select-label">
+          <FaGraduationCap className="field-icon" /> Graduation Year
+        </label>
+        <select
+          id="graduationYear"
+          name="graduationYear"
+          value={formData.graduationYear}
+          onChange={handleChange}
+          className="select-input"
+          required
+        >
+          <option value="" disabled>Select graduation year</option>
+          {Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i).map(year => (
+            <option key={year} value={year}>{year}</option>
+          ))}
+        </select>
+      </div>
+      
+      <div className="form-group">
+        <label htmlFor="postGraduateTraining" className="select-label">
+          <FaGraduationCap className="field-icon" /> Post-Graduate Training <span className="optional-label">(optional)</span>
+        </label>
+        <textarea
+          id="postGraduateTraining"
+          name="postGraduateTraining"
+          value={formData.postGraduateTraining}
+          onChange={handleChange}
+          placeholder="e.g., Residency at Mayo Clinic (2015-2018), Fellowship at Johns Hopkins (2018-2020)"
+          className="textarea-input"
+          rows="3"
+        ></textarea>
+      </div>
+      
+      <div className="form-group">
+        <label htmlFor="certifications" className="select-label">
+          <FaCertificate className="field-icon" /> Certifications <span className="optional-label">(optional)</span>
+        </label>
+        <textarea
+          id="certifications"
+          name="certifications"
+          value={formData.certifications}
+          onChange={handleChange}
+          placeholder="e.g., Board Certified in Internal Medicine, Advanced Cardiac Life Support (ACLS)"
+          className="textarea-input"
+          rows="3"
+        ></textarea>
+      </div>
+      
+      <div className="step-navigation">
+        <button 
+          type="button" 
+          className="prev-button"
+          onClick={prevStep}
+        >
+          <FaChevronLeft className="button-icon" /> Previous
+        </button>
+        <button 
+          type="button" 
+          className="next-button"
+          onClick={nextStep}
+          disabled={!validateStep5()}
+        >
+          Next <FaChevronRight className="button-icon" />
+        </button>
+      </div>
+    </form>
+  );
+
+  // Render sign-up step 6 (for doctors only - payment and tax info)
+  const renderSignUpStep6 = () => (
+    <form className="auth-form">
+      <div className="form-group">
+        <label className="select-label">
+          <FaMoneyBillWave className="field-icon" /> Payout Method
+        </label>
+        <div className="payout-method-selector">
+          <label className={`payout-method-option ${formData.payoutMethod === 'paypal' ? 'selected' : ''}`}>
+            <input
+              type="radio"
+              name="payoutMethod"
+              value="paypal"
+              checked={formData.payoutMethod === 'paypal'}
+              onChange={handleChange}
+            />
+            <FaPaypal className="payout-icon" />
+            <span>PayPal</span>
+          </label>
+          <label className={`payout-method-option ${formData.payoutMethod === 'stripe' ? 'selected' : ''}`}>
+            <input
+              type="radio"
+              name="payoutMethod"
+              value="stripe"
+              checked={formData.payoutMethod === 'stripe'}
+              onChange={handleChange}
+            />
+            <FaCreditCard className="payout-icon" />
+            <span>Stripe</span>
+          </label>
+          <label className={`payout-method-option ${formData.payoutMethod === 'bank' ? 'selected' : ''}`}>
+            <input
+              type="radio"
+              name="payoutMethod"
+              value="bank"
+              checked={formData.payoutMethod === 'bank'}
+              onChange={handleChange}
+            />
+            <FaUniversity className="payout-icon" />
+            <span>Bank Transfer</span>
+          </label>
+        </div>
+      </div>
+      
+      {formData.payoutMethod === 'paypal' && (
+        <div className="form-group">
+          <label htmlFor="paypalEmail" className="select-label">
+            <FaPaypal className="field-icon" /> PayPal Email
+          </label>
+          <input
+            type="email"
+            id="paypalEmail"
+            name="paypalEmail"
+            value={formData.paypalEmail}
+            onChange={handleChange}
+            placeholder="Enter your PayPal email address"
+            required
+          />
+        </div>
+      )}
+      
+      {formData.payoutMethod === 'bank' && (
+        <>
+          <div className="form-group">
+            <label htmlFor="bankName" className="select-label">
+              <FaUniversity className="field-icon" /> Bank Name
+            </label>
+            <input
+              type="text"
+              id="bankName"
+              name="bankName"
+              value={formData.bankName}
+              onChange={handleChange}
+              placeholder="Enter your bank name"
+              required
+            />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="accountNumber" className="select-label">
+              <FaUniversity className="field-icon" /> Account Number
+            </label>
+            <input
+              type="text"
+              id="accountNumber"
+              name="accountNumber"
+              value={formData.accountNumber}
+              onChange={handleChange}
+              placeholder="Enter your account number"
+              required
+            />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="routingNumber" className="select-label">
+              <FaUniversity className="field-icon" /> Routing Number / IBAN
+            </label>
+            <input
+              type="text"
+              id="routingNumber"
+              name="routingNumber"
+              value={formData.routingNumber}
+              onChange={handleChange}
+              placeholder="Enter routing number or IBAN"
+              required
+            />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="swiftCode" className="select-label">
+              <FaUniversity className="field-icon" /> SWIFT/BIC Code <span className="optional-label">(for international transfers)</span>
+            </label>
+            <input
+              type="text"
+              id="swiftCode"
+              name="swiftCode"
+              value={formData.swiftCode}
+              onChange={handleChange}
+              placeholder="Enter SWIFT/BIC code if applicable"
+            />
+          </div>
+        </>
+      )}
+      
+      {formData.payoutMethod === 'stripe' && (
+        <div className="stripe-info">
+          <p className="info-text">
+            <FaCreditCard className="info-icon" /> You'll be redirected to set up your Stripe account after completing registration.
+          </p>
+        </div>
+      )}
+      
+      <div className="form-group">
+        <label htmlFor="taxIdentificationNumber" className="select-label">
+          <FaFileInvoiceDollar className="field-icon" /> Tax Identification Number
+        </label>
+        <input
+          type="text"
+          id="taxIdentificationNumber"
+          name="taxIdentificationNumber"
+          value={formData.taxIdentificationNumber}
+          onChange={handleChange}
+          placeholder="TIN, SSN, or other tax ID"
+          required
+        />
+        <p className="field-hint">For U.S. doctors, enter your SSN or TIN. For Estonian doctors, enter your Social Security Number.</p>
+      </div>
+      
+      <div className="form-group">
+        <label htmlFor="taxResidenceCountry" className="select-label">
+          <FaGlobe className="field-icon" /> Country of Tax Residence
+        </label>
+        <select
+          id="taxResidenceCountry"
+          name="taxResidenceCountry"
+          value={formData.taxResidenceCountry}
+          onChange={handleChange}
+          className="select-input"
+          required
+        >
+          <option value="" disabled>Select your country of tax residence</option>
+          <option value="US">United States</option>
+          <option value="EE">Estonia</option>
+          <option value="GB">United Kingdom</option>
+          <option value="CA">Canada</option>
+          <option value="AU">Australia</option>
+          <option value="DE">Germany</option>
+          <option value="FR">France</option>
+          <option value="ES">Spain</option>
+          <option value="IT">Italy</option>
+          <option value="NL">Netherlands</option>
+          <option value="SE">Sweden</option>
+          <option value="NO">Norway</option>
+          <option value="DK">Denmark</option>
+          <option value="FI">Finland</option>
+          <option value="JP">Japan</option>
+          <option value="KR">South Korea</option>
+          <option value="SG">Singapore</option>
+          <option value="AE">United Arab Emirates</option>
+          <option value="BR">Brazil</option>
+          <option value="MX">Mexico</option>
+          <option value="ZA">South Africa</option>
+          <option value="IN">India</option>
+        </select>
+      </div>
+      
+      <div className="form-group">
+        <label htmlFor="billingCurrency" className="select-label">
+          <FaMoneyBillWave className="field-icon" /> Billing Currency
+        </label>
+        <select
+          id="billingCurrency"
+          name="billingCurrency"
+          value={formData.billingCurrency}
+          onChange={handleChange}
+          className="select-input"
+          required
+        >
+          <option value="USD">USD - US Dollar</option>
+          <option value="EUR">EUR - Euro</option>
+          <option value="GBP">GBP - British Pound</option>
+          <option value="CAD">CAD - Canadian Dollar</option>
+          <option value="AUD">AUD - Australian Dollar</option>
+          <option value="JPY">JPY - Japanese Yen</option>
+          <option value="CHF">CHF - Swiss Franc</option>
+          <option value="CNY">CNY - Chinese Yuan</option>
+          <option value="INR">INR - Indian Rupee</option>
+          <option value="SGD">SGD - Singapore Dollar</option>
+          <option value="AED">AED - UAE Dirham</option>
+        </select>
+      </div>
+      
+      <div className="tax-disclaimer">
+        <p>By submitting this form, you confirm that the tax information provided is accurate and complete. You understand that you are responsible for reporting and paying any applicable taxes on income earned through our platform according to the laws of your country of tax residence.</p>
+      </div>
+      
+      <div className="step-navigation">
+        <button 
+          type="button" 
+          className="prev-button"
+          onClick={prevStep}
+        >
+          <FaChevronLeft className="button-icon" /> Previous
+        </button>
+        <button 
+          type="button" 
+          className="next-button"
+          onClick={nextStep}
+          disabled={!validateStep6()}
+        >
+          Next <FaChevronRight className="button-icon" />
+        </button>
+      </div>
+    </form>
+  );
+
+  // Render sign-up step 7 (for doctors only - consent checkboxes)
+  const renderSignUpStep7 = () => (
+    <form onSubmit={handleSubmit} className="auth-form">
+      <div className="consent-section">
+        <h3 className="consent-title">Legal Agreements and Consents</h3>
+        <p className="consent-intro">Please review and agree to the following terms to complete your registration as a healthcare provider on our platform.</p>
+        
+        <div className="consent-item">
+          <div className="consent-header">
+            <FaUserMd className="consent-icon" />
+            <h4>Telehealth Terms of Service</h4>
+          </div>
+          <div className="consent-content">
+            <p>By checking this box, you agree to our Telehealth Terms of Service, which govern the provision of telehealth services through our platform. This includes guidelines for virtual consultations, patient communication, and documentation requirements.</p>
+            <button type="button" className="view-terms-button">View Full Terms</button>
+            <div className="checkbox-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="consentTelehealth"
+                  checked={formData.consentTelehealth}
+                  onChange={handleChange}
+                  required
+                />
+                <span>I agree to the Telehealth Terms of Service</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div className="consent-item">
+          <div className="consent-header">
+            <FaShieldAlt className="consent-icon" />
+            <h4>HIPAA/GDPR Compliance</h4>
+          </div>
+          <div className="consent-content">
+            <p>You agree to comply with all applicable privacy laws, including HIPAA (Health Insurance Portability and Accountability Act) in the United States and GDPR (General Data Protection Regulation) in Europe. This includes maintaining patient confidentiality, securing protected health information, and reporting any data breaches.</p>
+            <button type="button" className="view-terms-button">View Privacy Policy</button>
+            <div className="checkbox-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="consentHIPAA"
+                  checked={formData.consentHIPAA}
+                  onChange={handleChange}
+                  required
+                />
+                <span>I agree to comply with HIPAA/GDPR requirements</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div className="consent-item">
+          <div className="consent-header">
+            <FaClipboardCheck className="consent-icon" />
+            <h4>Platform Rules and Patient Care Standards</h4>
+          </div>
+          <div className="consent-content">
+            <p>You agree to adhere to our platform's professional standards, clinical guidelines, and code of conduct. This includes maintaining professional communication, providing evidence-based care, and following best practices for telehealth consultations.</p>
+            <button type="button" className="view-terms-button">View Platform Rules</button>
+            <div className="checkbox-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="consentPlatformRules"
+                  checked={formData.consentPlatformRules}
+                  onChange={handleChange}
+                  required
+                />
+                <span>I agree to follow the platform rules and patient care standards</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div className="consent-item">
+          <div className="consent-header">
+            <FaIdCard className="consent-icon" />
+            <h4>Background Checks and Verification</h4>
+          </div>
+          <div className="consent-content">
+            <p>You consent to credential verification, background checks, and ongoing monitoring of your professional standing. This includes verification of your medical license, education, professional history, and criminal background check where applicable.</p>
+            <button type="button" className="view-terms-button">View Verification Process</button>
+            <div className="checkbox-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="consentBackgroundCheck"
+                  checked={formData.consentBackgroundCheck}
+                  onChange={handleChange}
+                  required
+                />
+                <span>I consent to background checks and credential verification</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <div className="step-navigation">
         <button 
           type="button" 
@@ -528,9 +1312,9 @@ const AuthModal = ({ isOpen, onClose }) => {
         <button 
           type="submit" 
           className="submit-button"
-          disabled={!validateStep3()}
+          disabled={!validateStep7()}
         >
-          Sign Up
+          Complete Registration
         </button>
       </div>
     </form>
@@ -548,6 +1332,14 @@ const AuthModal = ({ isOpen, onClose }) => {
           return renderSignUpStep2();
         case 3:
           return renderSignUpStep3();
+        case 4:
+          return renderSignUpStep4();
+        case 5:
+          return renderSignUpStep5();
+        case 6:
+          return renderSignUpStep6();
+        case 7:
+          return renderSignUpStep7();
         default:
           return renderSignUpStep1();
       }
@@ -559,8 +1351,26 @@ const AuthModal = ({ isOpen, onClose }) => {
     if (isSignIn) {
       return 'Login';
     } else {
-      return `Sign Up - Step ${currentStep} of 3`;
+      // For doctors, we have 7 steps, for patients we have 3
+      const totalSteps = userType === 'doctor' ? 7 : 3;
+      return `Sign Up - Step ${currentStep} of ${totalSteps}`;
     }
+  };
+
+  // Get the appropriate step indicators based on user type
+  const renderStepIndicators = () => {
+    const totalSteps = userType === 'doctor' ? 7 : 3;
+    
+    return (
+      <div className="step-indicator">
+        {[...Array(totalSteps)].map((_, index) => (
+          <div 
+            key={index} 
+            className={`step ${currentStep >= index + 1 ? 'active' : ''}`}
+          ></div>
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -572,13 +1382,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         
         <div className="auth-header">
           <h2>{getFormTitle()}</h2>
-          {!isSignIn && (
-            <div className="step-indicator">
-              <div className={`step ${currentStep >= 1 ? 'active' : ''}`}></div>
-              <div className={`step ${currentStep >= 2 ? 'active' : ''}`}></div>
-              <div className={`step ${currentStep >= 3 ? 'active' : ''}`}></div>
-            </div>
-          )}
+          {!isSignIn && renderStepIndicators()}
         </div>
         
         {renderForm()}

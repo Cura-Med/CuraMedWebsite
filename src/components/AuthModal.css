@@ -21,6 +21,8 @@
   position: relative;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   animation: slideIn 0.3s ease-out;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .close-button {
@@ -95,11 +97,48 @@
   color: #9e9e9e;
 }
 
+.textarea-input {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 120px;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
+}
+
+.textarea-input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.textarea-input::placeholder {
+  color: #9e9e9e;
+}
+
 .select-label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
   color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-icon {
+  color: #8c7dff;
+  font-size: 16px;
+}
+
+.optional-label {
+  font-weight: normal;
+  font-size: 14px;
+  color: #9e9e9e;
+  font-style: italic;
 }
 
 .select-input {
@@ -411,6 +450,307 @@
   display: none;
 }
 
+/* Availability styles */
+.availability-container {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 8px;
+}
+
+.day-selector {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.day-button {
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.day-button.selected {
+  background-color: #f0edff;
+  border-color: #8c7dff;
+  color: #8c7dff;
+}
+
+.time-slot-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.time-inputs {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.time-input-group {
+  flex: 1;
+}
+
+.time-input-group label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: var(--text-color);
+}
+
+.time-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.add-slot-button {
+  background-color: #8c7dff;
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  height: 40px;
+}
+
+.add-slot-button:hover {
+  background-color: #7b6ce6;
+}
+
+.selected-slots {
+  margin-top: 16px;
+}
+
+.selected-slots h4 {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.slot-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.slot-item {
+  background-color: #f0edff;
+  border: 1px solid #8c7dff;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 14px;
+  color: #8c7dff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.remove-slot-button {
+  background: none;
+  border: none;
+  color: #8c7dff;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.remove-slot-button:hover {
+  color: #ff6b6b;
+}
+
+.no-slots-message {
+  color: #9e9e9e;
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* Payment method styles */
+.payout-method-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.payout-method-option {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.payout-method-option input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.payout-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+  color: #9e9e9e;
+}
+
+.payout-method-option.selected {
+  background-color: #f0edff;
+  border-color: #8c7dff;
+  color: #8c7dff;
+}
+
+.payout-method-option.selected .payout-icon {
+  color: #8c7dff;
+}
+
+.stripe-info {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.info-text {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: var(--text-color);
+  font-size: 14px;
+}
+
+.info-icon {
+  color: #8c7dff;
+  font-size: 18px;
+}
+
+.field-hint {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #9e9e9e;
+  font-style: italic;
+}
+
+.tax-disclaimer {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 10px;
+}
+
+.tax-disclaimer p {
+  margin: 0;
+  font-size: 12px;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Consent section styles */
+.consent-section {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.consent-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
+.consent-intro {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.consent-item {
+  background-color: var(--white);
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.consent-header {
+  background-color: #f0edff;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.consent-icon {
+  color: #8c7dff;
+  font-size: 20px;
+}
+
+.consent-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #8c7dff;
+}
+
+.consent-content {
+  padding: 16px;
+}
+
+.consent-content p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+}
+
+.view-terms-button {
+  background-color: transparent;
+  color: #8c7dff;
+  border: 1px solid #8c7dff;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.view-terms-button:hover {
+  background-color: #f0edff;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -443,6 +783,19 @@
   }
   
   .step-navigation {
+    flex-direction: column;
+  }
+  
+  .time-inputs {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .day-selector {
+    justify-content: center;
+  }
+  
+  .payout-method-selector {
     flex-direction: column;
   }
 }
