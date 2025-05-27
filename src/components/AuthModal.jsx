@@ -270,7 +270,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   // Render sign-in form
   const renderSignInForm = () => (
     <form onSubmit={handleSubmit} className="auth-form">
-      <div className="form-group">
+      <div className="form-group form-field">
         <input
           type="email"
           id="email"
@@ -282,7 +282,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         />
       </div>
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <input
           type="password"
           id="password"
@@ -335,7 +335,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         </label>
       </div>
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <input
           type="email"
           id="email"
@@ -347,7 +347,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         />
       </div>
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <input
           type="password"
           id="password"
@@ -359,7 +359,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         />
       </div>
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <input
           type="password"
           id="confirmPassword"
@@ -409,7 +409,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   const renderSignUpStep2 = () => (
     <form className="auth-form">
       {userType === 'doctor' && (
-        <div className="form-group">
+        <div className="form-group form-field">
           <label htmlFor="title" className="select-label">Title</label>
           <select
             id="title"
@@ -425,7 +425,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         </div>
       )}
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <input
           type="text"
           id="firstName"
@@ -437,7 +437,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         />
       </div>
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <input
           type="text"
           id="lastName"
@@ -474,7 +474,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         </div>
       </div>
       
-      <div className="form-group date-group">
+      <div className="form-group date-group form-field">
         <input
           type="date"
           id="dateOfBirth"
@@ -568,7 +568,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             </div>
           </div>
           
-          <div className="form-group">
+          <div className="form-group form-field">
             <label htmlFor="specialty" className="select-label">Specialty</label>
             <select
               id="specialty"
@@ -603,7 +603,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             </select>
           </div>
           
-          <div className="form-group">
+          <div className="form-group form-field">
             <label htmlFor="yearsOfExperience" className="select-label">Years of Experience</label>
             <input
               type="text"
@@ -616,7 +616,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             />
           </div>
           
-          <div className="form-group">
+          <div className="form-group form-field">
             <label htmlFor="languagesSpoken" className="select-label">Languages Spoken</label>
             <input
               type="text"
@@ -631,7 +631,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         </>
       ) : (
         <>
-          <div className="form-group">
+          <div className="form-group form-field">
             <input
               type="text"
               id="country"
@@ -643,7 +643,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             />
           </div>
           
-          <div className="form-group">
+          <div className="form-group form-field">
             <input
               type="text"
               id="city"
@@ -691,7 +691,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   // Render sign-up step 4 (for doctors only)
   const renderSignUpStep4 = () => (
     <form className="auth-form">
-      <div className="form-group">
+      <div className="form-group form-field">
         <label htmlFor="shortBio" className="select-label">Short biography</label>
         <textarea
           id="shortBio"
@@ -705,7 +705,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         ></textarea>
       </div>
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <label htmlFor="country" className="select-label">Practice Location</label>
         <input
           type="text"
@@ -718,7 +718,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         />
       </div>
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <input
           type="text"
           id="city"
@@ -730,7 +730,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         />
       </div>
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <label htmlFor="clinicAddress" className="select-label">Clinic Address <span className="optional-label">(optional)</span></label>
         <input
           type="text"
@@ -765,7 +765,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   // Render sign-up step 5 (for doctors only)
   const renderSignUpStep5 = () => (
     <form className="auth-form">
-      <div className="form-group">
+      <div className="form-group form-field">
         <label htmlFor="timeZone" className="select-label">
           <FaClock className="field-icon" /> Time Zone
         </label>
@@ -807,7 +807,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         </select>
       </div>
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <label className="select-label">
           <FaClock className="field-icon" /> Consultation Availability
         </label>
@@ -881,7 +881,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         </div>
       </div>
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <label htmlFor="medicalSchool" className="select-label">
           <FaGraduationCap className="field-icon" /> Medical School
         </label>
@@ -896,7 +896,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         />
       </div>
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <label htmlFor="graduationYear" className="select-label">
           <FaGraduationCap className="field-icon" /> Graduation Year
         </label>
@@ -915,7 +915,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         </select>
       </div>
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <label htmlFor="postGraduateTraining" className="select-label">
           <FaGraduationCap className="field-icon" /> Post-Graduate Training <span className="optional-label">(optional)</span>
         </label>
@@ -930,7 +930,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         ></textarea>
       </div>
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <label htmlFor="certifications" className="select-label">
           <FaCertificate className="field-icon" /> Certifications <span className="optional-label">(optional)</span>
         </label>
@@ -968,7 +968,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   // Render sign-up step 6 (for doctors only - payment and tax info)
   const renderSignUpStep6 = () => (
     <form className="auth-form">
-      <div className="form-group">
+      <div className="form-group form-field">
         <label className="select-label">
           <FaMoneyBillWave className="field-icon" /> Payout Method
         </label>
@@ -1004,13 +1004,13 @@ const AuthModal = ({ isOpen, onClose }) => {
               onChange={handleChange}
             />
             <FaUniversity className="payout-icon" />
-            <span>Bank Transfer</span>
+            <span>Bank</span>
           </label>
         </div>
       </div>
       
       {formData.payoutMethod === 'paypal' && (
-        <div className="form-group">
+        <div className="form-group form-field">
           <label htmlFor="paypalEmail" className="select-label">
             <FaPaypal className="field-icon" /> PayPal Email
           </label>
@@ -1028,7 +1028,7 @@ const AuthModal = ({ isOpen, onClose }) => {
       
       {formData.payoutMethod === 'bank' && (
         <>
-          <div className="form-group">
+          <div className="form-group form-field">
             <label htmlFor="bankName" className="select-label">
               <FaUniversity className="field-icon" /> Bank Name
             </label>
@@ -1043,7 +1043,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             />
           </div>
           
-          <div className="form-group">
+          <div className="form-group form-field">
             <label htmlFor="accountNumber" className="select-label">
               <FaUniversity className="field-icon" /> Account Number
             </label>
@@ -1058,7 +1058,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             />
           </div>
           
-          <div className="form-group">
+          <div className="form-group form-field">
             <label htmlFor="routingNumber" className="select-label">
               <FaUniversity className="field-icon" /> Routing Number / IBAN
             </label>
@@ -1073,7 +1073,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             />
           </div>
           
-          <div className="form-group">
+          <div className="form-group form-field">
             <label htmlFor="swiftCode" className="select-label">
               <FaUniversity className="field-icon" /> SWIFT/BIC Code <span className="optional-label">(for international transfers)</span>
             </label>
@@ -1097,7 +1097,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         </div>
       )}
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <label htmlFor="taxIdentificationNumber" className="select-label">
           <FaFileInvoiceDollar className="field-icon" /> Tax Identification Number
         </label>
@@ -1113,7 +1113,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         <p className="field-hint">For U.S. doctors, enter your SSN or TIN. For Estonian doctors, enter your Social Security Number.</p>
       </div>
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <label htmlFor="taxResidenceCountry" className="select-label">
           <FaGlobe className="field-icon" /> Country of Tax Residence
         </label>
@@ -1151,7 +1151,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         </select>
       </div>
       
-      <div className="form-group">
+      <div className="form-group form-field">
         <label htmlFor="billingCurrency" className="select-label">
           <FaMoneyBillWave className="field-icon" /> Billing Currency
         </label>
