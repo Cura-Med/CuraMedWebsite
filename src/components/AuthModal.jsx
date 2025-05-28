@@ -391,7 +391,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         onClick={nextStep}
         disabled={!validateStep1()}
       >
-        Next <FaChevronRight className="button-icon" />
+        Next
       </button>
       
       <button type="button" className="google-button">
@@ -516,7 +516,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           className="prev-button"
           onClick={prevStep}
         >
-          <FaChevronLeft className="button-icon" /> Previous
+          Previous
         </button>
         <button 
           type="button" 
@@ -524,7 +524,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           onClick={nextStep}
           disabled={!validateStep2()}
         >
-          Next <FaChevronRight className="button-icon" />
+          Next
         </button>
       </div>
     </form>
@@ -663,7 +663,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           className="prev-button"
           onClick={prevStep}
         >
-          <FaChevronLeft className="button-icon" /> Previous
+          Previous
         </button>
         {userType === 'doctor' ? (
           <button 
@@ -672,7 +672,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             onClick={nextStep}
             disabled={!validateStep3()}
           >
-            Next <FaChevronRight className="button-icon" />
+            Next
           </button>
         ) : (
           <button 
@@ -748,7 +748,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           className="prev-button"
           onClick={prevStep}
         >
-          <FaChevronLeft className="button-icon" /> Previous
+          Previous
         </button>
         <button 
           type="button" 
@@ -756,7 +756,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           onClick={nextStep}
           disabled={!validateStep4()}
         >
-          Next <FaChevronRight className="button-icon" />
+          Next
         </button>
       </div>
     </form>
@@ -951,7 +951,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           className="prev-button"
           onClick={prevStep}
         >
-          <FaChevronLeft className="button-icon" /> Previous
+          Previous
         </button>
         <button 
           type="button" 
@@ -959,7 +959,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           onClick={nextStep}
           disabled={!validateStep5()}
         >
-          Next <FaChevronRight className="button-icon" />
+          Next
         </button>
       </div>
     </form>
@@ -1187,7 +1187,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           className="prev-button"
           onClick={prevStep}
         >
-          <FaChevronLeft className="button-icon" /> Previous
+          Previous
         </button>
         <button 
           type="button" 
@@ -1195,7 +1195,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           onClick={nextStep}
           disabled={!validateStep6()}
         >
-          Next <FaChevronRight className="button-icon" />
+          Next
         </button>
       </div>
     </form>
@@ -1225,7 +1225,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                   onChange={handleChange}
                   required
                 />
-                <span>I agree to the Telehealth Terms of Service</span>
+                <span>I agree to the Telehealth Terms</span>
               </label>
             </div>
           </div>
@@ -1234,10 +1234,10 @@ const AuthModal = ({ isOpen, onClose }) => {
         <div className="consent-item">
           <div className="consent-header">
             <FaShieldAlt className="consent-icon" />
-            <h4>HIPAA/GDPR Compliance</h4>
+            <h4>GDPR Compliance</h4>
           </div>
           <div className="consent-content">
-            <p>You agree to comply with all applicable privacy laws, including HIPAA (Health Insurance Portability and Accountability Act) in the United States and GDPR (General Data Protection Regulation) in Europe. This includes maintaining patient confidentiality, securing protected health information, and reporting any data breaches.</p>
+            <p>You agree to comply with all applicable privacy laws, including the General Data Protection Regulation (GDPR) applicable in the European Union. This includes ensuring the lawful collection, processing, and storage of personal data, maintaining data subject confidentiality, implementing appropriate security measures to protect personal data, and promptly reporting any personal data breaches to the relevant supervisory authorities and affected individuals, as required by law.</p>
             <button type="button" className="view-terms-button">View Privacy Policy</button>
             <div className="checkbox-group">
               <label className="checkbox-label">
@@ -1248,7 +1248,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                   onChange={handleChange}
                   required
                 />
-                <span>I agree to comply with HIPAA/GDPR requirements</span>
+                <span>I agree to comply with GDPR</span>
               </label>
             </div>
           </div>
@@ -1271,7 +1271,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                   onChange={handleChange}
                   required
                 />
-                <span>I agree to follow the platform rules and patient care standards</span>
+                <span>I agree to platform rules and standards</span>
               </label>
             </div>
           </div>
@@ -1294,7 +1294,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                   onChange={handleChange}
                   required
                 />
-                <span>I consent to background checks and credential verification</span>
+                <span>I agree to background screening </span>
               </label>
             </div>
           </div>
@@ -1307,7 +1307,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           className="prev-button"
           onClick={prevStep}
         >
-          <FaChevronLeft className="button-icon" /> Previous
+          Previous
         </button>
         <button 
           type="submit" 

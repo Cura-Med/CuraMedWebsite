@@ -325,6 +325,7 @@
   justify-content: space-between;
   gap: 10px;
   margin-top: 10px;
+  align-items: center; /* Added to ensure vertical alignment */
 }
 
 .prev-button, .next-button {
@@ -340,6 +341,7 @@
   cursor: pointer;
   transition: all 0.3s;
   height: 50px; /* Match the Book Consultation button height */
+  box-sizing: border-box; /* Added to ensure consistent sizing */
 }
 
 .prev-button {
