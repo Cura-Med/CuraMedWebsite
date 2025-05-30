@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import './Header.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { openAuthModal, closeAuthModal } from '../features/modal/modalSlice';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const dispatch = useDispatch();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -47,7 +51,7 @@ const Header = () => {
         </nav>
         
         {/*<Link to="/signin" className="sign-in-btn">*/}
-        <Link to="/" className="sign-in-btn">
+        <Link to="/" className="sign-in-btn" onClick={() => dispatch(openAuthModal())}>
           Sign in
         </Link>
       </div>
