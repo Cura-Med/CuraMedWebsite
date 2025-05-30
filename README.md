@@ -1,5 +1,14 @@
 # CuraMed website
 
+
+To run locally
+Just:
+npm install
+npm run dev
+P.S. VideoCall.jsx needs the 'APP_ID'
+
+
+
 Please see readme from https://github.com/Cura-Med/GoogleCloudDeployReactStarter on how to deploy the website to google cloud
 
 Commands:
