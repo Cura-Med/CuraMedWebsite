@@ -1,3 +1,4 @@
+/*
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
@@ -27,6 +28,21 @@ function App() {
       <Footer />
     </div>
   );
+}
+
+export default App;
+*/
+
+// src/App.jsx
+import React from 'react';
+import VideoCall from './components/VideoCall';
+
+function App() {
+    return (
+        <div className="App">
+            <VideoCall />
+        </div>
+    );
 }
 
 export default App;

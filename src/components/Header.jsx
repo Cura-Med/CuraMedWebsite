@@ -2,22 +2,12 @@ import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import './Header.css';
-import AuthModal from './AuthModal';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-  };
-
-  const openAuthModal = () => {
-    setIsAuthModalOpen(true);
-  };
-
-  const closeAuthModal = () => {
-    setIsAuthModalOpen(false);
   };
 
   return (
@@ -56,12 +46,11 @@ const Header = () => {
           </ul>
         </nav>
         
-        <button className="sign-in-btn" onClick={openAuthModal}>
+        {/*<Link to="/signin" className="sign-in-btn">*/}
+        <Link to="/" className="sign-in-btn">
           Sign in
-        </button>
+        </Link>
       </div>
-
-      <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} />
     </header>
   );
 };
