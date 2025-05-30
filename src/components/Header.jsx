@@ -46,7 +46,8 @@ const Header = () => {
           </ul>
         </nav>
         
-        <Link to="/signin" className="sign-in-btn">
+        {/*<Link to="/signin" className="sign-in-btn">*/}
+        <Link to="/" className="sign-in-btn">
           Sign in
         </Link>
       </div>
