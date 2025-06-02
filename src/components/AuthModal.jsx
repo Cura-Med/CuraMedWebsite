@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { FaTimes, FaGoogle, FaCalendarAlt, FaChevronLeft, FaChevronRight, FaUpload, FaUser, FaClock, FaGraduationCap, FaCertificate, FaPaypal, FaCreditCard, FaUniversity, FaGlobe, FaMoneyBillWave, FaFileInvoiceDollar, FaShieldAlt, FaUserMd, FaClipboardCheck, FaIdCard } from 'react-icons/fa';
 import './AuthModal.css';
 
-const AuthModal = ({ isOpen, onClose }) => {
+const AuthModal = ({ isOpen = true, onClose }) => {
   const [isSignIn, setIsSignIn] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
   const [userType, setUserType] = useState('patient');
@@ -1706,6 +1706,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   };
 
   return (
+    <div id={'lool'}>
     <div className="auth-modal-overlay" onClick={onClose}>
       <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
         <button className="close-button" onClick={onClose}>
@@ -1734,6 +1735,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           </p>
         </div>
       </div>
+    </div>
     </div>
   );
 };
