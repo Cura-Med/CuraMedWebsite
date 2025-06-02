@@ -9,25 +9,12 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import SymptomCheckerPage from './pages/SymptomCheckerPage';
 import './App.css';
-import AuthModal from "./components/AuthModal.jsx";
-import { useDispatch, useSelector } from 'react-redux';
-import {closeAuthModal} from "./features/modal/modalSlice.js";
-
 
 function App() {
-
-  const dispatch = useDispatch();
-  const isModalOpen = useSelector((state) => state.modal.isAuthModalOpen);
-
   return (
     <div className="app">
       <Header />
-        <div id="tester">
-            <AuthModal isOpen={isModalOpen} onClose={() => dispatch(closeAuthModal())} />
-        </div>
-
       <main>
-
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/features" element={<FeaturesPage />} />
@@ -43,18 +30,3 @@ function App() {
 }
 
 export default App;
-
-// src/App.jsx
-/*
-import React from 'react';
-import VideoCall from './components/VideoCall';
-
-function App() {
-    return (
-        <div className="App">
-            <VideoCall />
-        </div>
-    );
-}
-
-export default App;*/
