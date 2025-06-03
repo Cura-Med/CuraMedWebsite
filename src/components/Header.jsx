@@ -56,7 +56,7 @@ const Header = () => {
         </Link>
       </div>
 
-      <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} />
+      {/*<AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} />*/}
     </header>
   );
 };
