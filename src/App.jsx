@@ -12,6 +12,7 @@ import './App.css';
 import AuthModal from "./components/AuthModal.jsx";
 import { useDispatch, useSelector } from 'react-redux';
 import {closeAuthModal} from "./features/modal/modalSlice.js";
+import VideoCall from "./components/VideoCall.jsx";
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/symptom-checker" element={<SymptomCheckerPage />} />
+          <Route path="/consultation" element={<VideoCall/>}/>
         </Routes>
       </main>
       <Footer />

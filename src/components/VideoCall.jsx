@@ -1,10 +1,11 @@
 // src/VideoCall.js
 import React, { useEffect, useRef, useState } from 'react';
 import AgoraRTC from 'agora-rtc-sdk-ng';
+import './VideoCall.css';
 
-const APP_ID = '';
-const TOKEN = null; // INSECURE app
-const CHANNEL = 'testchannel'; // Must match the token's channel name
+const APP_ID = import.meta.env.VITE_AGORA_APP_ID;
+const TOKEN = null;
+const CHANNEL = 'testchannel';
 
 const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
 
@@ -54,13 +55,13 @@ function VideoCall() {
     };
 
     return (
-        <div>
-            <h2>Agora Video Call</h2>
-            <div style={{ display: 'flex', gap: '10px' }}>
-                <div ref={localVideoRef} style={{ width: 320, height: 240, background: '#000' }} />
-                <div ref={remoteVideoRef} style={{ width: 320, height: 240, background: '#000' }} />
+        <div className="video-call-wrapper">
+            <h2 className="video-call-title">Agora Video Call</h2>
+            <div className="video-container">
+                <div ref={localVideoRef} className="video-box" />
+                <div ref={remoteVideoRef} className="video-box" />
             </div>
-            <div style={{ marginTop: 20 }}>
+            <div className="video-controls">
                 {!joined ? (
                     <button onClick={joinChannel}>Join Call</button>
                 ) : (
