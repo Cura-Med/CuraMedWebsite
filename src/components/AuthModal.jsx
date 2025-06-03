@@ -301,7 +301,7 @@ const AuthModal = ({ isOpen = true, onClose }) => {
     // If the user didn't select a date (just opened and closed the calendar)
     // and there was no previous selection, reset to empty
     if (!formData.dateOfBirth && dateInputRef.current) {
-      dateInputRef.current.value = '';
+      //dateInputRef.current.value = '';
     }
   };
 
