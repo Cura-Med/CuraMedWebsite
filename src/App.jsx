@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -13,11 +13,20 @@ import AuthModal from "./components/AuthModal.jsx";
 import { useDispatch, useSelector } from 'react-redux';
 import {closeAuthModal} from "./features/modal/modalSlice.js";
 import VideoCall from "./components/VideoCall.jsx";
+import {fetchUserMe} from "./features/auth/authSlice.js";
 
 function App() {
 
   const dispatch = useDispatch();
   const isModalOpen = useSelector((state) => state.modal.isAuthModalOpen);
+  const accessToken = useSelector((state) => state.auth.accessToken);
+
+
+  useEffect(() => {
+     if (accessToken && accessToken.length > 13) {
+         dispatch(fetchUserMe());
+     }
+  }, [accessToken]);
 
   return (
     <div className="app">

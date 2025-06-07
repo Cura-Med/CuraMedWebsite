@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaBrain, FaShieldAlt, FaExclamationCircle, FaInfoCircle } from 'react-icons/fa';
 import './SymptomCheckerPage.css';
 
+
 const SymptomCheckerPage = () => {
   const [symptoms, setSymptoms] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -160,6 +161,7 @@ const SymptomCheckerPage = () => {
                 <div className="results-actions">
                   <button className="btn" onClick={resetAnalysis}>Check Different Symptoms</button>
                   <Link to="/consultation" className="btn btn-primary">Book Consultation with a Doctor</Link>
+
                 </div>
               </div>
             </div>

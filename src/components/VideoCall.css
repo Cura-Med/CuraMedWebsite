@@ -8,6 +8,10 @@
     font-family: sans-serif;
 }
 
+.video-call-wrapper-debug {
+    min-height: 900px;
+}
+
 .video-call-title {
     text-align: center;
     font-size: 1.8rem;
