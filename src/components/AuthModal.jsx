@@ -1,8 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaTimes, FaGoogle, FaCalendarAlt, FaChevronLeft, FaChevronRight, FaUpload, FaUser, FaClock, FaGraduationCap, FaCertificate, FaPaypal, FaCreditCard, FaUniversity, FaGlobe, FaMoneyBillWave, FaFileInvoiceDollar, FaShieldAlt, FaUserMd, FaClipboardCheck, FaIdCard } from 'react-icons/fa';
 import './AuthModal.css';
+import {fetchUserMe, loginUser} from '../features/auth/authSlice';
+import {useDispatch, useSelector} from "react-redux";
 
 const AuthModal = ({ isOpen = true, onClose }) => {
+  const dispatch = useDispatch();
+  const accessToken = useSelector((state) => state.auth.accessToken);
+  const user = useSelector(state => state.auth.user);
   const [isSignIn, setIsSignIn] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
   const [userType, setUserType] = useState('patient');
@@ -264,7 +269,7 @@ const AuthModal = ({ isOpen = true, onClose }) => {
     { name: "Zimbabwe", code: "ZW" }
   ];
 
-  if (!isOpen) return null;
+  // if (!isOpen) return null;
 
   // Function to validate email format
   const validateEmail = (email) => {
@@ -384,7 +389,7 @@ const AuthModal = ({ isOpen = true, onClose }) => {
   const handleUserTypeChange = (type) => {
     setUserType(type);
   };
-
+/*
   const handleSubmit = (e) => {
     e.preventDefault();
     
@@ -401,7 +406,25 @@ const AuthModal = ({ isOpen = true, onClose }) => {
     console.log('Form submitted:', formData, 'User type:', userType);
     // For demo purposes, just close the modal
     onClose();
-  };
+  };*/
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        let email = formData.email;
+        let password = formData.password;
+        dispatch(loginUser({ email, password }));
+        onClose();
+    };
+
+  useEffect(() => {
+    if (accessToken && accessToken.length > 13) {
+      dispatch(fetchUserMe());
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
+    console.log('User: ', JSON.stringify(user));
+  }, [user, accessToken])
 
   const nextStep = () => {
     setCurrentStep(prev => prev + 1);
@@ -894,7 +917,7 @@ const AuthModal = ({ isOpen = true, onClose }) => {
                 name="profilePhoto"
                 ref={fileInputRef}
                 onChange={handleFileChange}
-                accept="image/*"
+                accept="image/!*"
                 className="file-input"
                 required
               />
@@ -1741,3 +1764,48 @@ const AuthModal = ({ isOpen = true, onClose }) => {
 };
 
 export default AuthModal;
+
+
+
+/*
+
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '../features/auth/authSlice';
+
+function LoginForm() {
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(loginUser({ email, password }));
+  };
+
+  return (
+      <div>
+        <h2>Login</h2>
+        {auth.status === 'loading' && <p>Logging in...</p>}
+        {auth.error && <p style={{ color: 'red' }}>{auth.error}</p>}
+        <form onSubmit={handleSubmit}>
+          <input
+              type="email"
+              value={email}
+              placeholder="Email"
+              onChange={(e) => setEmail(e.target.value)}
+          /><br />
+          <input
+              type="password"
+              value={password}
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+          /><br />
+          <button type="submit">Login</button>
+        </form>
+      </div>
+  );
+}
+
+export default LoginForm;*/

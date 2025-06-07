@@ -22,9 +22,11 @@ function App() {
   return (
     <div className="app">
       <Header />
-        <div id="tester">
-            <AuthModal isOpen={isModalOpen} onClose={() => dispatch(closeAuthModal())} />
-        </div>
+        {isModalOpen &&
+            <div id="tester">
+                <AuthModal isOpen={isModalOpen} onClose={() => dispatch(closeAuthModal())} />
+            </div>
+        }
 
       <main>
         <Routes>
