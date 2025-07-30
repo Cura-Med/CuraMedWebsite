@@ -264,6 +264,49 @@ const AuthModal = ({ isOpen = true, onClose }) => {
     { name: "Zimbabwe", code: "ZW" }
   ];
 
+  const CountrySelect = ({ formData, handleChange }) => {
+  const [countries, setCountries] = useState([]);
+
+  useEffect(() => {
+  async function fetchCountries() {
+    try {
+      const res = await fetch('https://curamed-auth-api-973580931654.europe-north1.run.app/countries');
+      const data = await res.json();
+      console.log("Fetched data:", data);
+
+      if (data.countries && Array.isArray(data.countries)) {
+        setCountries(data.countries);
+      } else {
+        console.error("Unexpected format:", data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch countries:", err);
+    }
+  }
+
+    fetchCountries();
+  }, []);
+    
+    return (
+      <div className="form-group form-field">
+        <label htmlFor="country" className="select-label">Country</label>
+        <select
+          id="country"
+          name="country"
+          value={formData.country}
+          onChange={handleChange}
+          className="select-input"
+          required
+        >
+          <option value="" disabled>Select your country</option>
+          {countries.map(country => (
+            <option key={country.id} value={country.id}>{country.name}</option>
+          ))}
+        </select>
+      </div>
+    );
+};
+
   if (!isOpen) return null;
 
   // Function to validate email format
@@ -964,24 +1007,7 @@ const AuthModal = ({ isOpen = true, onClose }) => {
         </>
       ) : (
         <>
-          <div className="form-group form-field">
-            <label htmlFor="country" className="select-label">Country</label>
-            <select
-              id="country"
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              className="select-input"
-              required
-            >
-              <option value="" disabled>Select your country</option>
-              {countries.map(country => (
-                <option key={country.code} value={country.code}>
-                  {country.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <CountrySelect formData={formData} handleChange={handleChange} />
           
           <div className="form-group form-field">
             <input
