@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaTimes, FaGoogle, FaCalendarAlt, FaChevronLeft, FaChevronRight, FaUpload, FaUser, FaClock, FaGraduationCap, FaCertificate, FaPaypal, FaCreditCard, FaUniversity, FaGlobe, FaMoneyBillWave, FaFileInvoiceDollar, FaShieldAlt, FaUserMd, FaClipboardCheck, FaIdCard } from 'react-icons/fa';
+import CountrySelect from './CountrySelect'; 
 import './AuthModal.css';
 
 const AuthModal = ({ isOpen = true, onClose }) => {
@@ -263,49 +264,6 @@ const AuthModal = ({ isOpen = true, onClose }) => {
     { name: "Zambia", code: "ZM" },
     { name: "Zimbabwe", code: "ZW" }
   ];
-
-  const CountrySelect = ({ formData, handleChange }) => {
-  const [countries, setCountries] = useState([]);
-
-  useEffect(() => {
-  async function fetchCountries() {
-    try {
-      const res = await fetch('https://curamed-auth-api-973580931654.europe-north1.run.app/countries');
-      const data = await res.json();
-      console.log("Fetched data:", data);
-
-      if (data.countries && Array.isArray(data.countries)) {
-        setCountries(data.countries);
-      } else {
-        console.error("Unexpected format:", data);
-      }
-    } catch (err) {
-      console.error("Failed to fetch countries:", err);
-    }
-  }
-
-    fetchCountries();
-  }, []);
-    
-    return (
-      <div className="form-group form-field">
-        <label htmlFor="country" className="select-label">Country</label>
-        <select
-          id="country"
-          name="country"
-          value={formData.country}
-          onChange={handleChange}
-          className="select-input"
-          required
-        >
-          <option value="" disabled>Select your country</option>
-          {countries.map(country => (
-            <option key={country.id} value={country.id}>{country.name}</option>
-          ))}
-        </select>
-      </div>
-    );
-};
 
   if (!isOpen) return null;
 
@@ -1007,7 +965,13 @@ const AuthModal = ({ isOpen = true, onClose }) => {
         </>
       ) : (
         <>
-          <CountrySelect formData={formData} handleChange={handleChange} />
+          <CountrySelect
+            label="Country"
+            id="country"
+            name="country"
+            value={formData.country}
+            onChange={handleChange}
+          />
           
           <div className="form-group form-field">
             <input
@@ -1071,24 +1035,13 @@ const AuthModal = ({ isOpen = true, onClose }) => {
         ></textarea>
       </div>
       
-      <div className="form-group form-field">
-        <label htmlFor="country" className="select-label">Practice Location</label>
-        <select
-          id="country"
-          name="country"
-          value={formData.country}
-          onChange={handleChange}
-          className="select-input"
-          required
-        >
-          <option value="" disabled>Select your country</option>
-          {countries.map(country => (
-            <option key={country.code} value={country.code}>
-              {country.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      <CountrySelect
+        label="Practice Location"
+        id="practiceCountry"
+        name="country"
+        value={formData.country}
+        onChange={handleChange}
+      />
       
       <div className="form-group form-field">
         <input
@@ -1488,26 +1441,15 @@ const AuthModal = ({ isOpen = true, onClose }) => {
         <p className="field-hint">For U.S. doctors, enter your SSN or TIN. For Estonian doctors, enter your Social Security Number.</p>
       </div>
       
-      <div className="form-group form-field">
-        <label htmlFor="taxResidenceCountry" className="select-label">
-          <FaGlobe className="field-icon" /> Country of Tax Residence
-        </label>
-        <select
-          id="taxResidenceCountry"
-          name="taxResidenceCountry"
-          value={formData.taxResidenceCountry}
-          onChange={handleChange}
-          className="select-input"
-          required
-        >
-          <option value="" disabled>Select your country of tax residence</option>
-          {countries.map(country => (
-            <option key={country.code} value={country.code}>
-              {country.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      <CountrySelect
+        label="Country of Tax Residence"
+        id="taxResidenceCountry"
+        name="taxResidenceCountry"
+        value={formData.taxResidenceCountry}
+        onChange={handleChange}
+        placeholder="Select your country of tax residence"
+        icon={FaGlobe}
+      />
       
       <div className="form-group form-field">
         <label htmlFor="billingCurrency" className="select-label">
