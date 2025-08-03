@@ -1,6 +1,6 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { FaGlobe } from 'react-icons/fa'; // Optional if you're using icons
+import React, { useState, useEffect } from 'react';
+import { FaGlobe } from 'react-icons/fa';
+import { getCountries } from '../services/countryService.js'; // Adjust path as needed
 
 const CountrySelect = ({
   label,
@@ -15,21 +15,17 @@ const CountrySelect = ({
   const [countries, setCountries] = useState([]);
 
   useEffect(() => {
-    async function fetchCountries() {
-      try {
-        const res = await fetch('https://curamed-auth-api-973580931654.europe-north1.run.app/countries');
-        const data = await res.json();
-        if (data.countries && Array.isArray(data.countries)) {
-          setCountries(data.countries);
-        } else {
-          console.error("Unexpected format:", data);
-        }
-      } catch (err) {
-        console.error("Failed to fetch countries:", err);
-      }
-    }
+    let isMounted = true;
 
-    fetchCountries();
+    getCountries()
+      .then(data => {
+        if (isMounted) setCountries(data);
+      })
+      .catch(err => {
+        console.error("Failed to load countries:", err);
+      });
+
+    return () => { isMounted = false };
   }, []);
 
   return (
@@ -44,13 +40,24 @@ const CountrySelect = ({
         onChange={onChange}
         className="select-input"
         required={required}
+        disabled={countries.length === 0}
       >
-        <option value="" disabled>{placeholder}</option>
-        {countries.map(country => (
-          <option key={country.code || country.id} value={country.code || country.id}>
-            {country.name}
+        {countries.length === 0 ? (
+          <option value="" disabled>
+            Loading countries...
           </option>
+        ) : (
+        <>
+          <option value="" disabled>
+            {placeholder}
+          </option>
+          {countries.map((country) => (
+            <option key={country.code || country.id} value={country.code || country.id}>
+              {country.name}
+            </option>
         ))}
+        </>
+      )}
       </select>
     </div>
   );
