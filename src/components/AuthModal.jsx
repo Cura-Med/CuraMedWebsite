@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { FaTimes, FaGoogle, FaCalendarAlt, FaChevronLeft, FaChevronRight, FaUpload, FaUser, FaClock, FaGraduationCap, FaCertificate, FaPaypal, FaCreditCard, FaUniversity, FaGlobe, FaMoneyBillWave, FaFileInvoiceDollar, FaShieldAlt, FaUserMd, FaClipboardCheck, FaIdCard } from 'react-icons/fa';
 import CountrySelect from './CountrySelect'; 
 import GenderSelect from './GenderSelect'; 
+import DoctorTitleSelect from './DoctorTitleSelect';
 import './AuthModal.css';
 
 const AuthModal = ({ isOpen = true, onClose }) => {
@@ -538,20 +539,12 @@ const AuthModal = ({ isOpen = true, onClose }) => {
   const renderSignUpStep2 = () => (
     <form className="auth-form">
       {userType === 'doctor' && (
-        <div className="form-group form-field">
-          <label htmlFor="title" className="select-label">Title</label>
-          <select
-            id="title"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            className="select-input"
-          >
-            <option value="Dr.">Dr.</option>
-            <option value="MD">MD</option>
-            <option value="DO">DO</option>
-          </select>
-        </div>
+        <DoctorTitleSelect
+          value={formData.title}
+          onChange={handleChange}
+          placeholder="Select your title"
+          loadingLabel="Loading titles..."
+        />
       )}
       
       <div className="form-group form-field">
