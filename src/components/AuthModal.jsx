@@ -3,6 +3,7 @@ import { FaTimes, FaGoogle, FaCalendarAlt, FaChevronLeft, FaChevronRight, FaUplo
 import CountrySelect from './CountrySelect'; 
 import GenderSelect from './GenderSelect'; 
 import DoctorTitleSelect from './DoctorTitleSelect';
+import SpecialtySelect from './SpecialtySelect';
 import './AuthModal.css';
 
 const AuthModal = ({ isOpen = true, onClose }) => {
@@ -676,40 +677,7 @@ const AuthModal = ({ isOpen = true, onClose }) => {
             </div>
           </div>
           
-          <div className="form-group form-field">
-            <label htmlFor="specialty" className="select-label">Specialty</label>
-            <select
-              id="specialty"
-              name="specialty"
-              value={formData.specialty}
-              onChange={handleChange}
-              className="select-input"
-              required
-            >
-              <option value="" disabled>Select your specialty</option>
-              <option value="General Practitioner">General Practitioner</option>
-              <option value="Psychologist">Psychologist</option>
-              <option value="Internal Medicine Physician">Internal Medicine Physician</option>
-              <option value="Pediatrician">Pediatrician</option>
-              <option value="Obstetrician-Gynecologist">Obstetrician-Gynecologist</option>
-              <option value="Reproductive Endocrinologist">Reproductive Endocrinologist</option>
-              <option value="Cardiologist">Cardiologist</option>
-              <option value="Pulmonologist">Pulmonologist</option>
-              <option value="Gastroenterologist">Gastroenterologist</option>
-              <option value="Endocrinologist">Endocrinologist</option>
-              <option value="Nephrologist">Nephrologist</option>
-              <option value="Rheumatologist">Rheumatologist</option>
-              <option value="Dermatologist">Dermatologist</option>
-              <option value="Ophthalmologist">Ophthalmologist</option>
-              <option value="Optometrist">Optometrist</option>
-              <option value="ENT Specialist (Otolaryngologist)">ENT Specialist (Otolaryngologist)</option>
-              <option value="Allergist/Immunologist">Allergist/Immunologist</option>
-              <option value="Oncologist">Oncologist</option>
-              <option value="Hematologist">Hematologist</option>
-              <option value="Infectious Disease Specialist">Infectious Disease Specialist</option>
-              <option value="Psychiatrist">Psychiatrist</option>
-            </select>
-          </div>
+          <SpecialtySelect id="specialty" name="specialty" value={formData.specialty} onChange={handleChange} />
           
           <div className="form-group form-field">
             <label htmlFor="yearsOfExperience" className="select-label">Years of Experience</label>
