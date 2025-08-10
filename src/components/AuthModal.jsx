@@ -6,6 +6,7 @@ import GenderSelect from './GenderSelect';
 import DoctorTitleSelect from './DoctorTitleSelect';
 import SpecialtySelect from './SpecialtySelect';
 import LanguagesMultiSelect from './LanguagesMultiSelect';
+import TimeZoneSelect from './TimeZoneSelect';
 import './AuthModal.css';
 
 const AuthModal = ({ isOpen = true, onClose }) => {
@@ -72,19 +73,6 @@ const AuthModal = ({ isOpen = true, onClose }) => {
   const dateInputRef = useRef(null);
 
   if (!isOpen) return null;
-
-const languageOptions = [
-  { value: 'English', label: 'English' },
-  { value: 'Spanish', label: 'Spanish' },
-  { value: 'French', label: 'French' },
-  { value: 'German', label: 'German' },
-  { value: 'Arabic', label: 'Arabic' },
-  { value: 'Mandarin', label: 'Mandarin' },
-  { value: 'Russian', label: 'Russian' },
-  { value: 'Hindi', label: 'Hindi' },
-  { value: 'Portuguese', label: 'Portuguese' },
-  { value: 'Other', label: 'Other' },
-];
 
   // Function to validate email format
   const validateEmail = (email) => {
@@ -838,47 +826,7 @@ const languageOptions = [
   // Render sign-up step 5 (for doctors only)
   const renderSignUpStep5 = () => (
     <form className="auth-form">
-      <div className="form-group form-field">
-        <label htmlFor="timeZone" className="select-label">
-          <FaClock className="field-icon" /> Time Zone
-        </label>
-        <select
-          id="timeZone"
-          name="timeZone"
-          value={formData.timeZone}
-          onChange={handleChange}
-          className="select-input"
-          required
-        >
-          <option value="" disabled>Select your time zone</option>
-          <option value="UTC-12:00">(UTC-12:00) International Date Line West</option>
-          <option value="UTC-11:00">(UTC-11:00) Coordinated Universal Time-11</option>
-          <option value="UTC-10:00">(UTC-10:00) Hawaii</option>
-          <option value="UTC-09:00">(UTC-09:00) Alaska</option>
-          <option value="UTC-08:00">(UTC-08:00) Pacific Time (US & Canada)</option>
-          <option value="UTC-07:00">(UTC-07:00) Mountain Time (US & Canada)</option>
-          <option value="UTC-06:00">(UTC-06:00) Central Time (US & Canada)</option>
-          <option value="UTC-05:00">(UTC-05:00) Eastern Time (US & Canada)</option>
-          <option value="UTC-04:00">(UTC-04:00) Atlantic Time (Canada)</option>
-          <option value="UTC-03:00">(UTC-03:00) Brasilia</option>
-          <option value="UTC-02:00">(UTC-02:00) Coordinated Universal Time-02</option>
-          <option value="UTC-01:00">(UTC-01:00) Azores</option>
-          <option value="UTC+00:00">(UTC+00:00) London, Dublin, Edinburgh</option>
-          <option value="UTC+01:00">(UTC+01:00) Berlin, Paris, Rome, Madrid</option>
-          <option value="UTC+02:00">(UTC+02:00) Athens, Istanbul, Helsinki</option>
-          <option value="UTC+03:00">(UTC+03:00) Moscow, St. Petersburg</option>
-          <option value="UTC+04:00">(UTC+04:00) Dubai, Abu Dhabi</option>
-          <option value="UTC+05:00">(UTC+05:00) Islamabad, Karachi</option>
-          <option value="UTC+05:30">(UTC+05:30) New Delhi, Mumbai</option>
-          <option value="UTC+06:00">(UTC+06:00) Dhaka</option>
-          <option value="UTC+07:00">(UTC+07:00) Bangkok, Jakarta</option>
-          <option value="UTC+08:00">(UTC+08:00) Beijing, Hong Kong, Singapore</option>
-          <option value="UTC+09:00">(UTC+09:00) Tokyo, Seoul</option>
-          <option value="UTC+10:00">(UTC+10:00) Sydney, Melbourne</option>
-          <option value="UTC+11:00">(UTC+11:00) Vladivostok</option>
-          <option value="UTC+12:00">(UTC+12:00) Auckland, Wellington</option>
-        </select>
-      </div>
+      <TimeZoneSelect value={formData.timeZone} onChange={handleChange} />
       
       <div className="form-group form-field">
         <label className="select-label">
