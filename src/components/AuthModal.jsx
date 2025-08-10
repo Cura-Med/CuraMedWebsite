@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaTimes, FaGoogle, FaCalendarAlt, FaChevronLeft, FaChevronRight, FaUpload, FaUser, FaClock, FaGraduationCap, FaCertificate, FaPaypal, FaCreditCard, FaUniversity, FaGlobe, FaMoneyBillWave, FaFileInvoiceDollar, FaShieldAlt, FaUserMd, FaClipboardCheck, FaIdCard } from 'react-icons/fa';
+import Select from 'react-select';
 import CountrySelect from './CountrySelect'; 
 import GenderSelect from './GenderSelect'; 
 import DoctorTitleSelect from './DoctorTitleSelect';
 import SpecialtySelect from './SpecialtySelect';
+import LanguagesMultiSelect from './LanguagesMultiSelect';
 import './AuthModal.css';
 
 const AuthModal = ({ isOpen = true, onClose }) => {
@@ -70,6 +72,19 @@ const AuthModal = ({ isOpen = true, onClose }) => {
   const dateInputRef = useRef(null);
 
   if (!isOpen) return null;
+
+const languageOptions = [
+  { value: 'English', label: 'English' },
+  { value: 'Spanish', label: 'Spanish' },
+  { value: 'French', label: 'French' },
+  { value: 'German', label: 'German' },
+  { value: 'Arabic', label: 'Arabic' },
+  { value: 'Mandarin', label: 'Mandarin' },
+  { value: 'Russian', label: 'Russian' },
+  { value: 'Hindi', label: 'Hindi' },
+  { value: 'Portuguese', label: 'Portuguese' },
+  { value: 'Other', label: 'Other' },
+];
 
   // Function to validate email format
   const validateEmail = (email) => {
@@ -692,18 +707,9 @@ const AuthModal = ({ isOpen = true, onClose }) => {
             />
           </div>
           
-          <div className="form-group form-field">
-            <label htmlFor="languagesSpoken" className="select-label">Languages Spoken</label>
-            <input
-              type="text"
-              id="languagesSpoken"
-              name="languagesSpoken"
-              value={formData.languagesSpoken}
-              onChange={handleChange}
-              placeholder="e.g., English, Spanish, French"
-              required
-            />
-          </div>
+          <LanguagesMultiSelect value={formData.languagesSpoken} onChange={handleChange}
+      />
+
         </>
       ) : (
         <>
