@@ -7,6 +7,7 @@ import DoctorTitleSelect from './DoctorTitleSelect';
 import SpecialtySelect from './SpecialtySelect';
 import LanguagesMultiSelect from './LanguagesMultiSelect';
 import TimeZoneSelect from './TimeZoneSelect';
+import PayoutMethodSelector from './PayoutMethodSelector';
 import './AuthModal.css';
 
 const AuthModal = ({ isOpen = true, onClose }) => {
@@ -989,137 +990,11 @@ const AuthModal = ({ isOpen = true, onClose }) => {
   // Render sign-up step 6 (for doctors only - payment and tax info)
   const renderSignUpStep6 = () => (
     <form className="auth-form">
-      <div className="form-group form-field">
-        <label className="select-label">
-          <FaMoneyBillWave className="field-icon" /> Payout Method
-        </label>
-        <div className="payout-method-selector">
-          <label className={`payout-method-option ${formData.payoutMethod === 'paypal' ? 'selected' : ''}`}>
-            <input
-              type="radio"
-              name="payoutMethod"
-              value="paypal"
-              checked={formData.payoutMethod === 'paypal'}
-              onChange={handleChange}
-            />
-            <FaPaypal className="payout-icon" />
-            <span>PayPal</span>
-          </label>
-          <label className={`payout-method-option ${formData.payoutMethod === 'stripe' ? 'selected' : ''}`}>
-            <input
-              type="radio"
-              name="payoutMethod"
-              value="stripe"
-              checked={formData.payoutMethod === 'stripe'}
-              onChange={handleChange}
-            />
-            <FaCreditCard className="payout-icon" />
-            <span>Stripe</span>
-          </label>
-          <label className={`payout-method-option ${formData.payoutMethod === 'bank' ? 'selected' : ''}`}>
-            <input
-              type="radio"
-              name="payoutMethod"
-              value="bank"
-              checked={formData.payoutMethod === 'bank'}
-              onChange={handleChange}
-            />
-            <FaUniversity className="payout-icon" />
-            <span>Bank</span>
-          </label>
-        </div>
-      </div>
-      
-      {formData.payoutMethod === 'paypal' && (
-        <div className="form-group form-field">
-          <label htmlFor="paypalEmail" className="select-label">
-            <FaPaypal className="field-icon" /> PayPal Email
-          </label>
-          <input
-            type="email"
-            id="paypalEmail"
-            name="paypalEmail"
-            value={formData.paypalEmail}
-            onChange={handleChange}
-            placeholder="Enter your PayPal email address"
-            required
-          />
-          {formData.paypalEmail && !validateEmail(formData.paypalEmail) && (
-            <div className="error-message">Please enter a valid email address</div>
-          )}
-        </div>
-      )}
-      
-      {formData.payoutMethod === 'bank' && (
-        <>
-          <div className="form-group form-field">
-            <label htmlFor="bankName" className="select-label">
-              <FaUniversity className="field-icon" /> Bank Name
-            </label>
-            <input
-              type="text"
-              id="bankName"
-              name="bankName"
-              value={formData.bankName}
-              onChange={handleChange}
-              placeholder="Enter your bank name"
-              required
-            />
-          </div>
-          
-          <div className="form-group form-field">
-            <label htmlFor="accountNumber" className="select-label">
-              <FaUniversity className="field-icon" /> Account Number
-            </label>
-            <input
-              type="text"
-              id="accountNumber"
-              name="accountNumber"
-              value={formData.accountNumber}
-              onChange={handleChange}
-              placeholder="Enter your account number"
-              required
-            />
-          </div>
-          
-          <div className="form-group form-field">
-            <label htmlFor="routingNumber" className="select-label">
-              <FaUniversity className="field-icon" /> Routing Number / IBAN
-            </label>
-            <input
-              type="text"
-              id="routingNumber"
-              name="routingNumber"
-              value={formData.routingNumber}
-              onChange={handleChange}
-              placeholder="Enter routing number or IBAN"
-              required
-            />
-          </div>
-          
-          <div className="form-group form-field">
-            <label htmlFor="swiftCode" className="select-label">
-              <FaUniversity className="field-icon" /> SWIFT/BIC Code <span className="optional-label">(for international transfers)</span>
-            </label>
-            <input
-              type="text"
-              id="swiftCode"
-              name="swiftCode"
-              value={formData.swiftCode}
-              onChange={handleChange}
-              placeholder="Enter SWIFT/BIC code if applicable"
-            />
-          </div>
-        </>
-      )}
-      
-      {formData.payoutMethod === 'stripe' && (
-        <div className="stripe-info">
-          <p className="info-text">
-            <FaCreditCard className="info-icon" /> You'll be redirected to set up your Stripe account after completing registration.
-          </p>
-        </div>
-      )}
+      <PayoutMethodSelector
+        formData={formData}
+        setFormData={setFormData}
+        handleChange={handleChange}
+      />
       
       <div className="form-group form-field">
         <label htmlFor="taxIdentificationNumber" className="select-label">
