@@ -8,6 +8,7 @@ import SpecialtySelect from './SpecialtySelect';
 import LanguagesMultiSelect from './LanguagesMultiSelect';
 import TimeZoneSelect from './TimeZoneSelect';
 import PayoutMethodSelector from './PayoutMethodSelector';
+import CurrencySelect from './CurrencySelect';
 import './AuthModal.css';
 
 const AuthModal = ({ isOpen = true, onClose }) => {
@@ -1022,31 +1023,7 @@ const AuthModal = ({ isOpen = true, onClose }) => {
         icon={FaGlobe}
       />
       
-      <div className="form-group form-field">
-        <label htmlFor="billingCurrency" className="select-label">
-          <FaMoneyBillWave className="field-icon" /> Billing Currency
-        </label>
-        <select
-          id="billingCurrency"
-          name="billingCurrency"
-          value={formData.billingCurrency}
-          onChange={handleChange}
-          className="select-input"
-          required
-        >
-          <option value="USD">USD - US Dollar</option>
-          <option value="EUR">EUR - Euro</option>
-          <option value="GBP">GBP - British Pound</option>
-          <option value="CAD">CAD - Canadian Dollar</option>
-          <option value="AUD">AUD - Australian Dollar</option>
-          <option value="JPY">JPY - Japanese Yen</option>
-          <option value="CHF">CHF - Swiss Franc</option>
-          <option value="CNY">CNY - Chinese Yuan</option>
-          <option value="INR">INR - Indian Rupee</option>
-          <option value="SGD">SGD - Singapore Dollar</option>
-          <option value="AED">AED - UAE Dirham</option>
-        </select>
-      </div>
+      <CurrencySelect formData={formData} handleChange={handleChange} />
       
       <div className="tax-disclaimer">
         <p>By submitting this form, you confirm that the tax information provided is accurate and complete. You understand that you are responsible for reporting and paying any applicable taxes on income earned through our platform according to the laws of your country of tax residence.</p>
