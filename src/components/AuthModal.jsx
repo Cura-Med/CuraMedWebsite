@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaTimes, FaGoogle, FaCalendarAlt, FaChevronLeft, FaChevronRight, FaUpload, FaUser, FaClock, FaGraduationCap, FaCertificate, FaPaypal, FaCreditCard, FaUniversity, FaGlobe, FaMoneyBillWave, FaFileInvoiceDollar, FaShieldAlt, FaUserMd, FaClipboardCheck, FaIdCard } from 'react-icons/fa';
 import Select from 'react-select';
+import axios from 'axios';
 import CountrySelect from './CountrySelect'; 
 import GenderSelect from './GenderSelect'; 
 import DoctorTitleSelect from './DoctorTitleSelect';
@@ -15,6 +16,8 @@ const AuthModal = ({ isOpen = true, onClose }) => {
   const [isSignIn, setIsSignIn] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
   const [userType, setUserType] = useState('patient');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -124,6 +127,11 @@ const AuthModal = ({ isOpen = true, onClose }) => {
       [name]: type === 'checkbox' ? checked : value
     }));
     
+    // Clear submit error when user starts typing
+    if (submitError) {
+      setSubmitError('');
+    }
+    
     // Validate email field
     if (name === 'email') {
       if (!value.trim()) {
@@ -195,7 +203,40 @@ const AuthModal = ({ isOpen = true, onClose }) => {
     setUserType(type);
   };
 
-  const handleSubmit = (e) => {
+  // Register user function
+  const registerUser = async (userData) => {
+    try {
+      const response = await axios.post(
+        'https://curamed-auth-api-973580931654.europe-north1.run.app/users/register',
+        userData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Registration error:', error);
+      
+      // Handle different types of errors
+      if (error.response) {
+        // Server responded with error status
+        const errorMessage = error.response.data?.message || 
+                            error.response.data?.error || 
+                            `Registration failed: ${error.response.status}`;
+        throw new Error(errorMessage);
+      } else if (error.request) {
+        // Request was made but no response received
+        throw new Error('Network error. Please check your connection and try again.');
+      } else {
+        // Something else happened
+        throw new Error('An unexpected error occurred. Please try again.');
+      }
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Validate email before submission
@@ -206,11 +247,48 @@ const AuthModal = ({ isOpen = true, onClose }) => {
       }));
       return;
     }
-    
-    // Here you would handle authentication logic
-    console.log('Form submitted:', formData, 'User type:', userType);
-    // For demo purposes, just close the modal
-    onClose();
+
+    // For patient registration, prepare the data according to API format
+    if (userType === 'patient') {
+      setIsSubmitting(true);
+      setSubmitError('');
+
+      try {
+        // Convert date format from YYYY-MM-DD to ISO string
+        const birthdayISO = new Date(formData.dateOfBirth).toISOString();
+
+        const registrationData = {
+          email: formData.email,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          password: formData.password,
+          birthday: birthdayISO,
+          sexTypeId: parseInt(formData.gender),
+          countryId: parseInt(formData.country),
+          city: formData.city,
+          timeZoneId: parseInt(formData.timeZone)
+        };
+
+        console.log('Registering user with data:', registrationData);
+        
+        const result = await registerUser(registrationData);
+        console.log('Registration successful:', result);
+        
+        // Handle successful registration
+        alert('Registration successful! Please check your email for verification.');
+        onClose();
+        
+      } catch (error) {
+        console.error('Registration failed:', error);
+        setSubmitError(error.message);
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else {
+      // For doctors, just log the data for now (you can implement doctor registration later)
+      console.log('Doctor registration not implemented yet:', formData);
+      alert('Doctor registration will be implemented soon!');
+    }
   };
 
   const nextStep = () => {
@@ -225,6 +303,7 @@ const AuthModal = ({ isOpen = true, onClose }) => {
     setIsSignIn(!isSignIn);
     setCurrentStep(1);
     setProfilePhotoPreview(null);
+    setSubmitError('');
     // Reset form data and errors when switching between forms
     setFormData({
       email: '',
@@ -350,7 +429,8 @@ const AuthModal = ({ isOpen = true, onClose }) => {
       return formData.profilePhoto && formData.specialty && 
              formData.yearsOfExperience && formData.languagesSpoken;
     }
-    return formData.country && formData.city;
+    // For patients, we need country, city, and timeZone for the API
+    return formData.country && formData.city && formData.timeZone;
   };
 
   const validateStep4 = () => {
@@ -697,8 +777,7 @@ const AuthModal = ({ isOpen = true, onClose }) => {
             />
           </div>
           
-          <LanguagesMultiSelect value={formData.languagesSpoken} onChange={handleChange}
-      />
+          <LanguagesMultiSelect value={formData.languagesSpoken} onChange={handleChange} />
 
         </>
       ) : (
@@ -722,7 +801,16 @@ const AuthModal = ({ isOpen = true, onClose }) => {
               required
             />
           </div>
+
+          <TimeZoneSelect value={formData.timeZone} onChange={handleChange} />
         </>
+      )}
+      
+      {/* Show error message if registration fails */}
+      {submitError && (
+        <div className="error-message" style={{ marginBottom: '16px', textAlign: 'center' }}>
+          {submitError}
+        </div>
       )}
       
       <div className="step-navigation">
@@ -747,9 +835,9 @@ const AuthModal = ({ isOpen = true, onClose }) => {
             type="submit" 
             className="submit-button"
             onClick={handleSubmit}
-            disabled={!validateStep3()}
+            disabled={!validateStep3() || isSubmitting}
           >
-            Sign Up
+            {isSubmitting ? 'Creating Account...' : 'Sign Up'}
           </button>
         )}
       </div>
