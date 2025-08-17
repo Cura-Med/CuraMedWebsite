@@ -11,8 +11,13 @@ import TimeZoneSelect from './TimeZoneSelect';
 import PayoutMethodSelector from './PayoutMethodSelector';
 import CurrencySelect from './CurrencySelect';
 import './AuthModal.css';
+import {fetchUserMe, loginUser} from '../features/auth/authSlice';
+import {useDispatch, useSelector} from "react-redux";
 
 const AuthModal = ({ isOpen = true, onClose }) => {
+  const dispatch = useDispatch();
+  const accessToken = useSelector((state) => state.auth.accessToken);
+  const user = useSelector(state => state.auth.user);
   const [isSignIn, setIsSignIn] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
   const [userType, setUserType] = useState('patient');
