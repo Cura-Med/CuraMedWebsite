@@ -11,13 +11,13 @@ import TimeZoneSelect from './TimeZoneSelect';
 import PayoutMethodSelector from './PayoutMethodSelector';
 import CurrencySelect from './CurrencySelect';
 import './AuthModal.css';
-import {fetchUserMe, loginUser} from '../features/auth/authSlice';
-import {useDispatch, useSelector} from "react-redux";
+import { fetchUserMe, loginUser } from '../features/auth/authSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { closeAuthModal } from '../features/modal/modalSlice';
 
 const AuthModal = ({ isOpen = true, onClose }) => {
   const dispatch = useDispatch();
-  const accessToken = useSelector((state) => state.auth.accessToken);
-  const user = useSelector(state => state.auth.user);
+  const { accessToken, status, error: authError, user } = useSelector((state) => state.auth);
   const [isSignIn, setIsSignIn] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
   const [userType, setUserType] = useState('patient');
@@ -81,6 +81,25 @@ const AuthModal = ({ isOpen = true, onClose }) => {
   const [timeSlot, setTimeSlot] = useState({ start: '09:00', end: '10:00' });
   const fileInputRef = useRef(null);
   const dateInputRef = useRef(null);
+
+  // Watch for successful login
+  useEffect(() => {
+    if (accessToken && status === 'succeeded') {
+      // Fetch user data after successful login
+      dispatch(fetchUserMe());
+      // Close modal after successful login
+      dispatch(closeAuthModal());
+      onClose();
+    }
+  }, [accessToken, status, dispatch, onClose]);
+
+  // Watch for auth errors
+  useEffect(() => {
+    if (status === 'failed' && authError) {
+      setSubmitError(typeof authError === 'string' ? authError : authError.message || 'Authentication failed');
+      setIsSubmitting(false);
+    }
+  }, [status, authError]);
 
   if (!isOpen) return null;
 
@@ -253,46 +272,64 @@ const AuthModal = ({ isOpen = true, onClose }) => {
       return;
     }
 
-    // For patient registration, prepare the data according to API format
-    if (userType === 'patient') {
-      setIsSubmitting(true);
-      setSubmitError('');
+    setIsSubmitting(true);
+    setSubmitError('');
 
-      try {
-        // Convert date format from YYYY-MM-DD to ISO string
-        const birthdayISO = new Date(formData.dateOfBirth).toISOString();
-
-        const registrationData = {
+    try {
+      if (isSignIn) {
+        // Handle login
+        const result = await dispatch(loginUser({
           email: formData.email,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          password: formData.password,
-          birthday: birthdayISO,
-          sexTypeId: parseInt(formData.gender),
-          countryId: parseInt(formData.country),
-          city: formData.city,
-          timeZoneId: parseInt(formData.timeZone)
-        };
+          password: formData.password
+        }));
+        
+        if (loginUser.fulfilled.match(result)) {
+          // Login successful - the useEffect will handle closing the modal
+          console.log('Login successful');
+        } else {
+          // Login failed - error will be handled by useEffect
+          console.log('Login failed:', result.payload);
+        }
+      } else {
+        // Handle registration
+        if (userType === 'patient') {
+          // Convert date format from YYYY-MM-DD to ISO string
+          const birthdayISO = new Date(formData.dateOfBirth).toISOString();
 
-        console.log('Registering user with data:', registrationData);
-        
-        const result = await registerUser(registrationData);
-        console.log('Registration successful:', result);
-        
-        // Handle successful registration
-        alert('Registration successful! Please check your email for verification.');
-        onClose();
-        
-      } catch (error) {
-        console.error('Registration failed:', error);
-        setSubmitError(error.message);
-      } finally {
+          const registrationData = {
+            email: formData.email,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            password: formData.password,
+            birthday: birthdayISO,
+            sexTypeId: parseInt(formData.gender),
+            countryId: parseInt(formData.country),
+            city: formData.city,
+            timeZoneId: parseInt(formData.timeZone)
+          };
+
+          console.log('Registering user with data:', registrationData);
+          
+          const result = await registerUser(registrationData);
+          console.log('Registration successful:', result);
+          
+          // Handle successful registration
+          alert('Registration successful! Please check your email for verification.');
+          onClose();
+          
+        } else {
+          // For doctors, just log the data for now (you can implement doctor registration later)
+          console.log('Doctor registration not implemented yet:', formData);
+          alert('Doctor registration will be implemented soon!');
+        }
+      }
+    } catch (error) {
+      console.error('Submit failed:', error);
+      setSubmitError(error.message);
+    } finally {
+      if (!isSignIn || status !== 'loading') {
         setIsSubmitting(false);
       }
-    } else {
-      // For doctors, just log the data for now (you can implement doctor registration later)
-      console.log('Doctor registration not implemented yet:', formData);
-      alert('Doctor registration will be implemented soon!');
     }
   };
 
@@ -507,12 +544,19 @@ const AuthModal = ({ isOpen = true, onClose }) => {
         />
       </div>
       
+      {/* Show error message if login fails */}
+      {submitError && (
+        <div className="error-message" style={{ marginBottom: '16px', textAlign: 'center' }}>
+          {submitError}
+        </div>
+      )}
+      
       <button 
         type="submit" 
         className="submit-button"
-        disabled={!formData.email || !formData.password || formErrors.email}
+        disabled={!formData.email || !formData.password || formErrors.email || isSubmitting}
       >
-        Login
+        {isSubmitting ? 'Logging in...' : 'Login'}
       </button>
       
       <button type="button" className="google-button">
