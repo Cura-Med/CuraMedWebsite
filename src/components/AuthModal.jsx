@@ -14,6 +14,7 @@ import './AuthModal.css';
 import { fetchUserMe, loginUser } from '../features/auth/authSlice';
 import { useDispatch, useSelector } from "react-redux";
 import { closeAuthModal } from '../features/modal/modalSlice';
+import { registerDoctor } from '../utils/doctorRegistration';
 
 const AuthModal = ({ isOpen = true, onClose }) => {
   const dispatch = useDispatch();
@@ -227,8 +228,8 @@ const AuthModal = ({ isOpen = true, onClose }) => {
     setUserType(type);
   };
 
-  // Register user function
-  const registerUser = async (userData) => {
+  // Register patient function
+  const registerPatient = async (userData) => {
     try {
       const response = await axios.post(
         'https://curamed-auth-api-973580931654.europe-north1.run.app/users/register',
@@ -308,19 +309,25 @@ const AuthModal = ({ isOpen = true, onClose }) => {
             timeZoneId: parseInt(formData.timeZone)
           };
 
-          console.log('Registering user with data:', registrationData);
+          console.log('Registering patient with data:', registrationData);
           
-          const result = await registerUser(registrationData);
-          console.log('Registration successful:', result);
+          const result = await registerPatient(registrationData);
+          console.log('Patient registration successful:', result);
           
           // Handle successful registration
           alert('Registration successful! Please check your email for verification.');
           onClose();
           
-        } else {
-          // For doctors, just log the data for now (you can implement doctor registration later)
-          console.log('Doctor registration not implemented yet:', formData);
-          alert('Doctor registration will be implemented soon!');
+        } else if (userType === 'doctor') {
+          // Handle doctor registration
+          console.log('Registering doctor with data:', formData);
+          
+          const result = await registerDoctor(formData);
+          console.log('Doctor registration successful:', result);
+          
+          // Handle successful registration
+          alert('Doctor registration completed successfully! Please check your email for verification.');
+          onClose();
         }
       }
     } catch (error) {
@@ -1286,6 +1293,13 @@ const AuthModal = ({ isOpen = true, onClose }) => {
         </div>
       </div>
       
+      {/* Show error message if registration fails */}
+      {submitError && (
+        <div className="error-message" style={{ marginBottom: '16px', textAlign: 'center' }}>
+          {submitError}
+        </div>
+      )}
+      
       <div className="step-navigation">
         <button 
           type="button" 
@@ -1297,9 +1311,9 @@ const AuthModal = ({ isOpen = true, onClose }) => {
         <button 
           type="submit" 
           className="submit-button"
-          disabled={!validateStep7()}
+          disabled={!validateStep7() || isSubmitting}
         >
-          Complete Registration
+          {isSubmitting ? 'Completing Registration...' : 'Complete Registration'}
         </button>
       </div>
     </form>
