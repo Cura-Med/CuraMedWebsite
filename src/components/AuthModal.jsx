@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaTimes, FaGoogle, FaCalendarAlt, FaChevronLeft, FaChevronRight, FaUpload, FaUser, FaClock, FaGraduationCap, FaCertificate, FaPaypal, FaCreditCard, FaUniversity, FaGlobe, FaMoneyBillWave, FaFileInvoiceDollar, FaShieldAlt, FaUserMd, FaClipboardCheck, FaIdCard } from 'react-icons/fa';
 import Select from 'react-select';
 import axios from 'axios';
@@ -18,6 +19,7 @@ import { registerDoctor } from '../utils/doctorRegistration';
 
 const AuthModal = ({ isOpen = true, onClose }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { accessToken, status, error: authError, user } = useSelector((state) => state.auth);
   const [isSignIn, setIsSignIn] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
@@ -314,8 +316,13 @@ const AuthModal = ({ isOpen = true, onClose }) => {
           const result = await registerPatient(registrationData);
           console.log('Patient registration successful:', result);
           
-          // Handle successful registration
-          alert('Registration successful! Please check your email for verification.');
+          // Handle successful registration          
+          navigate('/email-verification-pending', {
+            state: {
+              email: formData.email,
+              userType: formData.userType, // optional, if you have it
+            },
+          });
           onClose();
           
         } else if (userType === 'doctor') {
@@ -326,7 +333,12 @@ const AuthModal = ({ isOpen = true, onClose }) => {
           console.log('Doctor registration successful:', result);
           
           // Handle successful registration
-          alert('Doctor registration completed successfully! Please check your email for verification.');
+          navigate('/email-verification-pending', {
+            state: {
+              email: formData.email,
+              userType: formData.userType, // optional, if you have it
+            },
+          });
           onClose();
         }
       }

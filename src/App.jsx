@@ -8,6 +8,8 @@ import ServicesPage from './pages/ServicesPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import SymptomCheckerPage from './pages/SymptomCheckerPage';
+import EmailVerificationPending from './pages/EmailVerificationPending';
+import EmailVerification from './pages/EmailVerification';
 import './App.css';
 import AuthModal from "./components/AuthModal.jsx";
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,6 +37,8 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/symptom-checker" element={<SymptomCheckerPage />} />
+          <Route path="/email-verification-pending" element={<EmailVerificationPending />} />
+          <Route path="/email-verification" element={<EmailVerification />} />
         </Routes>
       </main>
       <Footer />

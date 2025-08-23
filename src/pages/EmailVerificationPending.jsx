@@ -10,6 +10,7 @@ const EmailVerificationPending = () => {
   const [email, setEmail] = useState('');
   const [userType, setUserType] = useState('patient');
   const [isResending, setIsResending] = useState(false);
+  const [isRegistrationCompleted, setIsRegistrationCompleted] = useState(false);
   const [resendMessage, setResendMessage] = useState('');
   const [resendError, setResendError] = useState('');
 
@@ -49,9 +50,30 @@ const EmailVerificationPending = () => {
           }
         }
       );
+      console.log('Resend email result:', response.data);
+      if (response.data.isSuccess == false) 
+      {
+        if (response.data.registrationAlreadyCompleted) 
+        {
+          setResendMessage('This email has already been verified. Please log in.');
+          setIsRegistrationCompleted(true);
+          return;
+        }
+        else
+        {
+          setResendError(response.data.response);
 
-      console.log('Resend email successful:', response.data);
-      setResendMessage('Verification email sent successfully! Please check your inbox.');
+          // Clear the error message after 5 seconds
+          setTimeout(() => {
+            setResendError('');
+          }, 5000);
+        }
+      }
+      else 
+      {
+        console.log('Resend email successful:', response.data);
+        setResendMessage('Verification email sent successfully! Please check your inbox.');
+      }
       
       // Clear the success message after 5 seconds
       setTimeout(() => {
@@ -137,7 +159,7 @@ const EmailVerificationPending = () => {
             <button 
               className="primary-button"
               onClick={handleResendEmail}
-              disabled={isResending || !email}
+              disabled={isResending || isRegistrationCompleted || !email}
             >
               {isResending ? (
                 <>
