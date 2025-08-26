@@ -11,7 +11,7 @@ export const loginUser = createAsyncThunk(
         try {
             const response = await axios.post('/authentication/login', { email, password });
             const token = response.data.accessToken;
-
+            
             // Save to localStorage
             localStorage.setItem('accessToken', token);
 
@@ -19,9 +19,9 @@ export const loginUser = createAsyncThunk(
             console.log('We have token: ', token);
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-            return token;
+            return { token }; 
         } catch (error) {
-            return rejectWithValue(error.response?.data || 'Login failed');
+            return rejectWithValue(error.response?.data?.Message || 'Login failed');
         }
     }
 );

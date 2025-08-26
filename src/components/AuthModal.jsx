@@ -99,7 +99,8 @@ const AuthModal = ({ isOpen = true, onClose }) => {
   // Watch for auth errors
   useEffect(() => {
     if (status === 'failed' && authError) {
-      setSubmitError(typeof authError === 'string' ? authError : authError.message || 'Authentication failed');
+      //alert(authError);
+      setSubmitError(typeof authError === 'string' ? authError : authError.Message || 'Authentication failed');
       setIsSubmitting(false);
     }
   }, [status, authError]);
