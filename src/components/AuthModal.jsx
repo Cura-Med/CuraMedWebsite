@@ -96,6 +96,13 @@ const AuthModal = ({ isOpen = true, onClose }) => {
     }
   }, [accessToken, status, dispatch, onClose]);
 
+  // Watch for user data and redirect to dashboard if user is a regular user
+  useEffect(() => {
+    if (user && !user.isDoctor) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
+
   // Watch for auth errors
   useEffect(() => {
     if (status === 'failed' && authError) {

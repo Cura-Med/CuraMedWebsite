@@ -10,6 +10,7 @@ import ContactPage from './pages/ContactPage';
 import SymptomCheckerPage from './pages/SymptomCheckerPage';
 import EmailVerificationPending from './pages/EmailVerificationPending';
 import EmailVerification from './pages/EmailVerification';
+import UserDashboard from './pages/UserDashboard';
 import './App.css';
 import AuthModal from "./components/AuthModal.jsx";
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,15 +32,16 @@ function App() {
 
       <main>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/features" element={<FeaturesPage />} />
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/symptom-checker" element={<SymptomCheckerPage />} />
-          <Route path="/email-verification-pending" element={<EmailVerificationPending />} />
-          <Route path="/email-verification" element={<EmailVerification />} />
-        </Routes>
+           <Route path="/" element={<HomePage />} />
+           <Route path="/features" element={<FeaturesPage />} />
+           <Route path="/services" element={<ServicesPage />} />
+           <Route path="/about" element={<AboutPage />} />
+           <Route path="/contact" element={<ContactPage />} />
+           <Route path="/symptom-checker" element={<SymptomCheckerPage />} />
+           <Route path="/email-verification-pending" element={<EmailVerificationPending />} />
+           <Route path="/email-verification" element={<EmailVerification />} />
+           <Route path="/dashboard" element={<UserDashboard />} />
+         </Routes>
       </main>
       <Footer />
     </div>
