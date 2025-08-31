@@ -36,21 +36,7 @@
   color: var(--primary-color);
 }
 
-.sign-in-btn {
-  background-color: var(--primary-color);
-  color: var(--white);
-  padding: 10px 20px;
-  border-radius: 50px;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
-  border: none;
-  cursor: pointer;
-}
-
-.sign-in-btn:hover {
-  background-color: var(--secondary-color);
-}
-
+.sign-in-btn,
 .logout-btn {
   background-color: var(--primary-color);
   color: var(--white);
@@ -60,10 +46,24 @@
   transition: background-color 0.3s ease;
   border: none;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  line-height: 1.2;
+  height: auto;
+  min-height: 40px;
+  box-sizing: border-box;
+}
+
+.sign-in-btn {
+  background-color: var(--primary-color);
+}
+
+.sign-in-btn:hover {
+  background-color: var(--secondary-color);
 }
 
 .logout-btn:hover {
-  background-color: var(--secondary-color);
+  background-color: var(--primary-color);
 }
 
 .menu-icon {
