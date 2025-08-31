@@ -96,10 +96,14 @@ const AuthModal = ({ isOpen = true, onClose }) => {
     }
   }, [accessToken, status, dispatch, onClose]);
 
-  // Watch for user data and redirect to dashboard if user is a regular user
+  // Watch for user data and redirect to appropriate dashboard
   useEffect(() => {
-    if (user && !user.isDoctor) {
-      navigate('/dashboard');
+    if (user) {
+      if (user.isDoctor) {
+        navigate('/doctor-dashboard');
+      } else if (user.isUser) {
+        navigate('/dashboard');
+      }
     }
   }, [user, navigate]);
 

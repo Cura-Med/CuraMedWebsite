@@ -11,6 +11,7 @@ import SymptomCheckerPage from './pages/SymptomCheckerPage';
 import EmailVerificationPending from './pages/EmailVerificationPending';
 import EmailVerification from './pages/EmailVerification';
 import UserDashboard from './pages/UserDashboard';
+import DoctorDashboard from './pages/DoctorDashboard';
 import './App.css';
 import AuthModal from "./components/AuthModal.jsx";
 import { useDispatch, useSelector } from 'react-redux';
@@ -41,6 +42,7 @@ function App() {
            <Route path="/email-verification-pending" element={<EmailVerificationPending />} />
            <Route path="/email-verification" element={<EmailVerification />} />
            <Route path="/dashboard" element={<UserDashboard />} />
+           <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
          </Routes>
       </main>
       <Footer />
