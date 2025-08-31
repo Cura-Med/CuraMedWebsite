@@ -51,6 +51,21 @@
   background-color: var(--secondary-color);
 }
 
+.logout-btn {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background-color: var(--secondary-color);
+}
+
 .menu-icon {
   display: none;
   font-size: 24px;

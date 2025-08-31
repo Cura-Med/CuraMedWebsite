@@ -24,9 +24,6 @@ const UserDashboard = () => {
       <header className="dashboard-header">
         <div className="header-content">
           <h1>Welcome to Your Dashboard</h1>
-          <button onClick={handleLogout} className="logout-button">
-            Logout
-          </button>
         </div>
       </header>
 

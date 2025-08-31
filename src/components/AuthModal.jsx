@@ -90,22 +90,25 @@ const AuthModal = ({ isOpen = true, onClose }) => {
     if (accessToken && status === 'succeeded') {
       // Fetch user data after successful login
       dispatch(fetchUserMe());
-      // Close modal after successful login
-      dispatch(closeAuthModal());
-      onClose();
+      // Don't close modal here - let the user data effect handle it
     }
-  }, [accessToken, status, dispatch, onClose]);
+  }, [accessToken, status, dispatch]);
 
   // Watch for user data and redirect to appropriate dashboard
   useEffect(() => {
     if (user) {
       if (user.isDoctor) {
         navigate('/doctor-dashboard');
-      } else if (user.isUser) {
+      } else {
         navigate('/dashboard');
       }
+      // Close modal after successful navigation
+      setTimeout(() => {
+        dispatch(closeAuthModal());
+        onClose();
+      }, 100);
     }
-  }, [user, navigate]);
+  }, [user, navigate, dispatch, onClose]);
 
   // Watch for auth errors
   useEffect(() => {
