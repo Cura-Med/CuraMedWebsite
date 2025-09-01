@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FaCheckCircle, FaSpinner, FaExclamationTriangle, FaTimes } from 'react-icons/fa';
+import { useDispatch } from 'react-redux';
+import { openAuthModal } from '../features/modal/modalSlice';
 import axios from 'axios';
 import './EmailVerification.css';
 
 const EmailVerification = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const [verificationStatus, setVerificationStatus] = useState('loading');
   const [errorMessage, setErrorMessage] = useState('');
@@ -80,11 +83,7 @@ const EmailVerification = () => {
   };
 
   const handleBackToLogin = () => {
-    navigate('/', { 
-      state: { 
-        email: email 
-      } 
-    });
+    dispatch(openAuthModal());
   };
 
   const renderLoadingState = () => (
