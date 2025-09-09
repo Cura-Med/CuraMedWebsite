@@ -1,18 +1,12 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../features/auth/authSlice';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { FaUser, FaStethoscope, FaEnvelope } from 'react-icons/fa';
 import './UserDashboard.css';
 
 const UserDashboard = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, accessToken } = useSelector((state) => state.auth);
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate('/');
-  };
 
   if (!accessToken || !user) {
     navigate('/');
@@ -20,72 +14,53 @@ const UserDashboard = () => {
   }
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <div className="header-content">
-          <h1>Welcome to Your Dashboard</h1>
+    <div className="user-dashboard-container">
+      <h1>Welcome back, {user.fullName}</h1>
+      <p>Patient Portal</p>
+
+      <div className="stats-row">
+        <div className="stat-box">
+          <div className="stat-number">2</div>
+          <div className="stat-label">Appointments</div>
         </div>
-      </header>
+        <div className="stat-box">
+          <div className="stat-number">4</div>
+          <div className="stat-label">Total Consultations</div>
+        </div>
+        <div className="stat-box">
+          <div className="stat-number">Active</div>
+          <div className="stat-label">Account</div>
+        </div>
+      </div>
 
-      <main className="dashboard-main">
-        {/* Profile Section */}
-        <section className="dashboard-section profile-section">
-          <h2>Profile Information</h2>
-          <div className="profile-card">
-            <div className="profile-avatar">
-              {user.avatarUrl ? (
-                <img src={user.avatarUrl} alt="Profile" />
-              ) : (
-                <div className="avatar-placeholder">
-                  {user.fullName?.charAt(0).toUpperCase()}
-                </div>
-              )}
-            </div>
-            <div className="profile-details">
-              <h3>{user.fullName}</h3>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Role:</strong> {user.role}</p>
-              <p><strong>User ID:</strong> {user.id}</p>
-            </div>
-          </div>
-        </section>
+      <div className="main-sections">
+        <div className="left-section">
+          <h2>Upcoming Consultations</h2>
+          <ul className="consultations-list">
+            <li className="consultation-item">
+              <span className="category">General</span>
+              <span className="date">Jun 10, 10:00 AM</span>
+            </li>
+            <li className="consultation-item">
+              <span className="category">Mental Health</span>
+              <span className="date">Jun 15, 2:00 PM</span>
+            </li>
+          </ul>
+          <a href="#" className="view-all">View All</a>
 
-        {/* Appointments Section */}
-        <section className="dashboard-section appointments-section">
-          <h2>Appointment History</h2>
-          <div className="section-content">
-            <div className="placeholder-card">
-              <h3>No Appointments Yet</h3>
-              <p>Your appointment history will appear here once you schedule consultations.</p>
-              <button className="action-button">Schedule Appointment</button>
-            </div>
-          </div>
-        </section>
+          <h2>Track Your Vitals</h2>
+        </div>
 
-        {/* Health Records Section */}
-        <section className="dashboard-section health-records-section">
-          <h2>Health Records</h2>
-          <div className="section-content">
-            <div className="placeholder-card">
-              <h3>Health Records</h3>
-              <p>Your medical records and health information will be displayed here.</p>
-              <button className="action-button">View Records</button>
-            </div>
-          </div>
-        </section>
-
-        {/* Symptom Tracking Section */}
-        <section className="dashboard-section symptom-tracking-section">
-          <h2>Symptom Tracking</h2>
-          <div className="section-content">
-            <div className="placeholder-card">
-              <h3>Track Your Symptoms</h3>
-              <p>Monitor and log your symptoms for better health management.</p>
-              <button className="action-button">Log Symptoms</button>
-            </div>
-          </div>
-        </section>
-      </main>
+        <div className="right-section">
+          <h2>Quick Actions</h2>
+          <ul className="actions-list">
+            <li><FaUser /> Update Profile</li>
+            <li><FaStethoscope /> Symptom Checker</li>
+            <li><FaEnvelope /> Message Doctor</li>
+          </ul>
+          <div className="chat-bot">Chat with CuraBot</div>
+        </div>
+      </div>
     </div>
   );
 };
