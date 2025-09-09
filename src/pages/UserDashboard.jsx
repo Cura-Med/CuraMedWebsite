@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { FaUser, FaStethoscope, FaEnvelope } from 'react-icons/fa';
+import { FaUser, FaStethoscope, FaEnvelope, FaCalendarAlt } from 'react-icons/fa';
 import './UserDashboard.css';
 
 const UserDashboard = () => {
@@ -54,6 +54,7 @@ const UserDashboard = () => {
         <div className="right-section">
           <h2>Quick Actions</h2>
           <ul className="actions-list">
+            <li><FaCalendarAlt /> Book Consultation</li>
             <li><FaUser /> Update Profile</li>
             <li><FaStethoscope /> Symptom Checker</li>
             <li><FaEnvelope /> Message Doctor</li>
