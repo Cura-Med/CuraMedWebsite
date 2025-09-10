@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { FaCalendarAlt, FaChartBar } from 'react-icons/fa';
+import { FaEnvelope, FaCalendarAlt, FaChartBar } from 'react-icons/fa';
 import './DoctorDashboard.css';
 
 const DoctorDashboard = () => {
@@ -45,6 +45,7 @@ const DoctorDashboard = () => {
         <div className="right-section">
           <h2>Quick Actions</h2>
           <ul className="actions-list">
+            <li><FaEnvelope /> Message Patients</li>
             <li><FaCalendarAlt /> Manage Schedule</li>
             <li><FaChartBar /> View Analytics</li>
           </ul>
