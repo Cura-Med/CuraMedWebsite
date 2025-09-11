@@ -12,6 +12,7 @@ import EmailVerificationPending from './pages/EmailVerificationPending';
 import EmailVerification from './pages/EmailVerification';
 import UserDashboard from './pages/UserDashboard';
 import DoctorDashboard from './pages/DoctorDashboard';
+import BookConsultation from './pages/BookConsultation';
 import './App.css';
 import AuthModal from "./components/AuthModal.jsx";
 import { useDispatch, useSelector } from 'react-redux';
@@ -43,6 +44,7 @@ function App() {
            <Route path="/email-verification" element={<EmailVerification />} />
            <Route path="/dashboard" element={<UserDashboard />} />
            <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+           <Route path="/book-consultation" element={<BookConsultation />} />
          </Routes>
       </main>
       <Footer />

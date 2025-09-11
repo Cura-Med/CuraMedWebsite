@@ -1,0 +1,75 @@
+.book-consultation-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+}
+
+.book-consultation-container h1 {
+  text-align: left;
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+  color: #333;
+}
+
+input[type="date"],
+input[type="time"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 1em;
+}
+
+.radio-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.radio-group input[type="radio"] {
+  margin-right: 10px;
+  accent-color: #6f42c1; /* Purple */
+}
+
+.radio-group label {
+  font-size: 0.9em;
+  color: #333;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 1em;
+  min-height: 100px;
+}
+
+.book-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #6f42c1;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1em;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.book-button:hover {
+  background-color: #5632a1;
+}

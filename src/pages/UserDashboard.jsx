@@ -54,7 +54,7 @@ const UserDashboard = () => {
         <div className="right-section">
           <h2>Quick Actions</h2>
           <ul className="actions-list">
-            <li><FaCalendarAlt /> Book Consultation</li>
+            <li onClick={() => navigate('/book-consultation')} style={{cursor: 'pointer'}}><FaCalendarAlt /> Book Consultation</li>
             <li><FaUser /> Update Profile</li>
             <li><FaStethoscope /> Symptom Checker</li>
             <li><FaEnvelope /> Message Doctor</li>
