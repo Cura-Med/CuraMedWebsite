@@ -26,40 +26,52 @@ const BookConsultation = () => {
         </div>
         <div className="form-group">
           <label>Consultation Type</label>
-          <div className="radio-group">
-            <input type="radio" id="general" name="consultationType" value="general" />
-            <label htmlFor="general">General Consultation</label>
-          </div>
-          <div className="radio-group">
-            <input type="radio" id="mental" name="consultationType" value="mental" />
-            <label htmlFor="mental">Mental Health</label>
-          </div>
-          <div className="radio-group">
-            <input type="radio" id="pediatric" name="consultationType" value="pediatric" />
-            <label htmlFor="pediatric">Pediatric Care</label>
-          </div>
-          <div className="radio-group">
-            <input type="radio" id="specialist" name="consultationType" value="specialist" />
-            <label htmlFor="specialist">Specialist Consultation</label>
+          <div className="radio-columns">
+            <div className="column">
+              <div className="radio-group">
+                <input type="radio" id="general" name="consultationType" value="general" />
+                <label htmlFor="general">General Consultation</label>
+              </div>
+              <div className="radio-group">
+                <input type="radio" id="pediatric" name="consultationType" value="pediatric" />
+                <label htmlFor="pediatric">Pediatric Care</label>
+              </div>
+            </div>
+            <div className="column">
+              <div className="radio-group">
+                <input type="radio" id="mental" name="consultationType" value="mental" />
+                <label htmlFor="mental">Mental Health</label>
+              </div>
+              <div className="radio-group">
+                <input type="radio" id="specialist" name="consultationType" value="specialist" />
+                <label htmlFor="specialist">Specialist Consultation</label>
+              </div>
+            </div>
           </div>
         </div>
         <div className="form-group">
           <label>Preferred Language</label>
-          <div className="radio-group">
-            <input type="radio" id="english" name="language" value="english" defaultChecked />
-            <label htmlFor="english">English</label>
-          </div>
-          <div className="radio-group">
-            <input type="radio" id="spanish" name="language" value="spanish" />
-            <label htmlFor="spanish">Spanish</label>
-          </div>
-          <div className="form-group">
-            <input type="radio" id="french" name="language" value="french" />
-            <label htmlFor="french">French</label>
-          </div>
-          <div className="radio-group">
-            <input type="radio" id="german" name="language" value="german" />
-            <label htmlFor="german">German</label>
+          <div className="radio-columns">
+            <div className="column">
+              <div className="radio-group">
+                <input type="radio" id="english" name="language" value="english" defaultChecked />
+                <label htmlFor="english">English</label>
+              </div>
+              <div className="radio-group">
+                <input type="radio" id="french" name="language" value="french" />
+                <label htmlFor="french">French</label>
+              </div>
+            </div>
+            <div className="column">
+              <div className="radio-group">
+                <input type="radio" id="spanish" name="language" value="spanish" />
+                <label htmlFor="spanish">Spanish</label>
+              </div>
+              <div className="radio-group">
+                <input type="radio" id="german" name="language" value="german" />
+                <label htmlFor="german">German</label>
+              </div>
+            </div>
           </div>
         </div>
         <div className="form-group">

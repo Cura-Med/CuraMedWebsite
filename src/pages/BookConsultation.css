@@ -73,3 +73,31 @@ textarea {
 .book-button:hover {
   background-color: #5632a1;
 }
+.radio-columns {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 0px;
+  height: 100px;
+}
+
+.radio-columns .column {
+  display: flex;
+  flex-direction: column;
+  margin-left: 50px;
+}
+
+.radio-group {
+  display: flex;
+  align-items: center;
+  height: 130px;
+}
+
+.radio-group input[type="radio"] {
+  margin-right: 10px;
+  accent-color: #6f42c1;
+}
+
+.radio-group label {
+  font-size: 0.9em;
+  color: #333;
+}
