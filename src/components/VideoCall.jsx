@@ -7,9 +7,9 @@ import {openAuthModal} from "../features/modal/modalSlice.js";
 import {useNavigate} from "react-router-dom";
 import { getChatToken } from '../features/chat/chatSlice';
 
-// const APP_ID = import.meta.env.VITE_AGORA_APP_ID;
-// let TOKEN = null;
-// let CHANNEL = 'testchannel';
+const APP_ID = import.meta.env.VITE_AGORA_APP_ID;
+let TOKEN = null;
+let CHANNEL = 'testchannel';
 
 const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
 
@@ -45,10 +45,20 @@ function VideoCall() {
         return str;
     }
 
-    const joinChannel = async () => {
-       // const uid = await client.join(APP_ID, CHANNEL, TOKEN || null, null);
+/*    const joinChannel = async () => {
+        const uid = await client.join(APP_ID, CHANNEL, TOKEN || null, null);
         dispatch(getChatToken(giveMeAQuickHash()));
+    };*/
+
+    const joinChannel = async () => {
+        const generatedChannel = giveMeAQuickHash();
+        setChannel(generatedChannel);
+
+        // Fetch your Agora token
+        await dispatch(getChatToken(generatedChannel));
     };
+
+
 
     useEffect(() => {
         if (chatToken && chatToken.length > 10) {
