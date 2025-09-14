@@ -1,16 +1,31 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaTimes, FaGoogle, FaCalendarAlt, FaChevronLeft, FaChevronRight, FaUpload, FaUser, FaClock, FaGraduationCap, FaCertificate, FaPaypal, FaCreditCard, FaUniversity, FaGlobe, FaMoneyBillWave, FaFileInvoiceDollar, FaShieldAlt, FaUserMd, FaClipboardCheck, FaIdCard } from 'react-icons/fa';
+import Select from 'react-select';
+import axios from 'axios';
+import CountrySelect from './CountrySelect'; 
+import GenderSelect from './GenderSelect'; 
+import DoctorTitleSelect from './DoctorTitleSelect';
+import SpecialtySelect from './SpecialtySelect';
+import LanguagesMultiSelect from './LanguagesMultiSelect';
+import TimeZoneSelect from './TimeZoneSelect';
+import PayoutMethodSelector from './PayoutMethodSelector';
+import CurrencySelect from './CurrencySelect';
 import './AuthModal.css';
-import {fetchUserMe, loginUser} from '../features/auth/authSlice';
-import {useDispatch, useSelector} from "react-redux";
+import { fetchUserMe, loginUser } from '../features/auth/authSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { closeAuthModal } from '../features/modal/modalSlice';
+import { registerDoctor } from '../utils/doctorRegistration';
 
 const AuthModal = ({ isOpen = true, onClose }) => {
   const dispatch = useDispatch();
-  const accessToken = useSelector((state) => state.auth.accessToken);
-  const user = useSelector(state => state.auth.user);
+  const navigate = useNavigate();
+  const { accessToken, status, error: authError, user } = useSelector((state) => state.auth);
   const [isSignIn, setIsSignIn] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
   const [userType, setUserType] = useState('patient');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -70,206 +85,41 @@ const AuthModal = ({ isOpen = true, onClose }) => {
   const fileInputRef = useRef(null);
   const dateInputRef = useRef(null);
 
-  // List of countries with their codes
-  const countries = [
-    { name: "Afghanistan", code: "AF" },
-    { name: "Albania", code: "AL" },
-    { name: "Algeria", code: "DZ" },
-    { name: "Andorra", code: "AD" },
-    { name: "Angola", code: "AO" },
-    { name: "Antigua and Barbuda", code: "AG" },
-    { name: "Argentina", code: "AR" },
-    { name: "Armenia", code: "AM" },
-    { name: "Australia", code: "AU" },
-    { name: "Austria", code: "AT" },
-    { name: "Azerbaijan", code: "AZ" },
-    { name: "Bahamas", code: "BS" },
-    { name: "Bahrain", code: "BH" },
-    { name: "Bangladesh", code: "BD" },
-    { name: "Barbados", code: "BB" },
-    { name: "Belarus", code: "BY" },
-    { name: "Belgium", code: "BE" },
-    { name: "Belize", code: "BZ" },
-    { name: "Benin", code: "BJ" },
-    { name: "Bhutan", code: "BT" },
-    { name: "Bolivia", code: "BO" },
-    { name: "Bosnia and Herzegovina", code: "BA" },
-    { name: "Botswana", code: "BW" },
-    { name: "Brazil", code: "BR" },
-    { name: "Brunei", code: "BN" },
-    { name: "Bulgaria", code: "BG" },
-    { name: "Burkina Faso", code: "BF" },
-    { name: "Burundi", code: "BI" },
-    { name: "Cabo Verde", code: "CV" },
-    { name: "Cambodia", code: "KH" },
-    { name: "Cameroon", code: "CM" },
-    { name: "Canada", code: "CA" },
-    { name: "Central African Republic", code: "CF" },
-    { name: "Chad", code: "TD" },
-    { name: "Chile", code: "CL" },
-    { name: "China", code: "CN" },
-    { name: "Colombia", code: "CO" },
-    { name: "Comoros", code: "KM" },
-    { name: "Congo", code: "CG" },
-    { name: "Costa Rica", code: "CR" },
-    { name: "Croatia", code: "HR" },
-    { name: "Cuba", code: "CU" },
-    { name: "Cyprus", code: "CY" },
-    { name: "Czech Republic", code: "CZ" },
-    { name: "Denmark", code: "DK" },
-    { name: "Djibouti", code: "DJ" },
-    { name: "Dominica", code: "DM" },
-    { name: "Dominican Republic", code: "DO" },
-    { name: "Ecuador", code: "EC" },
-    { name: "Egypt", code: "EG" },
-    { name: "El Salvador", code: "SV" },
-    { name: "Equatorial Guinea", code: "GQ" },
-    { name: "Eritrea", code: "ER" },
-    { name: "Estonia", code: "EE" },
-    { name: "Eswatini", code: "SZ" },
-    { name: "Ethiopia", code: "ET" },
-    { name: "Fiji", code: "FJ" },
-    { name: "Finland", code: "FI" },
-    { name: "France", code: "FR" },
-    { name: "Gabon", code: "GA" },
-    { name: "Gambia", code: "GM" },
-    { name: "Georgia", code: "GE" },
-    { name: "Germany", code: "DE" },
-    { name: "Ghana", code: "GH" },
-    { name: "Greece", code: "GR" },
-    { name: "Grenada", code: "GD" },
-    { name: "Guatemala", code: "GT" },
-    { name: "Guinea", code: "GN" },
-    { name: "Guinea-Bissau", code: "GW" },
-    { name: "Guyana", code: "GY" },
-    { name: "Haiti", code: "HT" },
-    { name: "Honduras", code: "HN" },
-    { name: "Hungary", code: "HU" },
-    { name: "Iceland", code: "IS" },
-    { name: "India", code: "IN" },
-    { name: "Indonesia", code: "ID" },
-    { name: "Iran", code: "IR" },
-    { name: "Iraq", code: "IQ" },
-    { name: "Ireland", code: "IE" },
-    { name: "Israel", code: "IL" },
-    { name: "Italy", code: "IT" },
-    { name: "Jamaica", code: "JM" },
-    { name: "Japan", code: "JP" },
-    { name: "Jordan", code: "JO" },
-    { name: "Kazakhstan", code: "KZ" },
-    { name: "Kenya", code: "KE" },
-    { name: "Kiribati", code: "KI" },
-    { name: "Korea, North", code: "KP" },
-    { name: "Korea, South", code: "KR" },
-    { name: "Kosovo", code: "XK" },
-    { name: "Kuwait", code: "KW" },
-    { name: "Kyrgyzstan", code: "KG" },
-    { name: "Laos", code: "LA" },
-    { name: "Latvia", code: "LV" },
-    { name: "Lebanon", code: "LB" },
-    { name: "Lesotho", code: "LS" },
-    { name: "Liberia", code: "LR" },
-    { name: "Libya", code: "LY" },
-    { name: "Liechtenstein", code: "LI" },
-    { name: "Lithuania", code: "LT" },
-    { name: "Luxembourg", code: "LU" },
-    { name: "Madagascar", code: "MG" },
-    { name: "Malawi", code: "MW" },
-    { name: "Malaysia", code: "MY" },
-    { name: "Maldives", code: "MV" },
-    { name: "Mali", code: "ML" },
-    { name: "Malta", code: "MT" },
-    { name: "Marshall Islands", code: "MH" },
-    { name: "Mauritania", code: "MR" },
-    { name: "Mauritius", code: "MU" },
-    { name: "Mexico", code: "MX" },
-    { name: "Micronesia", code: "FM" },
-    { name: "Moldova", code: "MD" },
-    { name: "Monaco", code: "MC" },
-    { name: "Mongolia", code: "MN" },
-    { name: "Montenegro", code: "ME" },
-    { name: "Morocco", code: "MA" },
-    { name: "Mozambique", code: "MZ" },
-    { name: "Myanmar", code: "MM" },
-    { name: "Namibia", code: "NA" },
-    { name: "Nauru", code: "NR" },
-    { name: "Nepal", code: "NP" },
-    { name: "Netherlands", code: "NL" },
-    { name: "New Zealand", code: "NZ" },
-    { name: "Nicaragua", code: "NI" },
-    { name: "Niger", code: "NE" },
-    { name: "Nigeria", code: "NG" },
-    { name: "North Macedonia", code: "MK" },
-    { name: "Norway", code: "NO" },
-    { name: "Oman", code: "OM" },
-    { name: "Pakistan", code: "PK" },
-    { name: "Palau", code: "PW" },
-    { name: "Palestine", code: "PS" },
-    { name: "Panama", code: "PA" },
-    { name: "Papua New Guinea", code: "PG" },
-    { name: "Paraguay", code: "PY" },
-    { name: "Peru", code: "PE" },
-    { name: "Philippines", code: "PH" },
-    { name: "Poland", code: "PL" },
-    { name: "Portugal", code: "PT" },
-    { name: "Qatar", code: "QA" },
-    { name: "Romania", code: "RO" },
-    { name: "Russia", code: "RU" },
-    { name: "Rwanda", code: "RW" },
-    { name: "Saint Kitts and Nevis", code: "KN" },
-    { name: "Saint Lucia", code: "LC" },
-    { name: "Saint Vincent and the Grenadines", code: "VC" },
-    { name: "Samoa", code: "WS" },
-    { name: "San Marino", code: "SM" },
-    { name: "Sao Tome and Principe", code: "ST" },
-    { name: "Saudi Arabia", code: "SA" },
-    { name: "Senegal", code: "SN" },
-    { name: "Serbia", code: "RS" },
-    { name: "Seychelles", code: "SC" },
-    { name: "Sierra Leone", code: "SL" },
-    { name: "Singapore", code: "SG" },
-    { name: "Slovakia", code: "SK" },
-    { name: "Slovenia", code: "SI" },
-    { name: "Solomon Islands", code: "SB" },
-    { name: "Somalia", code: "SO" },
-    { name: "South Africa", code: "ZA" },
-    { name: "South Sudan", code: "SS" },
-    { name: "Spain", code: "ES" },
-    { name: "Sri Lanka", code: "LK" },
-    { name: "Sudan", code: "SD" },
-    { name: "Suriname", code: "SR" },
-    { name: "Sweden", code: "SE" },
-    { name: "Switzerland", code: "CH" },
-    { name: "Syria", code: "SY" },
-    { name: "Taiwan", code: "TW" },
-    { name: "Tajikistan", code: "TJ" },
-    { name: "Tanzania", code: "TZ" },
-    { name: "Thailand", code: "TH" },
-    { name: "Timor-Leste", code: "TL" },
-    { name: "Togo", code: "TG" },
-    { name: "Tonga", code: "TO" },
-    { name: "Trinidad and Tobago", code: "TT" },
-    { name: "Tunisia", code: "TN" },
-    { name: "Turkey", code: "TR" },
-    { name: "Turkmenistan", code: "TM" },
-    { name: "Tuvalu", code: "TV" },
-    { name: "Uganda", code: "UG" },
-    { name: "Ukraine", code: "UA" },
-    { name: "United Arab Emirates", code: "AE" },
-    { name: "United Kingdom", code: "GB" },
-    { name: "United States", code: "US" },
-    { name: "Uruguay", code: "UY" },
-    { name: "Uzbekistan", code: "UZ" },
-    { name: "Vanuatu", code: "VU" },
-    { name: "Vatican City", code: "VA" },
-    { name: "Venezuela", code: "VE" },
-    { name: "Vietnam", code: "VN" },
-    { name: "Yemen", code: "YE" },
-    { name: "Zambia", code: "ZM" },
-    { name: "Zimbabwe", code: "ZW" }
-  ];
+  // Watch for successful login
+  useEffect(() => {
+    if (accessToken && status === 'succeeded') {
+      // Fetch user data after successful login
+      dispatch(fetchUserMe());
+      // Don't close modal here - let the user data effect handle it
+    }
+  }, [accessToken, status, dispatch]);
 
-  // if (!isOpen) return null;
+  // Watch for user data and redirect to appropriate dashboard
+  useEffect(() => {
+    if (user) {
+      if (user.isDoctor) {
+        navigate('/doctor-dashboard');
+      } else {
+        navigate('/dashboard');
+      }
+      // Close modal after successful navigation
+      setTimeout(() => {
+        dispatch(closeAuthModal());
+        onClose();
+      }, 100);
+    }
+  }, [user, navigate, dispatch, onClose]);
+
+  // Watch for auth errors
+  useEffect(() => {
+    if (status === 'failed' && authError) {
+      //alert(authError);
+      setSubmitError(typeof authError === 'string' ? authError : authError.Message || 'Authentication failed');
+      setIsSubmitting(false);
+    }
+  }, [status, authError]);
+
+  if (!isOpen) return null;
 
   // Function to validate email format
   const validateEmail = (email) => {
@@ -306,7 +156,7 @@ const AuthModal = ({ isOpen = true, onClose }) => {
     // If the user didn't select a date (just opened and closed the calendar)
     // and there was no previous selection, reset to empty
     if (!formData.dateOfBirth && dateInputRef.current) {
-      dateInputRef.current.value = '';
+      //dateInputRef.current.value = '';
     }
   };
 
@@ -318,6 +168,11 @@ const AuthModal = ({ isOpen = true, onClose }) => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+    
+    // Clear submit error when user starts typing
+    if (submitError) {
+      setSubmitError('');
+    }
     
     // Validate email field
     if (name === 'email') {
@@ -389,8 +244,41 @@ const AuthModal = ({ isOpen = true, onClose }) => {
   const handleUserTypeChange = (type) => {
     setUserType(type);
   };
-/*
-  const handleSubmit = (e) => {
+
+  // Register patient function
+  const registerPatient = async (userData) => {
+    try {
+      const response = await axios.post(
+        'https://curamed-auth-api-973580931654.europe-north1.run.app/users/register',
+        userData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Registration error:', error);
+      
+      // Handle different types of errors
+      if (error.response) {
+        // Server responded with error status
+        const errorMessage = error.response.data?.message || 
+                            error.response.data?.error || 
+                            `Registration failed: ${error.response.status}`;
+        throw new Error(errorMessage);
+      } else if (error.request) {
+        // Request was made but no response received
+        throw new Error('Network error. Please check your connection and try again.');
+      } else {
+        // Something else happened
+        throw new Error('An unexpected error occurred. Please try again.');
+      }
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Validate email before submission
@@ -401,30 +289,83 @@ const AuthModal = ({ isOpen = true, onClose }) => {
       }));
       return;
     }
-    
-    // Here you would handle authentication logic
-    console.log('Form submitted:', formData, 'User type:', userType);
-    // For demo purposes, just close the modal
-    onClose();
-  };*/
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        let email = formData.email;
-        let password = formData.password;
-        dispatch(loginUser({ email, password }));
-        onClose();
-    };
+    setIsSubmitting(true);
+    setSubmitError('');
 
-  useEffect(() => {
-    if (accessToken && accessToken.length > 13) {
-      dispatch(fetchUserMe());
+    try {
+      if (isSignIn) {
+        // Handle login
+        const result = await dispatch(loginUser({
+          email: formData.email,
+          password: formData.password
+        }));
+        
+        if (loginUser.fulfilled.match(result)) {
+          // Login successful - the useEffect will handle closing the modal
+          console.log('Login successful');
+        } else {
+          // Login failed - error will be handled by useEffect
+          console.log('Login failed:', result.payload);
+        }
+      } else {
+        // Handle registration
+        if (userType === 'patient') {
+          // Convert date format from YYYY-MM-DD to ISO string
+          const birthdayISO = new Date(formData.dateOfBirth).toISOString();
+
+          const registrationData = {
+            email: formData.email,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            password: formData.password,
+            birthday: birthdayISO,
+            sexTypeId: parseInt(formData.gender),
+            countryId: parseInt(formData.country),
+            city: formData.city,
+            timeZoneId: parseInt(formData.timeZone)
+          };
+
+          console.log('Registering patient with data:', registrationData);
+          
+          const result = await registerPatient(registrationData);
+          console.log('Patient registration successful:', result);
+          
+          // Handle successful registration          
+          navigate('/email-verification-pending', {
+            state: {
+              email: formData.email,
+              userType: formData.userType, // optional, if you have it
+            },
+          });
+          onClose();
+          
+        } else if (userType === 'doctor') {
+          // Handle doctor registration
+          console.log('Registering doctor with data:', formData);
+          
+          const result = await registerDoctor(formData);
+          console.log('Doctor registration successful:', result);
+          
+          // Handle successful registration
+          navigate('/email-verification-pending', {
+            state: {
+              email: formData.email,
+              userType: formData.userType, // optional, if you have it
+            },
+          });
+          onClose();
+        }
+      }
+    } catch (error) {
+      console.error('Submit failed:', error);
+      setSubmitError(error.message);
+    } finally {
+      if (!isSignIn || status !== 'loading') {
+        setIsSubmitting(false);
+      }
     }
-  }, [accessToken]);
-
-  useEffect(() => {
-    console.log('User: ', JSON.stringify(user));
-  }, [user, accessToken])
+  };
 
   const nextStep = () => {
     setCurrentStep(prev => prev + 1);
@@ -438,6 +379,7 @@ const AuthModal = ({ isOpen = true, onClose }) => {
     setIsSignIn(!isSignIn);
     setCurrentStep(1);
     setProfilePhotoPreview(null);
+    setSubmitError('');
     // Reset form data and errors when switching between forms
     setFormData({
       email: '',
@@ -563,7 +505,8 @@ const AuthModal = ({ isOpen = true, onClose }) => {
       return formData.profilePhoto && formData.specialty && 
              formData.yearsOfExperience && formData.languagesSpoken;
     }
-    return formData.country && formData.city;
+    // For patients, we need country, city, and timeZone for the API
+    return formData.country && formData.city && formData.timeZone;
   };
 
   const validateStep4 = () => {
@@ -635,12 +578,19 @@ const AuthModal = ({ isOpen = true, onClose }) => {
         />
       </div>
       
+      {/* Show error message if login fails */}
+      {submitError && (
+        <div className="error-message" style={{ marginBottom: '16px', textAlign: 'center' }}>
+          {submitError}
+        </div>
+      )}
+      
       <button 
         type="submit" 
         className="submit-button"
-        disabled={!formData.email || !formData.password || formErrors.email}
+        disabled={!formData.email || !formData.password || formErrors.email || isSubmitting}
       >
-        Login
+        {isSubmitting ? 'Logging in...' : 'Login'}
       </button>
       
       <button type="button" className="google-button">
@@ -758,20 +708,12 @@ const AuthModal = ({ isOpen = true, onClose }) => {
   const renderSignUpStep2 = () => (
     <form className="auth-form">
       {userType === 'doctor' && (
-        <div className="form-group form-field">
-          <label htmlFor="title" className="select-label">Title</label>
-          <select
-            id="title"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            className="select-input"
-          >
-            <option value="Dr.">Dr.</option>
-            <option value="MD">MD</option>
-            <option value="DO">DO</option>
-          </select>
-        </div>
+        <DoctorTitleSelect
+          value={formData.title}
+          onChange={handleChange}
+          placeholder="Select your title"
+          loadingLabel="Loading titles..."
+        />
       )}
       
       <div className="form-group form-field">
@@ -843,28 +785,7 @@ const AuthModal = ({ isOpen = true, onClose }) => {
         <FaCalendarAlt className="calendar-icon" />
       </div>
       
-      <div className="gender-selector">
-        <label className={`gender-option ${formData.gender === 'male' ? 'selected' : ''}`}>
-          <input
-            type="radio"
-            name="gender"
-            value="male"
-            checked={formData.gender === 'male'}
-            onChange={handleChange}
-          />
-          <span>Male</span>
-        </label>
-        <label className={`gender-option ${formData.gender === 'female' ? 'selected' : ''}`}>
-          <input
-            type="radio"
-            name="gender"
-            value="female"
-            checked={formData.gender === 'female'}
-            onChange={handleChange}
-          />
-          <span>Female</span>
-        </label>
-      </div>
+      <GenderSelect formData={formData} handleChange={handleChange} />
       
       <div className="step-navigation">
         <button 
@@ -917,47 +838,14 @@ const AuthModal = ({ isOpen = true, onClose }) => {
                 name="profilePhoto"
                 ref={fileInputRef}
                 onChange={handleFileChange}
-                accept="image/!*"
+                accept="image/*"
                 className="file-input"
                 required
               />
             </div>
           </div>
           
-          <div className="form-group form-field">
-            <label htmlFor="specialty" className="select-label">Specialty</label>
-            <select
-              id="specialty"
-              name="specialty"
-              value={formData.specialty}
-              onChange={handleChange}
-              className="select-input"
-              required
-            >
-              <option value="" disabled>Select your specialty</option>
-              <option value="General Practitioner">General Practitioner</option>
-              <option value="Psychologist">Psychologist</option>
-              <option value="Internal Medicine Physician">Internal Medicine Physician</option>
-              <option value="Pediatrician">Pediatrician</option>
-              <option value="Obstetrician-Gynecologist">Obstetrician-Gynecologist</option>
-              <option value="Reproductive Endocrinologist">Reproductive Endocrinologist</option>
-              <option value="Cardiologist">Cardiologist</option>
-              <option value="Pulmonologist">Pulmonologist</option>
-              <option value="Gastroenterologist">Gastroenterologist</option>
-              <option value="Endocrinologist">Endocrinologist</option>
-              <option value="Nephrologist">Nephrologist</option>
-              <option value="Rheumatologist">Rheumatologist</option>
-              <option value="Dermatologist">Dermatologist</option>
-              <option value="Ophthalmologist">Ophthalmologist</option>
-              <option value="Optometrist">Optometrist</option>
-              <option value="ENT Specialist (Otolaryngologist)">ENT Specialist (Otolaryngologist)</option>
-              <option value="Allergist/Immunologist">Allergist/Immunologist</option>
-              <option value="Oncologist">Oncologist</option>
-              <option value="Hematologist">Hematologist</option>
-              <option value="Infectious Disease Specialist">Infectious Disease Specialist</option>
-              <option value="Psychiatrist">Psychiatrist</option>
-            </select>
-          </div>
+          <SpecialtySelect id="specialty" name="specialty" value={formData.specialty} onChange={handleChange} />
           
           <div className="form-group form-field">
             <label htmlFor="yearsOfExperience" className="select-label">Years of Experience</label>
@@ -972,39 +860,18 @@ const AuthModal = ({ isOpen = true, onClose }) => {
             />
           </div>
           
-          <div className="form-group form-field">
-            <label htmlFor="languagesSpoken" className="select-label">Languages Spoken</label>
-            <input
-              type="text"
-              id="languagesSpoken"
-              name="languagesSpoken"
-              value={formData.languagesSpoken}
-              onChange={handleChange}
-              placeholder="e.g., English, Spanish, French"
-              required
-            />
-          </div>
+          <LanguagesMultiSelect value={formData.languagesSpoken} onChange={handleChange} />
+
         </>
       ) : (
         <>
-          <div className="form-group form-field">
-            <label htmlFor="country" className="select-label">Country</label>
-            <select
-              id="country"
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              className="select-input"
-              required
-            >
-              <option value="" disabled>Select your country</option>
-              {countries.map(country => (
-                <option key={country.code} value={country.code}>
-                  {country.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <CountrySelect
+            label="Country"
+            id="country"
+            name="country"
+            value={formData.country}
+            onChange={handleChange}
+          />
           
           <div className="form-group form-field">
             <input
@@ -1017,7 +884,16 @@ const AuthModal = ({ isOpen = true, onClose }) => {
               required
             />
           </div>
+
+          <TimeZoneSelect value={formData.timeZone} onChange={handleChange} />
         </>
+      )}
+      
+      {/* Show error message if registration fails */}
+      {submitError && (
+        <div className="error-message" style={{ marginBottom: '16px', textAlign: 'center' }}>
+          {submitError}
+        </div>
       )}
       
       <div className="step-navigation">
@@ -1042,9 +918,9 @@ const AuthModal = ({ isOpen = true, onClose }) => {
             type="submit" 
             className="submit-button"
             onClick={handleSubmit}
-            disabled={!validateStep3()}
+            disabled={!validateStep3() || isSubmitting}
           >
-            Sign Up
+            {isSubmitting ? 'Creating Account...' : 'Sign Up'}
           </button>
         )}
       </div>
@@ -1068,24 +944,13 @@ const AuthModal = ({ isOpen = true, onClose }) => {
         ></textarea>
       </div>
       
-      <div className="form-group form-field">
-        <label htmlFor="country" className="select-label">Practice Location</label>
-        <select
-          id="country"
-          name="country"
-          value={formData.country}
-          onChange={handleChange}
-          className="select-input"
-          required
-        >
-          <option value="" disabled>Select your country</option>
-          {countries.map(country => (
-            <option key={country.code} value={country.code}>
-              {country.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      <CountrySelect
+        label="Practice Location"
+        id="practiceCountry"
+        name="country"
+        value={formData.country}
+        onChange={handleChange}
+      />
       
       <div className="form-group form-field">
         <input
@@ -1134,47 +999,7 @@ const AuthModal = ({ isOpen = true, onClose }) => {
   // Render sign-up step 5 (for doctors only)
   const renderSignUpStep5 = () => (
     <form className="auth-form">
-      <div className="form-group form-field">
-        <label htmlFor="timeZone" className="select-label">
-          <FaClock className="field-icon" /> Time Zone
-        </label>
-        <select
-          id="timeZone"
-          name="timeZone"
-          value={formData.timeZone}
-          onChange={handleChange}
-          className="select-input"
-          required
-        >
-          <option value="" disabled>Select your time zone</option>
-          <option value="UTC-12:00">(UTC-12:00) International Date Line West</option>
-          <option value="UTC-11:00">(UTC-11:00) Coordinated Universal Time-11</option>
-          <option value="UTC-10:00">(UTC-10:00) Hawaii</option>
-          <option value="UTC-09:00">(UTC-09:00) Alaska</option>
-          <option value="UTC-08:00">(UTC-08:00) Pacific Time (US & Canada)</option>
-          <option value="UTC-07:00">(UTC-07:00) Mountain Time (US & Canada)</option>
-          <option value="UTC-06:00">(UTC-06:00) Central Time (US & Canada)</option>
-          <option value="UTC-05:00">(UTC-05:00) Eastern Time (US & Canada)</option>
-          <option value="UTC-04:00">(UTC-04:00) Atlantic Time (Canada)</option>
-          <option value="UTC-03:00">(UTC-03:00) Brasilia</option>
-          <option value="UTC-02:00">(UTC-02:00) Coordinated Universal Time-02</option>
-          <option value="UTC-01:00">(UTC-01:00) Azores</option>
-          <option value="UTC+00:00">(UTC+00:00) London, Dublin, Edinburgh</option>
-          <option value="UTC+01:00">(UTC+01:00) Berlin, Paris, Rome, Madrid</option>
-          <option value="UTC+02:00">(UTC+02:00) Athens, Istanbul, Helsinki</option>
-          <option value="UTC+03:00">(UTC+03:00) Moscow, St. Petersburg</option>
-          <option value="UTC+04:00">(UTC+04:00) Dubai, Abu Dhabi</option>
-          <option value="UTC+05:00">(UTC+05:00) Islamabad, Karachi</option>
-          <option value="UTC+05:30">(UTC+05:30) New Delhi, Mumbai</option>
-          <option value="UTC+06:00">(UTC+06:00) Dhaka</option>
-          <option value="UTC+07:00">(UTC+07:00) Bangkok, Jakarta</option>
-          <option value="UTC+08:00">(UTC+08:00) Beijing, Hong Kong, Singapore</option>
-          <option value="UTC+09:00">(UTC+09:00) Tokyo, Seoul</option>
-          <option value="UTC+10:00">(UTC+10:00) Sydney, Melbourne</option>
-          <option value="UTC+11:00">(UTC+11:00) Vladivostok</option>
-          <option value="UTC+12:00">(UTC+12:00) Auckland, Wellington</option>
-        </select>
-      </div>
+      <TimeZoneSelect value={formData.timeZone} onChange={handleChange} />
       
       <div className="form-group form-field">
         <label className="select-label">
@@ -1337,137 +1162,11 @@ const AuthModal = ({ isOpen = true, onClose }) => {
   // Render sign-up step 6 (for doctors only - payment and tax info)
   const renderSignUpStep6 = () => (
     <form className="auth-form">
-      <div className="form-group form-field">
-        <label className="select-label">
-          <FaMoneyBillWave className="field-icon" /> Payout Method
-        </label>
-        <div className="payout-method-selector">
-          <label className={`payout-method-option ${formData.payoutMethod === 'paypal' ? 'selected' : ''}`}>
-            <input
-              type="radio"
-              name="payoutMethod"
-              value="paypal"
-              checked={formData.payoutMethod === 'paypal'}
-              onChange={handleChange}
-            />
-            <FaPaypal className="payout-icon" />
-            <span>PayPal</span>
-          </label>
-          <label className={`payout-method-option ${formData.payoutMethod === 'stripe' ? 'selected' : ''}`}>
-            <input
-              type="radio"
-              name="payoutMethod"
-              value="stripe"
-              checked={formData.payoutMethod === 'stripe'}
-              onChange={handleChange}
-            />
-            <FaCreditCard className="payout-icon" />
-            <span>Stripe</span>
-          </label>
-          <label className={`payout-method-option ${formData.payoutMethod === 'bank' ? 'selected' : ''}`}>
-            <input
-              type="radio"
-              name="payoutMethod"
-              value="bank"
-              checked={formData.payoutMethod === 'bank'}
-              onChange={handleChange}
-            />
-            <FaUniversity className="payout-icon" />
-            <span>Bank</span>
-          </label>
-        </div>
-      </div>
-      
-      {formData.payoutMethod === 'paypal' && (
-        <div className="form-group form-field">
-          <label htmlFor="paypalEmail" className="select-label">
-            <FaPaypal className="field-icon" /> PayPal Email
-          </label>
-          <input
-            type="email"
-            id="paypalEmail"
-            name="paypalEmail"
-            value={formData.paypalEmail}
-            onChange={handleChange}
-            placeholder="Enter your PayPal email address"
-            required
-          />
-          {formData.paypalEmail && !validateEmail(formData.paypalEmail) && (
-            <div className="error-message">Please enter a valid email address</div>
-          )}
-        </div>
-      )}
-      
-      {formData.payoutMethod === 'bank' && (
-        <>
-          <div className="form-group form-field">
-            <label htmlFor="bankName" className="select-label">
-              <FaUniversity className="field-icon" /> Bank Name
-            </label>
-            <input
-              type="text"
-              id="bankName"
-              name="bankName"
-              value={formData.bankName}
-              onChange={handleChange}
-              placeholder="Enter your bank name"
-              required
-            />
-          </div>
-          
-          <div className="form-group form-field">
-            <label htmlFor="accountNumber" className="select-label">
-              <FaUniversity className="field-icon" /> Account Number
-            </label>
-            <input
-              type="text"
-              id="accountNumber"
-              name="accountNumber"
-              value={formData.accountNumber}
-              onChange={handleChange}
-              placeholder="Enter your account number"
-              required
-            />
-          </div>
-          
-          <div className="form-group form-field">
-            <label htmlFor="routingNumber" className="select-label">
-              <FaUniversity className="field-icon" /> Routing Number / IBAN
-            </label>
-            <input
-              type="text"
-              id="routingNumber"
-              name="routingNumber"
-              value={formData.routingNumber}
-              onChange={handleChange}
-              placeholder="Enter routing number or IBAN"
-              required
-            />
-          </div>
-          
-          <div className="form-group form-field">
-            <label htmlFor="swiftCode" className="select-label">
-              <FaUniversity className="field-icon" /> SWIFT/BIC Code <span className="optional-label">(for international transfers)</span>
-            </label>
-            <input
-              type="text"
-              id="swiftCode"
-              name="swiftCode"
-              value={formData.swiftCode}
-              onChange={handleChange}
-              placeholder="Enter SWIFT/BIC code if applicable"
-            />
-          </div>
-        </>
-      )}
-      
-      {formData.payoutMethod === 'stripe' && (
-        <div className="stripe-info">
-          <p className="info-text">
-            <FaCreditCard className="info-icon" /> You'll be redirected to set up your Stripe account after completing registration.
-          </p>
-        </div>
-      )}
+      <PayoutMethodSelector
+        formData={formData}
+        setFormData={setFormData}
+        handleChange={handleChange}
+      />
       
       <div className="form-group form-field">
         <label htmlFor="taxIdentificationNumber" className="select-label">
@@ -1485,52 +1184,17 @@ const AuthModal = ({ isOpen = true, onClose }) => {
         <p className="field-hint">For U.S. doctors, enter your SSN or TIN. For Estonian doctors, enter your Social Security Number.</p>
       </div>
       
-      <div className="form-group form-field">
-        <label htmlFor="taxResidenceCountry" className="select-label">
-          <FaGlobe className="field-icon" /> Country of Tax Residence
-        </label>
-        <select
-          id="taxResidenceCountry"
-          name="taxResidenceCountry"
-          value={formData.taxResidenceCountry}
-          onChange={handleChange}
-          className="select-input"
-          required
-        >
-          <option value="" disabled>Select your country of tax residence</option>
-          {countries.map(country => (
-            <option key={country.code} value={country.code}>
-              {country.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      <CountrySelect
+        label="Country of Tax Residence"
+        id="taxResidenceCountry"
+        name="taxResidenceCountry"
+        value={formData.taxResidenceCountry}
+        onChange={handleChange}
+        placeholder="Select your country of tax residence"
+        icon={FaGlobe}
+      />
       
-      <div className="form-group form-field">
-        <label htmlFor="billingCurrency" className="select-label">
-          <FaMoneyBillWave className="field-icon" /> Billing Currency
-        </label>
-        <select
-          id="billingCurrency"
-          name="billingCurrency"
-          value={formData.billingCurrency}
-          onChange={handleChange}
-          className="select-input"
-          required
-        >
-          <option value="USD">USD - US Dollar</option>
-          <option value="EUR">EUR - Euro</option>
-          <option value="GBP">GBP - British Pound</option>
-          <option value="CAD">CAD - Canadian Dollar</option>
-          <option value="AUD">AUD - Australian Dollar</option>
-          <option value="JPY">JPY - Japanese Yen</option>
-          <option value="CHF">CHF - Swiss Franc</option>
-          <option value="CNY">CNY - Chinese Yuan</option>
-          <option value="INR">INR - Indian Rupee</option>
-          <option value="SGD">SGD - Singapore Dollar</option>
-          <option value="AED">AED - UAE Dirham</option>
-        </select>
-      </div>
+      <CurrencySelect formData={formData} handleChange={handleChange} />
       
       <div className="tax-disclaimer">
         <p>By submitting this form, you confirm that the tax information provided is accurate and complete. You understand that you are responsible for reporting and paying any applicable taxes on income earned through our platform according to the laws of your country of tax residence.</p>
@@ -1656,6 +1320,13 @@ const AuthModal = ({ isOpen = true, onClose }) => {
         </div>
       </div>
       
+      {/* Show error message if registration fails */}
+      {submitError && (
+        <div className="error-message" style={{ marginBottom: '16px', textAlign: 'center' }}>
+          {submitError}
+        </div>
+      )}
+      
       <div className="step-navigation">
         <button 
           type="button" 
@@ -1667,9 +1338,9 @@ const AuthModal = ({ isOpen = true, onClose }) => {
         <button 
           type="submit" 
           className="submit-button"
-          disabled={!validateStep7()}
+          disabled={!validateStep7() || isSubmitting}
         >
-          Complete Registration
+          {isSubmitting ? 'Completing Registration...' : 'Complete Registration'}
         </button>
       </div>
     </form>
@@ -1764,48 +1435,3 @@ const AuthModal = ({ isOpen = true, onClose }) => {
 };
 
 export default AuthModal;
-
-
-
-/*
-
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../features/auth/authSlice';
-
-function LoginForm() {
-  const dispatch = useDispatch();
-  const auth = useSelector((state) => state.auth);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(loginUser({ email, password }));
-  };
-
-  return (
-      <div>
-        <h2>Login</h2>
-        {auth.status === 'loading' && <p>Logging in...</p>}
-        {auth.error && <p style={{ color: 'red' }}>{auth.error}</p>}
-        <form onSubmit={handleSubmit}>
-          <input
-              type="email"
-              value={email}
-              placeholder="Email"
-              onChange={(e) => setEmail(e.target.value)}
-          /><br />
-          <input
-              type="password"
-              value={password}
-              placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
-          /><br />
-          <button type="submit">Login</button>
-        </form>
-      </div>
-  );
-}
-
-export default LoginForm;*/

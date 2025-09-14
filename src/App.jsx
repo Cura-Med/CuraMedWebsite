@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -8,25 +8,19 @@ import ServicesPage from './pages/ServicesPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import SymptomCheckerPage from './pages/SymptomCheckerPage';
+import EmailVerificationPending from './pages/EmailVerificationPending';
+import EmailVerification from './pages/EmailVerification';
+import UserDashboard from './pages/UserDashboard';
+import DoctorDashboard from './pages/DoctorDashboard';
 import './App.css';
 import AuthModal from "./components/AuthModal.jsx";
 import { useDispatch, useSelector } from 'react-redux';
 import {closeAuthModal} from "./features/modal/modalSlice.js";
-import VideoCall from "./components/VideoCall.jsx";
-import {fetchUserMe} from "./features/auth/authSlice.js";
 
 function App() {
 
   const dispatch = useDispatch();
   const isModalOpen = useSelector((state) => state.modal.isAuthModalOpen);
-  const accessToken = useSelector((state) => state.auth.accessToken);
-
-
-  useEffect(() => {
-     if (accessToken && accessToken.length > 13) {
-         dispatch(fetchUserMe());
-     }
-  }, [accessToken]);
 
   return (
     <div className="app">
@@ -39,14 +33,17 @@ function App() {
 
       <main>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/features" element={<FeaturesPage />} />
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/symptom-checker" element={<SymptomCheckerPage />} />
-          <Route path="/consultation" element={<VideoCall/>}/>
-        </Routes>
+           <Route path="/" element={<HomePage />} />
+           <Route path="/features" element={<FeaturesPage />} />
+           <Route path="/services" element={<ServicesPage />} />
+           <Route path="/about" element={<AboutPage />} />
+           <Route path="/contact" element={<ContactPage />} />
+           <Route path="/symptom-checker" element={<SymptomCheckerPage />} />
+           <Route path="/email-verification-pending" element={<EmailVerificationPending />} />
+           <Route path="/email-verification" element={<EmailVerification />} />
+           <Route path="/dashboard" element={<UserDashboard />} />
+           <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+         </Routes>
       </main>
       <Footer />
     </div>

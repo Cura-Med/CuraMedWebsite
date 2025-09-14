@@ -1,0 +1,131 @@
+.user-dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Arial', sans-serif;
+  background-color: #ffffff;
+}
+
+.user-dashboard-container h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.user-dashboard-container p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-box {
+  background-color: #f0eaff;
+  border-radius: 1rem;
+  padding: 1rem;
+  text-align: center;
+  min-width: 120px;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #6b46c1;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.main-sections {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.left-section {
+  flex: 2;
+}
+
+.left-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.consultations-list {
+  list-style: none;
+  padding: 0;
+}
+
+.consultation-item {
+  background-color: #e6ffed;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.category {
+  font-weight: bold;
+  color: #27ae60;
+}
+
+.date {
+  color: #666;
+}
+
+.view-all {
+  display: block;
+  text-align: right;
+  color: #6b46c1;
+  text-decoration: none;
+  margin-top: 0.5rem;
+}
+
+.right-section {
+  flex: 1;
+}
+
+.right-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.actions-list {
+  list-style: none;
+  padding: 0;
+}
+
+.actions-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #333;
+}
+
+.chat-bot {
+  background-color: #f0f0f0;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  text-align: center;
+  color: #666;
+  margin-top: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-sections {
+    flex-direction: column;
+  }
+}
