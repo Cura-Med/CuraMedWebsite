@@ -77,19 +77,24 @@ textarea {
   display: flex;
   justify-content: flex-start;
   margin-left: 0px;
-  height: 100px;
 }
 
 .radio-columns .column {
   display: flex;
   flex-direction: column;
+}
+.radio-columns .column:first-child {
+  margin-left: 0;
+}
+.radio-columns .column:not(:first-child) {
   margin-left: 50px;
 }
 
 .radio-group {
   display: flex;
   align-items: center;
-  height: 130px;
+  width: 100%;
+  margin-bottom: 10px;
 }
 
 .radio-group input[type="radio"] {
