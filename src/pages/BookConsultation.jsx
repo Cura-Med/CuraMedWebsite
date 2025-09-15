@@ -1,11 +1,26 @@
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import './BookConsultation.css';
+import instance from '../api/axios';
 
 const BookConsultation = () => {
   const navigate = useNavigate();
   const { user, accessToken } = useSelector((state) => state.auth);
+  const [specialties, setSpecialties] = useState([]);
+
+  useEffect(() => {
+    const fetchSpecialties = async () => {
+      try {
+        const response = await instance.get('/doctor-specialties/scheduled');
+        setSpecialties(response.data.doctorSpecialties);
+      } catch (error) {
+        console.error('Error fetching specialties:', error);
+      }
+    };
+    fetchSpecialties();
+  }, []);
 
   // Temporarily bypass auth for verification
   // if (!accessToken || !user) {
@@ -19,28 +34,12 @@ const BookConsultation = () => {
       <form>
         <div className="form-group">
           <label>Consultation Type</label>
-          <div className="radio-columns">
-            <div className="column">
-              <div className="radio-group">
-                <input type="radio" id="general" name="consultationType" value="general" />
-                <label htmlFor="general">General Consultation</label>
-              </div>
-              <div className="radio-group">
-                <input type="radio" id="pediatric" name="consultationType" value="pediatric" />
-                <label htmlFor="pediatric">Pediatric Care</label>
-              </div>
+          {specialties.map((spec) => (
+            <div className="radio-group" key={spec.id}>
+              <input type="radio" id={`spec-${spec.id}`} name="consultationType" value={spec.id} />
+              <label htmlFor={`spec-${spec.id}`}>{spec.name}</label>
             </div>
-            <div className="column">
-              <div className="radio-group">
-                <input type="radio" id="mental" name="consultationType" value="mental" />
-                <label htmlFor="mental">Mental Health</label>
-              </div>
-              <div className="radio-group">
-                <input type="radio" id="specialist" name="consultationType" value="specialist" />
-                <label htmlFor="specialist">Specialist Consultation</label>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
         <div className="form-group">
           <label htmlFor="date">Date</label>
@@ -85,4 +84,4 @@ const BookConsultation = () => {
   );
 };
 
-export default BookConsultation;
+export default BookConsultation
