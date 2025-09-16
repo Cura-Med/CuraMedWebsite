@@ -40,7 +40,7 @@ export default function VideoCall2() {
 
     // Generate channel once (initiator). You'll paste this value into the other user's hardcoded channel.
     const generateChannel = () => {
-        const ch = '8ufur0r62yp' // Math.random().toString(36).substring(2, 20);
+        const ch = 'pdyuaofq6xa' // Math.random().toString(36).substring(2, 20);
         setChannel(ch);
         console.log('Generated channel:', ch); // <-- copy this for the other user
         return ch;
@@ -124,6 +124,62 @@ export default function VideoCall2() {
         setJoined(false);
     };
 
+
+
+
+
+
+
+    // state for toggles
+    const [micOn, setMicOn]   = useState(true);
+    const [camOn, setCamOn]   = useState(true);
+    const [screenOn, setScreenOn] = useState(false);
+
+    const toggleMic = async () => {
+        const t = localTracks.current?.audioTrack;
+        if (!t) return;
+        await t.setEnabled(!micOn);
+        setMicOn(!micOn);
+    };
+
+    const toggleCam = async () => {
+        const t = localTracks.current?.videoTrack;
+        if (!t) return;
+        await t.setEnabled(!camOn);
+        setCamOn(!camOn);
+    };
+
+    /* Simple screen share: swap camera track with screen track and back */
+    const toggleScreen = async () => {
+        if (!screenOn) {
+            // start screenshare
+            const [screenTrack] = await AgoraRTC.createScreenVideoTrack({});
+            // unpublish camera, publish screen
+            if (localTracks.current.videoTrack) {
+                await client.unpublish([localTracks.current.videoTrack]);
+                localTracks.current.videoTrack.stop();
+                localTracks.current.videoTrack.close();
+            }
+            localTracks.current.videoTrack = screenTrack;
+            localTracks.current.videoTrack.play(localVideoRef.current);
+            await client.publish([localTracks.current.videoTrack]);
+            setScreenOn(true);
+        } else {
+            // stop screen, switch back to camera
+            await client.unpublish([localTracks.current.videoTrack]);
+            localTracks.current.videoTrack.stop();
+            localTracks.current.videoTrack.close();
+            const camTrack = await AgoraRTC.createCameraVideoTrack();
+            localTracks.current.videoTrack = camTrack;
+            localTracks.current.videoTrack.play(localVideoRef.current);
+            await client.publish([localTracks.current.videoTrack]);
+            setScreenOn(false);
+            if (!camOn) { await camTrack.setEnabled(false); }
+        }
+    };
+
+
+
     if (!authUser?.id || authUser.id.length < 1) {
         return <div className="video-call-wrapper video-call-wrapper-debug" />;
     }
@@ -132,34 +188,93 @@ export default function VideoCall2() {
         <div className="video-call-wrapper">
             <h2 className="video-call-title">Agora Video Call</h2>
 
-            <div style={{ marginBottom: 8 }}>
-                <div style={{ fontSize: 12, opacity: 0.85 }}>
-                    Channel to share with the other user:&nbsp;
+            {/* Channel share row */}
+            <div className="vc-sharebar">
+                <div className="vc-channel">
+                    Channel:&nbsp;
                     <code>{channel || '(click Start to generate)'}</code>
                 </div>
                 <button
+                    className="vc-btn"
                     onClick={() => {
                         const ch = channel || generateChannel();
-                        navigator.clipboard?.writeText(ch).catch(()=>{});
+                        navigator.clipboard?.writeText(ch).catch(() => {});
                     }}
-                    style={{ marginTop: 6 }}
                 >
                     Copy Channel
                 </button>
             </div>
 
-            <div className="video-container">
-                <div ref={localVideoRef} className="video-box" />
-                <div ref={remoteVideoRef} className="video-box" />
+            {/* Stage */}
+            <div className="vc-stage">
+                <div ref={remoteVideoRef} className="vc-remote" />
+                <div ref={localVideoRef} className="vc-pip">
+                    <span className="vc-pip-label">You</span>
+                </div>
+
+                {/* Floating Controls */}
+                <div className="vc-controls">
+                    <button
+                        className={`vc-iconbtn ${!micOn ? 'is-muted' : ''}`}
+                        onClick={toggleMic}
+                        aria-label={micOn ? 'Mute microphone' : 'Unmute microphone'}
+                        title={micOn ? 'Mute mic' : 'Unmute mic'}
+                    >
+                        {micOn ? '🎙️' : '🔇'}
+                    </button>
+
+                    <button
+                        className={`vc-iconbtn ${!camOn ? 'is-muted' : ''}`}
+                        onClick={toggleCam}
+                        aria-label={camOn ? 'Turn camera off' : 'Turn camera on'}
+                        title={camOn ? 'Camera off' : 'Camera on'}
+                    >
+                        {camOn ? '📷' : '🚫'}
+                    </button>
+
+                    <button
+                        className={`vc-iconbtn`}
+                        onClick={toggleScreen}
+                        aria-label={screenOn ? 'Stop sharing' : 'Share screen'}
+                        title={screenOn ? 'Stop sharing' : 'Share screen'}
+                    >
+                        {screenOn ? '🛑' : '🖥️'}
+                    </button>
+
+                    {!joined ? (
+                        <button className="vc-iconbtn" onClick={startCall} title="Start / Join">
+                            ▶️
+                        </button>
+                    ) : (
+                        <button className="vc-iconbtn is-danger" onClick={leaveChannel} title="Leave">
+                            ⏹️
+                        </button>
+                    )}
+                </div>
             </div>
 
-            <div className="video-controls">
-                {!joined ? (
-                    <button onClick={startCall}>Start / Join</button>
-                ) : (
-                    <button onClick={leaveChannel}>Leave</button>
-                )}
+            {/* Bottom row: Translation + Chat */}
+            <div className="vc-bottom">
+                <div className="vc-translation">
+                    <select className="vc-select" defaultValue="en" aria-label="Translation language">
+                        <option value="en">English</option>
+                        <option value="et">Estonian</option>
+                        <option value="de">German</option>
+                        <option value="fr">French</option>
+                    </select>
+                    <div className="vc-transcript">
+                        <em>Live Translation:</em>&nbsp;The doctor is explaining the treatment plan…
+                    </div>
+                </div>
+
+                <button className="vc-btn" onClick={() => console.log('Open Chat')}>
+                    Open Chat
+                </button>
             </div>
         </div>
     );
+
+
+
+
 }
