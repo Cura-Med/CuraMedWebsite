@@ -106,3 +106,63 @@ textarea {
   font-size: 0.9em;
   color: #333;
 }
+/* New styles for slots */
+.slots-section {
+  margin-top: 20px;
+}
+
+.slots-section h2 {
+  font-size: 1.1em;
+  margin-bottom: 15px;
+}
+
+.doctor-group {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.doctor-header {
+  display: flex;
+  align-items: center;
+  font-size: 1em;
+  margin-bottom: 10px;
+}
+
+.doctor-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.slot-button {
+  padding: 8px 12px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.3s;
+}
+
+.slot-button:hover {
+  background-color: #ddd;
+}
+
+.slot-button.selected {
+  background-color: #6f42c1;
+  color: white;
+}
+
+.slot-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
