@@ -29,6 +29,8 @@ const Header = () => {
         <div className="menu-icon" onClick={toggleMenu}>
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </div>
+
+        <div style={{flex: 1}}/>
         
         <nav className={`nav ${isMenuOpen ? 'active' : ''}`}>
           <ul className="nav-list">
@@ -54,7 +56,7 @@ const Header = () => {
             </li>
           </ul>
         </nav>
-        
+        <div style={{minWidth: '42px'}} />
         {accessToken ? (
           <button className="logout-btn" onClick={handleLogout}>
             Logout
