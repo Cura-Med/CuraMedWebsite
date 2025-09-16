@@ -21,6 +21,7 @@ import {closeAuthModal} from "./features/modal/modalSlice.js";
 import VideoCall2 from "./components/VideoCall2.jsx";
 import VideoCall from "./components/VideoCall.jsx";
 import {fetchUserMe} from "./features/auth/authSlice.js";
+import VideoCall3 from "./components/VideoCall3.jsx";
 
 function App() {
 
@@ -59,7 +60,7 @@ function App() {
            <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
 
             <Route path="/video-test" element={<VideoCall />} />
-            <Route path="/video-test-joiner" element={<VideoCall2 />} />
+            <Route path="/video-test-joiner" element={<VideoCall3 />} />
          </Routes>
       </main>
       <Footer />

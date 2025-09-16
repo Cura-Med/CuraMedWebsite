@@ -1,0 +1,236 @@
+/* --- Wrapper --- */
+.video-call-wrapper {
+    --radius: 12px;
+    --pad: 12px;
+    --bg: #0a0a0a;   /* stage background */
+    --panel: #f9f9f9;/* outer background */
+    --muted: #6b7280;
+    --text: #111827;
+
+    padding: 12px;
+    background: var(--panel);
+    border-radius: var(--radius);
+    margin: 0 auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+.video-call-wrapper-debug { min-height: 80vh; }
+
+.video-call-title {
+    text-align: left;
+    font-size: 1.125rem; /* 18px */
+    margin: 4px 0 12px;
+    color: var(--text);
+}
+
+/* --- Top row: channel share (mobile: stacked) --- */
+.vc-sharebar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.vc-sharebar .vc-channel {
+    font-size: 0.875rem;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.vc-btn {
+    appearance: none;
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    background: #111827;
+    color: #fff;
+    cursor: pointer;
+}
+.vc-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* --- NEW: Stage + Sidebar container --- */
+.vc-main {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr;           /* mobile: stack */
+}
+
+/* --- Stage (video area) --- */
+.vc-stage {
+    position: relative;
+    width: 100%;
+    background: var(--bg);
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 16/9;                   /* fluid 16:9 */
+}
+
+/* Remote video fills the stage */
+.vc-remote {
+    position: absolute;
+    inset: 0;
+    background: #000; /* before remote plays */
+}
+
+/* Local PiP preview */
+.vc-pip {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: min(34%, 140px);
+    aspect-ratio: 4/3;
+    background: #000;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+.vc-pip-label {
+    position: absolute;
+    bottom: 6px; right: 8px;
+    font-size: 0.75rem; color: #fff; opacity: 0.85;
+}
+
+/* Floating controls (centered at bottom) */
+.vc-controls {
+    position: absolute;
+    left: 50%; transform: translateX(-50%);
+    bottom: 10px;
+    display: flex;
+    gap: 10px;
+    background: rgba(17,24,39,0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 8px 10px;
+    border-radius: 999px;
+}
+
+.vc-iconbtn {
+    width: 40px; height: 40px;
+    display: inline-grid; place-items: center;
+    border-radius: 999px;
+    border: 0;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+}
+.vc-iconbtn.is-danger { background: #b91c1c; }  /* Leave */
+.vc-iconbtn.is-muted  { opacity: 0.7; }
+
+/* --- NEW: Sidebar (Medical Reports) --- */
+.vc-sidebar {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 10px;
+    min-height: 120px;
+}
+
+.vc-files-head {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.vc-files {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+    max-height: 50vh;
+    overflow: auto;
+}
+
+.vc-file {
+    display: grid;
+    grid-template-columns: 22px 1fr auto;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border: 1px solid #f1f5f9;
+    border-radius: 10px;
+    background: #fafafa;
+}
+
+.vc-file-icon { font-size: 16px; }
+.vc-file-name {
+    font-size: 0.9rem;
+    color: #111827;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.vc-file-x {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: #6b7280;
+    font-size: 16px;
+    cursor: pointer;
+}
+.vc-file-x:hover { color: #111827; }
+
+/* --- Translation strip + Chat --- */
+.vc-bottom {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: start;
+    margin-top: 10px;
+}
+
+.vc-translation {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+    align-items: center;
+}
+
+.vc-select {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    font-size: 0.9rem;
+}
+
+.vc-transcript {
+    grid-column: 1 / -1;
+    font-size: 0.85rem;
+    color: #374151;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+/* --- Responsive: wider screens --- */
+@media (min-width: 900px) {
+    .video-call-wrapper {
+        padding: 16px;
+        max-width: 1200px;
+    }
+    .video-call-title { font-size: 1.25rem; }
+    .vc-stage { aspect-ratio: 16/9; }
+
+    /* vc-main becomes two columns: stage + sidebar right */
+    .vc-main {
+        grid-template-columns: 1fr 320px;
+        align-items: start;
+    }
+
+    /* keep sidebar visible while scrolling */
+    .vc-sidebar { position: sticky; top: 12px; }
+}
+
+/* Legacy two-box view hidden */
+.video-container { display: none; }
+.video-box { display: none; }
