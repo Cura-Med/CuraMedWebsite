@@ -47,11 +47,24 @@
   border: none;
   cursor: pointer;
   text-decoration: none;
-  display: inline-block;
+  display: none;
   line-height: 1.2;
   height: auto;
   min-height: 40px;
   box-sizing: border-box;
+}
+
+.logout-btn-show {
+  display: none;
+}
+.spec-nav {
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .logout-btn-show {
+    display: inline-block;
+  }
 }
 
 .sign-in-btn {

@@ -25,10 +25,6 @@ const Header = () => {
         <Link to="/" className="logo">
           CuraMed
         </Link>
-        
-        <div className="menu-icon" onClick={toggleMenu}>
-          {isMenuOpen ? <FaTimes /> : <FaBars />}
-        </div>
 
         <div style={{flex: 1}}/>
         
@@ -54,18 +50,42 @@ const Header = () => {
                 Contact
               </NavLink>
             </li>
+
+            {accessToken ? (
+                <li className="nav-item spec-nav">
+                  <div onClick={handleLogout}>
+                    <a>Logout</a>
+                  </div>
+                </li>
+            ) : (
+                <li className="nav-item spec-nav">
+                  <div  onClick={() => dispatch(openAuthModal())}>
+                    <a>Sign in</a>
+                  </div>
+                </li>
+            )}
+
+
+
           </ul>
         </nav>
+
+
         <div style={{minWidth: '42px'}} />
-        {accessToken ? (
-          <button className="logout-btn" onClick={handleLogout}>
+
+{/*        {accessToken ? (
+          <button className="logout-btn logout-btn-show" onClick={handleLogout}>
             Logout
           </button>
         ) : (
           <Link to="/" className="sign-in-btn" onClick={() => dispatch(openAuthModal())}>
             Sign in
           </Link>
-        )}
+        )}*/}
+
+        <div className="menu-icon" onClick={toggleMenu}>
+          {isMenuOpen ? <FaTimes /> : <FaBars />}
+        </div>
       </div>
 
     </header>
