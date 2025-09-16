@@ -10,7 +10,7 @@ import { getChatToken } from '../features/chat/chatSlice';
 const APP_ID = import.meta.env.VITE_AGORA_APP_ID;
 const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
 
-export default function VideoCall() {
+export default function VideoCall2() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -40,7 +40,7 @@ export default function VideoCall() {
 
     // Generate channel once (initiator). You'll paste this value into the other user's hardcoded channel.
     const generateChannel = () => {
-        const ch = Math.random().toString(36).substring(2, 20);
+        const ch = '8ufur0r62yp' // Math.random().toString(36).substring(2, 20);
         setChannel(ch);
         console.log('Generated channel:', ch); // <-- copy this for the other user
         return ch;

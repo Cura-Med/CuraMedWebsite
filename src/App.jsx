@@ -17,6 +17,10 @@ import AuthModal from "./components/AuthModal.jsx";
 import { useDispatch, useSelector } from 'react-redux';
 import {closeAuthModal} from "./features/modal/modalSlice.js";
 
+
+import VideoCall2 from "./components/VideoCall2.jsx";
+import VideoCall from "./components/VideoCall.jsx";
+
 function App() {
 
   const dispatch = useDispatch();
@@ -43,6 +47,9 @@ function App() {
            <Route path="/email-verification" element={<EmailVerification />} />
            <Route path="/dashboard" element={<UserDashboard />} />
            <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+
+            <Route path="/video-test" element={<VideoCall />} />
+            <Route path="/video-test-joiner" element={<VideoCall2 />} />
          </Routes>
       </main>
       <Footer />
