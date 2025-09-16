@@ -19,7 +19,7 @@ export const loginUser = createAsyncThunk(
             console.log('We have token: ', token);
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-            return { token }; 
+            return token;
         } catch (error) {
             return rejectWithValue(error.response?.data?.Message || 'Login failed');
         }
@@ -31,6 +31,7 @@ export const fetchUserMe = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const response = await axios.get('/users/me');
+            // console.log('Response: ', response.data)
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || 'Failed to fetch user');

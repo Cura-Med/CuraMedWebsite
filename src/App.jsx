@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -20,11 +20,21 @@ import {closeAuthModal} from "./features/modal/modalSlice.js";
 
 import VideoCall2 from "./components/VideoCall2.jsx";
 import VideoCall from "./components/VideoCall.jsx";
+import {fetchUserMe} from "./features/auth/authSlice.js";
 
 function App() {
 
   const dispatch = useDispatch();
   const isModalOpen = useSelector((state) => state.modal.isAuthModalOpen);
+  const accessToken = useSelector((state) => state.auth.accessToken);
+  const status = useSelector((state) => state.auth.status)
+
+    useEffect(() => {
+       // console.log('accessToken: ', accessToken, status)
+        if (accessToken) {
+            dispatch(fetchUserMe());
+        }
+    }, [accessToken, status]);
 
   return (
     <div className="app">
