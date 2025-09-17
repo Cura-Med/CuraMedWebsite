@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import './BookConsultation.css';
-import instance from '../api/axios';
+import axios from '../api/axios';
 
 const BookConsultation = () => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const BookConsultation = () => {
   useEffect(() => {
     const fetchSpecialties = async () => {
       try {
-        const response = await instance.get('/doctor-specialties/scheduled');
+        const response = await axios.get('/doctor-specialties/scheduled');
         setSpecialties(response.data.doctorSpecialties);
       } catch (error) {
         console.error('Error fetching specialties:', error);
@@ -32,7 +32,7 @@ const BookConsultation = () => {
     const fetchSlots = async () => {
       if (selectedSpecialty && selectedDate) {
         try {
-          const response = await instance.get(`/appointments/available-slots?SpecialtyId=${selectedSpecialty}&AppointmentDate=${selectedDate}`);
+          const response = await axios.get(`/appointments/available-slots?SpecialtyId=${selectedSpecialty}&AppointmentDate=${selectedDate}`);
           setAvailableSlots(response.data.availableSlots);
         } catch (error) {
           console.error('Error fetching slots:', error);
@@ -107,9 +107,10 @@ const BookConsultation = () => {
                 id={`spec-${spec.id}`}
                 name="consultationType"
                 value={spec.id}
+                style={{maxWidth: 20}}
                 onChange={(e) => setSelectedSpecialty(e.target.value)}
               />
-              <label htmlFor={`spec-${spec.id}`}>{spec.name}</label>
+              <label style={{marginBottom: -1}} htmlFor={`spec-${spec.id}`}>{spec.name}</label>
             </div>
           ))}
         </div>
