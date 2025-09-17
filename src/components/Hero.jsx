@@ -19,7 +19,7 @@ const Hero = () => {
         </p>
         
         <div className="hero-buttons">
-          <Link to="/consultation" className="btn btn-primary">Book Consultation</Link>
+          <Link to="/book-consultation" className="btn btn-primary">Book Consultation</Link>
           <Link to="/symptom-checker" className="btn btn-outline">Try AI Symptom Checker</Link>
           <Link to="/video-test" className="btn btn-outline">Video Test</Link>
           <Link to="/video-test-joiner" className="btn btn-outline">Join Video</Link>

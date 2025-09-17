@@ -39,7 +39,7 @@ export default function VideoCall3() {
 
     // Generate channel once (initiator). You'll paste this value into the other user's hardcoded channel.
     const generateChannel = () => {
-        const ch = 'dey402da6qk' // Math.random().toString(36).substring(2, 20);
+        const ch = 'a4px8rnpf4q' // Math.random().toString(36).substring(2, 20);
         setChannel(ch);
         console.log('Generated channel:', ch); // <-- copy this for the other user
         return ch;
