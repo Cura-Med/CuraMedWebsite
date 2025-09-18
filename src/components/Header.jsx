@@ -19,6 +19,14 @@ const Header = () => {
   const toggleMenu = () => setIsMenuOpen((v) => !v);
   const toggleUserMenu = () => setUserMenuOpen((v) => !v);
 
+  const openDashboard = () => {
+    if (user?.isDoctor) {
+      window.location.href = "/doctor-dashboard";
+    } else {
+      window.location.href = "/dashboard";
+    }
+  }
+
   const handleLogout = () => {
     dispatch(logout());
     window.location.href = '/';
@@ -88,7 +96,7 @@ const Header = () => {
                     </div>
 
                     <div className="nav-item hide-from-wide" onClick={() => setIsMenuOpen(false)}>
-                      {user?.isDoctor ? <a>Doctor Dashboard</a> : <a>Dashboard</a>}
+                      {user?.isDoctor ? <a onClick={() => openDashboard()}>Doctor Dashboard</a> : <a onClick={() => openDashboard()}>Dashboard</a>}
                     </div>
                   </>
               )}
@@ -130,7 +138,7 @@ const Header = () => {
                     style={{ borderTop: 'solid 1px rgba(0, 0, 0, 0.05)' }}
                     onClick={() => setUserMenuOpen(false)}
                 >
-                  {user?.isDoctor ? <a>Doctor Dashboard</a> : <a>Dashboard</a>}
+                  {user?.isDoctor ? <a onClick={() => openDashboard()}>Doctor Dashboard</a> : <a onClick={() => openDashboard()}>Dashboard</a>}
                 </div>
               </div>
           )}
