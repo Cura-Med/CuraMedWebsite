@@ -1,119 +1,147 @@
-import React, { useState } from 'react';
+// src/components/Header.jsx
+import React, { useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import {FaBars, FaRegUser, FaTimes } from 'react-icons/fa';
+import { FaBars, FaRegUser, FaTimes } from 'react-icons/fa';
 import './Header.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { openAuthModal } from '../features/modal/modalSlice';
 import { logout } from '../features/auth/authSlice';
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
-  const { accessToken } = useSelector((state) => state.auth);
+  const { user, accessToken } = useSelector((state) => state.auth);
 
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const toggleUserMenu = () => setUserMenuOpen(v => !v);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);     // mobile nav
+  const [userMenuOpen, setUserMenuOpen] = useState(false); // user dropdown
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const isLoggedIn = Boolean(user?.id || accessToken);
+
+  const toggleMenu = () => setIsMenuOpen((v) => !v);
+  const toggleUserMenu = () => setUserMenuOpen((v) => !v);
 
   const handleLogout = () => {
     dispatch(logout());
-    window.location.href = "/";
+    window.location.href = '/';
   };
 
-  const handleResize = () => {
-    setUserMenuOpen(false)
-  }
-
-  window.addEventListener("resize", handleResize);
-
+  useEffect(() => {
+    const onResize = () => setUserMenuOpen(false);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   return (
-    <header className="header">
-      <div className="container header-container">
-        <Link to="/" className="logo">
-          CuraMed
-        </Link>
+      <header className="header">
+        <div className="container header-container">
+          <Link to="/" className="logo" onClick={() => setIsMenuOpen(false)}>
+            CuraMed
+          </Link>
 
-        <div style={{flex: 1}}/>
-        
-        <nav className={`nav ${isMenuOpen ? 'active' : ''}`}>
-          <ul className="nav-list">
-            <li className="nav-item">
-              <NavLink to="/features" className={({isActive}) => isActive ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>
-                Features
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/services" className={({isActive}) => isActive ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>
-                Services
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/about" className={({isActive}) => isActive ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>
-                About
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/contact" className={({isActive}) => isActive ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>
-                Contact
-              </NavLink>
-            </li>
+          <div style={{ flex: 1 }} />
+
+          <nav className={`nav ${isMenuOpen ? 'active' : ''}`}>
+            <ul className="nav-list">
+              <li className="nav-item" onClick={() => setIsMenuOpen(false)}>
+                <NavLink to="/features" className={({ isActive }) => (isActive ? 'active' : '')}>
+                  Features
+                </NavLink>
+              </li>
+
+              <li className="nav-item" onClick={() => setIsMenuOpen(false)}>
+                <NavLink to="/services" className={({ isActive }) => (isActive ? 'active' : '')}>
+                  Services
+                </NavLink>
+              </li>
+
+              <li className="nav-item" onClick={() => setIsMenuOpen(false)}>
+                <NavLink to="/about" className={({ isActive }) => (isActive ? 'active' : '')}>
+                  About
+                </NavLink>
+              </li>
+
+              <li className="nav-item" onClick={() => setIsMenuOpen(false)}>
+                <NavLink to="/contact" className={({ isActive }) => (isActive ? 'active' : '')}>
+                  Contact
+                </NavLink>
+              </li>
+
+              {!isLoggedIn ? (
+                  <div
+                      className="nav-item hide-from-wide"
+                      onClick={() => {
+                        dispatch(openAuthModal());
+                        setIsMenuOpen(false);
+                      }}
+                  >
+                    <a>Sign in</a>
+                  </div>
+              ) : (
+                  <>
+                    <div
+                        className="nav-item hide-from-wide"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          handleLogout();
+                        }}
+                    >
+                      <a>Logout</a>
+                    </div>
+
+                    <div className="nav-item hide-from-wide" onClick={() => setIsMenuOpen(false)}>
+                      {user?.isDoctor ? <a>Doctor Dashboard</a> : <a>Dashboard</a>}
+                    </div>
+                  </>
+              )}
+
+              {!isLoggedIn ? (
+                  <li
+                      className="nav-item the-user-icon"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => dispatch(openAuthModal())}
+                  >
+                    <a>Sign in</a>
+                  </li>
+              ) : (
+                  <li
+                      className="nav-item the-user-icon"
+                      style={{ cursor: 'pointer' }}
+                      onClick={toggleUserMenu}
+                  >
+                    <FaRegUser />
+                  </li>
+              )}
+            </ul>
+          </nav>
 
 
-
-
-            {accessToken ? (
-                <div className="nav-item hide-from-wide" onClick={handleLogout}>
+          {isLoggedIn && (
+              <div className={`user-nav ${userMenuOpen ? 'active' : ''}`} id="user-div">
+                <div
+                    className="nav-item user-nav-item"
+                    onClick={handleLogout}
+                    id="user-inner-div-1"
+                >
                   <a>Logout</a>
                 </div>
-            ) : (
-                <div className="nav-item hide-from-wide"  onClick={() => dispatch(openAuthModal())}>
-                  <a>Sign in</a>
+
+                <div
+                    className="nav-item user-nav-item"
+                    id="user-inner-div-3"
+                    style={{ borderTop: 'solid 1px rgba(0, 0, 0, 0.05)' }}
+                    onClick={() => setUserMenuOpen(false)}
+                >
+                  {user?.isDoctor ? <a>Doctor Dashboard</a> : <a>Dashboard</a>}
                 </div>
-            )}
-            <div className="nav-item hide-from-wide">
-              <a>Dashboard</a>
-            </div>
-
-
-
-
-            <li className="nav-item the-user-icon" style={{cursor: 'pointer'}} onClick={toggleUserMenu}>
-              <FaRegUser />
-            </li>
-
-          </ul>
-        </nav>
-
-
-        <div className={`user-nav ${userMenuOpen ? 'active' : ''}`} id="user-div">
-          {accessToken ? (
-                <div className="nav-item user-nav-item" onClick={handleLogout} id='user-inner-div-1'>
-                  <a>Logout</a>
-                </div>
-          ) : (
-                <div className="nav-item user-nav-item"  onClick={() => dispatch(openAuthModal())} id='user-inner-div-2'>
-                  <a>Sign in</a>
-                </div>
+              </div>
           )}
-          <div className="nav-item user-nav-item" id='user-inner-div-3' style={{borderTop: 'solid 1px rgba(0, 0, 0, 0.05)'}}>
-            <a>Dashboard</a>
+
+          <div style={{ minWidth: '42px' }} />
+
+          <div className="menu-icon" onClick={toggleMenu}>
+            {isMenuOpen ? <FaTimes /> : <FaBars />}
           </div>
         </div>
-
-
-        <div style={{minWidth: '42px'}} />
-
-
-        <div className="menu-icon" onClick={toggleMenu}>
-          {isMenuOpen ? <FaTimes /> : <FaBars />}
-        </div>
-      </div>
-
-    </header>
+      </header>
   );
 };
 

@@ -174,3 +174,8 @@
 .user-nav.active {
   transform: translateY(0);
 }
+
+
+.no-display {
+  display: none;
+}
