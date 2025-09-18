@@ -1,4 +1,11 @@
 .schedules-wrapper {
+    display: flex;
     flex:1;
     height: 100%;
+    flex-direction: column;
+}
+
+.schedules-header {
+    display: flex;
+    flex-direction: row;
 }
