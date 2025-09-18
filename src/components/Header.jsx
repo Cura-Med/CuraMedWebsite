@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import {FaBars, FaRegUser, FaTimes } from 'react-icons/fa';
 import './Header.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { openAuthModal } from '../features/modal/modalSlice';
@@ -11,6 +11,9 @@ const Header = () => {
   const dispatch = useDispatch();
   const { accessToken } = useSelector((state) => state.auth);
 
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const toggleUserMenu = () => setUserMenuOpen(v => !v);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -19,6 +22,13 @@ const Header = () => {
     dispatch(logout());
     window.location.href = "/";
   };
+
+  const handleResize = () => {
+    setUserMenuOpen(false)
+  }
+
+  window.addEventListener("resize", handleResize);
+
 
   return (
     <header className="header">
@@ -52,37 +62,51 @@ const Header = () => {
               </NavLink>
             </li>
 
+
+
+
             {accessToken ? (
-                <li className="nav-item spec-nav">
-                  <div onClick={handleLogout}>
-                    <a>Logout</a>
-                  </div>
-                </li>
+                <div className="nav-item hide-from-wide" onClick={handleLogout}>
+                  <a>Logout</a>
+                </div>
             ) : (
-                <li className="nav-item spec-nav">
-                  <div  onClick={() => dispatch(openAuthModal())}>
-                    <a>Sign in</a>
-                  </div>
-                </li>
+                <div className="nav-item hide-from-wide"  onClick={() => dispatch(openAuthModal())}>
+                  <a>Sign in</a>
+                </div>
             )}
+            <div className="nav-item hide-from-wide">
+              <a>Dashboard</a>
+            </div>
 
 
+
+
+            <li className="nav-item the-user-icon" style={{cursor: 'pointer'}} onClick={toggleUserMenu}>
+              <FaRegUser />
+            </li>
 
           </ul>
         </nav>
 
 
+        <div className={`user-nav ${userMenuOpen ? 'active' : ''}`} id="user-div">
+          {accessToken ? (
+                <div className="nav-item user-nav-item" onClick={handleLogout} id='user-inner-div-1'>
+                  <a>Logout</a>
+                </div>
+          ) : (
+                <div className="nav-item user-nav-item"  onClick={() => dispatch(openAuthModal())} id='user-inner-div-2'>
+                  <a>Sign in</a>
+                </div>
+          )}
+          <div className="nav-item user-nav-item" id='user-inner-div-3' style={{borderTop: 'solid 1px rgba(0, 0, 0, 0.05)'}}>
+            <a>Dashboard</a>
+          </div>
+        </div>
+
+
         <div style={{minWidth: '42px'}} />
 
-{/*        {accessToken ? (
-          <button className="logout-btn logout-btn-show" onClick={handleLogout}>
-            Logout
-          </button>
-        ) : (
-          <Link to="/" className="sign-in-btn" onClick={() => dispatch(openAuthModal())}>
-            Sign in
-          </Link>
-        )}*/}
 
         <div className="menu-icon" onClick={toggleMenu}>
           {isMenuOpen ? <FaTimes /> : <FaBars />}
