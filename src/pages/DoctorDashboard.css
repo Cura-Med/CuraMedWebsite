@@ -100,3 +100,7 @@
     flex-wrap: wrap;
   }
 }
+
+.actions-list li {
+  cursor: pointer;
+}
