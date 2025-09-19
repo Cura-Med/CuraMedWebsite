@@ -1,8 +1,8 @@
-import TimeZoneSelect from "../TimeZoneSelect.jsx";
-import {FaCertificate, FaClock, FaGraduationCap} from "react-icons/fa";
-import React, {useEffect, useState} from "react";
+import {FaClock} from "react-icons/fa";
+import React, {useState} from "react";
 import './AddSchedule.css';
 import axios from "../../api/axios.js";
+import {useSelector} from "react-redux";
 
 
 
@@ -10,6 +10,7 @@ import axios from "../../api/axios.js";
 
 const AddSchedule = () => {
 
+    const user = useSelector((state) => state.auth.user);
     const handleChange = () => {};
     const [selectedDay, setSelectedDay] = useState('monday');
     const [timeSlot, setTimeSlot] = useState({ start: '09:00', end: '10:00' });
@@ -43,22 +44,52 @@ const AddSchedule = () => {
         }
     };
 
-    const addSchedules = async () => {
+    const dayMap = {
+        sunday: 0,
+        monday: 1,
+        tuesday: 2,
+        wednesday: 3,
+        thursday: 4,
+        friday: 5,
+        saturday: 6,
+    };
 
-        console.log(formData)
-/*        try {
-            const response = await axios.post('/doctor-schedules/add-multiple',
-                formData,
+    const addSchedules = async () => {
+        try {
+            const schedules = [];
+
+            Object.entries(formData.availabilitySlots).forEach(([day, slots]) => {
+                slots.forEach((slot) => {
+                    const [startTime, endTime] = slot.split(" - ");
+                    schedules.push({
+                        dayOfWeek: dayMap[day],
+                        startTime,
+                        endTime,
+                    });
+                });
+            });
+
+            let docId = user?.id || 'debug'
+            const payload = {
+                doctorId: docId,
+                schedules,
+            };
+
+            console.log("Final payload:", payload);
+
+            const response = await axios.post(
+                "/doctor-schedules/add-multiple",
+                payload,
                 {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { "Content-Type": "application/json" },
                 }
-                );
+            );
+
+            console.log("Schedules saved:", response.data);
         } catch (error) {
-            console.error('Error saving schedules:', error);
-        }*/
-    }
+            console.error("Error saving schedules:", error);
+        }
+    };
 
 
 

@@ -21,7 +21,7 @@ const DoctorDashboard = () => {
 
   useEffect( () => {
     const fetchSchedules = async () => {
-      if (user.id.length > 1 && accessToken) {
+      if (user?.id?.length > 1 && accessToken) {
         try {
           const response = await axios.get(`/doctor-schedules?DoctorId=${user.id}`);
           console.log('Schedules: ', response)
