@@ -1,7 +1,9 @@
 import TimeZoneSelect from "../TimeZoneSelect.jsx";
 import {FaCertificate, FaClock, FaGraduationCap} from "react-icons/fa";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import './AddSchedule.css';
+import axios from "../../api/axios.js";
+
 
 
 
@@ -40,6 +42,23 @@ const AddSchedule = () => {
             }
         }
     };
+
+    const addSchedules = async () => {
+
+        console.log(formData)
+/*        try {
+            const response = await axios.post('/doctor-schedules/add-multiple',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+                );
+        } catch (error) {
+            console.error('Error saving schedules:', error);
+        }*/
+    }
 
 
 
@@ -139,7 +158,13 @@ const AddSchedule = () => {
                                         ))}
                                     </ul>
                                     <div style={{flex: 1}}/>
-                                    <div>Submit</div>
+                                    <button
+                                        type="button"
+                                        className="add-slot-button"
+                                        onClick={addSchedules}
+                                    >
+                                        Submit
+                                    </button>
                                 </div>
 
                         ) : (
