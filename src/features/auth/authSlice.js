@@ -73,10 +73,14 @@ const authSlice = createSlice({
             })
             .addCase(fetchUserMe.fulfilled, (state, action) => {
                 state.user = action.payload;
+                state.error = null;
             })
             .addCase(fetchUserMe.rejected, (state, action) => {
                 state.user = null;
                 state.error = action.payload;
+                state.accessToken = null;
+                localStorage.removeItem('accessToken');
+                delete axios.defaults.headers.common['Authorization'];
             });
     }
 });

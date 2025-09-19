@@ -21,7 +21,7 @@ import {closeAuthModal} from "./features/modal/modalSlice.js";
 
 import VideoCall2 from "./components/VideoCall2.jsx";
 import VideoCall from "./components/VideoCall.jsx";
-import {fetchUserMe} from "./features/auth/authSlice.js";
+import {fetchUserMe, logout} from "./features/auth/authSlice.js";
 import VideoCall3 from "./components/VideoCall3.jsx";
 
 function App() {
@@ -30,6 +30,7 @@ function App() {
   const isModalOpen = useSelector((state) => state.modal.isAuthModalOpen);
   const accessToken = useSelector((state) => state.auth.accessToken);
   const status = useSelector((state) => state.auth.status)
+  const error = useSelector((state) => state.auth.error)
 
     useEffect(() => {
        // console.log('accessToken: ', accessToken, status)
@@ -37,6 +38,12 @@ function App() {
             dispatch(fetchUserMe());
         }
     }, [accessToken, status]);
+
+  useEffect(() => {
+      if (error) {
+          dispatch(logout());
+      }
+  }, [error])
 
   return (
     <div className="app">
