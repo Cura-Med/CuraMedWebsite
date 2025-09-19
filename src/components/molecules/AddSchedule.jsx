@@ -69,7 +69,7 @@ const AddSchedule = () => {
 
     return (
     <form className="auth-form">
-        <TimeZoneSelect value={formData.timeZone} onChange={handleChange} />
+        {/*<TimeZoneSelect value={formData.timeZone} onChange={handleChange} />*/}
 
         <div className="form-group form-field">
             <label className="select-label">
@@ -123,20 +123,25 @@ const AddSchedule = () => {
                     <div className="selected-slots">
                         <h4>Selected time slots for {selectedDay.charAt(0).toUpperCase() + selectedDay.slice(1)}</h4>
                         {formData.availabilitySlots[selectedDay].length > 0 ? (
-                            <ul className="slot-list">
-                                {formData.availabilitySlots[selectedDay].map((slot, index) => (
-                                    <li key={index} className="slot-item">
-                                        <span>{slot}</span>
-                                        <button
-                                            type="button"
-                                            className="remove-slot-button"
-                                            onClick={() => removeTimeSlot(selectedDay, slot)}
-                                        >
-                                            ×
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
+                                <div className="slots-wrap">
+                                    <ul className="slot-list">
+                                        {formData.availabilitySlots[selectedDay].map((slot, index) => (
+                                            <li key={index} className="slot-item">
+                                                <span>{slot}</span>
+                                                <button
+                                                    type="button"
+                                                    className="remove-slot-button"
+                                                    onClick={() => removeTimeSlot(selectedDay, slot)}
+                                                >
+                                                    ×
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <div style={{flex: 1}}/>
+                                    <div>Submit</div>
+                                </div>
+
                         ) : (
                             <p className="no-slots-message">No time slots added yet</p>
                         )}
