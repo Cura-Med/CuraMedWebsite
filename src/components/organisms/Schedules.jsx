@@ -4,8 +4,13 @@ import React, {useState} from "react";
 import AddSchedule from "../molecules/AddSchedule.jsx";
 
 
-const Schedules = (schedules) => {
+const Schedules = (props) => {
 
+    let schedules = props.schedules;
+    let setTick = props.setTick;
+
+
+    console.log('Sche: ', schedules)
     const [componentStep, setComponentStep] = useState('default')
 
     const chooseAdd = () => {
@@ -26,12 +31,15 @@ const Schedules = (schedules) => {
                         {!schedules?.[0]?.id &&
                             <p>No upcoming schedules</p>
                         }
+                        {schedules?.[0]?.id &&
+                            <p>{schedules.length}</p>
+                        }
                     </>
                 </>
             }
 
             {componentStep === 'add' &&
-                <AddSchedule />
+                <AddSchedule setComponentStep={setComponentStep} setTick={setTick} />
             }
 
 

@@ -66,24 +66,8 @@
   padding: 0;
 }
 
-.consultation-item {
-  background-color: #e6ffed;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 
-.category {
-  font-weight: bold;
-  color: #27ae60;
-}
 
-.date {
-  color: #666;
-}
 
 .view-all {
   display: block;

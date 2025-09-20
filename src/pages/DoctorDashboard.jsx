@@ -14,6 +14,8 @@ const DoctorDashboard = () => {
   const [schedules, setSchedules] = useState([]);
   const [appointments, setAppointments] = useState([]);
 
+  const [tick, setTick] = useState(0);
+
   const [leftSectionSelection, setLeftSectionSelection] = useState('appointments')
 
   const setLeftSectionSelectionSchedules = () => { setLeftSectionSelection('schedules') }
@@ -23,14 +25,29 @@ const DoctorDashboard = () => {
     const fetchSchedules = async () => {
       if (user?.id?.length > 1 && accessToken) {
         try {
-          const response = await axios.get(`/doctor-schedules?DoctorId=${user.id}`);
+          const response = await axios.get(`/doctor-schedules?DoctorId=${user.doctorId}`);
           console.log('Schedules: ', response)
-          setSchedules(response.doctorSchedules)
+          setSchedules(response.data.doctorSchedules)
         } catch (e) {}
       }
     }
     fetchSchedules().then(r => {})
-  }, [user]);
+  }, [user, tick]);
+
+  useEffect(() => {
+    if (!user || !accessToken) return;
+    getMyAppointments().then(() => {});
+  }, [user, accessToken]);
+
+  const getMyAppointments = async () => {
+    try {
+      const response = await axios.get('/appointments/by-doctor/' + user.doctorId);
+      console.log(response)
+      setAppointments(response.data.appointments)
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+    }
+  };
 
   if (!accessToken || !user) {
     navigate('/');
@@ -66,7 +83,7 @@ const DoctorDashboard = () => {
               <Appointments appointments={appointments}/>
           }
           {leftSectionSelection === 'schedules' &&
-              <Schedules schedules={schedules}/>
+              <Schedules schedules={schedules} setTick={setTick} key={'schedules' + tick}/>
           }
         </div>
 

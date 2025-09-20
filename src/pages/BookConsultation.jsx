@@ -6,7 +6,7 @@ import axios from '../api/axios';
 
 const BookConsultation = () => {
   const navigate = useNavigate();
-  const { user, accessToken } = useSelector((state) => state.auth);
+  const user = useSelector((state) => state.auth.user);
   const [specialties, setSpecialties] = useState([]);
   const [selectedSpecialty, setSelectedSpecialty] = useState(null);
   const [selectedDate, setSelectedDate] = useState('');
@@ -71,16 +71,17 @@ const BookConsultation = () => {
       return;
     }
     try {
-      await instance.post('/appointments', {
+      await axios.post('/appointments/' + selectedSlot.doctorId + '/make-appointment', {
         specialtyId: selectedSpecialty,
+        patientId: user.id,
         appointmentDate: selectedDate,
         doctorId: selectedSlot.doctorId,
-        slotStart: selectedSlot.slotStart,
-        slotEnd: selectedSlot.slotEnd,
+        startTime: selectedSlot.slotStart,
+        endTime: selectedSlot.slotEnd,
         language: selectedLanguage,
-        symptoms
+        notes: symptoms
       });
-      navigate('/user-dashboard');
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error booking appointment:', error);
     }
@@ -93,6 +94,10 @@ const BookConsultation = () => {
   //   navigate('/');
   //   return null;
   // }
+
+  if (!user?.id) {
+    return null
+  }
 
   return (
     <div className="book-consultation-container">

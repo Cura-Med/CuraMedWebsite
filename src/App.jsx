@@ -68,7 +68,7 @@ function App() {
            <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
 
             <Route path="/video-test" element={<VideoCall />} />
-            <Route path="/video-test-joiner" element={<VideoCall3 />} />
+            <Route path="/video-call/:callId" element={<VideoCall3 />} />
            <Route path="/book-consultation" element={<BookConsultation />} />
          </Routes>
       </main>

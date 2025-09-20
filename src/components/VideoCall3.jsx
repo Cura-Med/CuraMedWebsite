@@ -5,11 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { openAuthModal } from "../features/modal/modalSlice.js";
 import { useNavigate } from "react-router-dom";
 import { getChatToken } from '../features/chat/chatSlice';
+import { useParams } from "react-router-dom";
 
 const APP_ID = import.meta.env.VITE_AGORA_APP_ID;
 const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
 
 export default function VideoCall3() {
+    const { callId } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -39,7 +41,7 @@ export default function VideoCall3() {
 
     // Generate channel once (initiator). You'll paste this value into the other user's hardcoded channel.
     const generateChannel = () => {
-        const ch = 'a4px8rnpf4q' // Math.random().toString(36).substring(2, 20);
+        const ch = callId // Math.random().toString(36).substring(2, 20);
         setChannel(ch);
         console.log('Generated channel:', ch); // <-- copy this for the other user
         return ch;

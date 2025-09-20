@@ -8,8 +8,10 @@ import {useSelector} from "react-redux";
 
 
 
-const AddSchedule = () => {
+const AddSchedule = (props) => {
 
+    const setComponentStep = props.setComponentStep;
+    const setTick = props.setTick;
     const user = useSelector((state) => state.auth.user);
     const handleChange = () => {};
     const [selectedDay, setSelectedDay] = useState('monday');
@@ -69,7 +71,7 @@ const AddSchedule = () => {
                 });
             });
 
-            let docId = user?.id || 'debug'
+            let docId = user?.doctorId || 'debug'
             const payload = {
                 doctorId: docId,
                 schedules,
@@ -86,6 +88,8 @@ const AddSchedule = () => {
             );
 
             console.log("Schedules saved:", response.data);
+            setTick(new Date().getTime())
+            setComponentStep('default')
         } catch (error) {
             console.error("Error saving schedules:", error);
         }
