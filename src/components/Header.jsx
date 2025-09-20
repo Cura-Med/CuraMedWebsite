@@ -31,7 +31,7 @@ const Header = () => {
     dispatch(logout());
     window.location.href = '/';
   };
-  
+
 
   useEffect(() => {
     const onResize = () => setUserMenuOpen(false);

@@ -19,8 +19,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {closeAuthModal} from "./features/modal/modalSlice.js";
 
 
-import VideoCall2 from "./components/VideoCall2.jsx";
-import VideoCall from "./components/VideoCall.jsx";
 import {fetchUserMe, logout} from "./features/auth/authSlice.js";
 import VideoCall3 from "./components/VideoCall3.jsx";
 
@@ -67,7 +65,6 @@ function App() {
            <Route path="/dashboard" element={<UserDashboard />} />
            <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
 
-            <Route path="/video-test" element={<VideoCall />} />
             <Route path="/video-call/:callId" element={<VideoCall3 />} />
            <Route path="/book-consultation" element={<BookConsultation />} />
          </Routes>
