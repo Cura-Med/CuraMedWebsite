@@ -2,6 +2,7 @@
 import './Schedules.css';
 import React, {useState} from "react";
 import AddSchedule from "../molecules/AddSchedule.jsx";
+import EditSchedule from "../molecules/EditSchedule.jsx";
 
 
 const Schedules = (props) => {
@@ -25,14 +26,20 @@ const Schedules = (props) => {
                     <div className='schedules-header'>
                         <h2>Upcoming Schedules</h2>
                         <div style={{flex: 1}}/>
-                        <div style={{cursor: 'pointer'}} onClick={chooseAdd}>Add</div>
+                        <button
+                            type="button"
+                            className="add-slot-button"
+                            onClick={chooseAdd}
+                        >
+                            Add
+                        </button>
                     </div>
                     <>
                         {!schedules?.[0]?.id &&
                             <p>No upcoming schedules</p>
                         }
                         {schedules?.[0]?.id &&
-                            <p>{schedules.length}</p>
+                            <EditSchedule schedules={schedules} />
                         }
                     </>
                 </>

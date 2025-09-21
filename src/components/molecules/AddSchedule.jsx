@@ -21,6 +21,10 @@ const AddSchedule = (props) => {
         setSelectedDay(day);
     };
 
+    const backToDefault = () => {
+        setComponentStep('default')
+    }
+
     const handleTimeSlotChange = (e) => {
         const { name, value } = e.target;
         setTimeSlot(prev => ({
@@ -126,9 +130,18 @@ const AddSchedule = (props) => {
         {/*<TimeZoneSelect value={formData.timeZone} onChange={handleChange} />*/}
 
         <div className="form-group form-field">
-            <label className="select-label">
-                <FaClock className="field-icon" /> Consultation Availability
-            </label>
+            <div className="select-label_schedule">
+                <FaClock className="field-icon" />
+                <p style={{marginLeft: '8px'}}>Consultation Availability</p>
+                <div style={{flex: 1}}/>
+                <button
+                    type="button"
+                    className="add-slot-button"
+                    onClick={backToDefault}
+                >
+                    Edit
+                </button>
+            </div>
             <div className="availability-container">
                 <div className="day-selector">
                     {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(day => (

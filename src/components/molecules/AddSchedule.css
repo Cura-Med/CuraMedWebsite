@@ -54,18 +54,18 @@
 }
 
 /* Labels & icons */
-.select-label {
+.select-label_schedule {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     font-weight: 500;
     color: var(--text-color);
+    flex-direction: row;
 }
 
 .field-icon {
     color: #8c7dff;
-    font-size: 16px;
+    font-size: 24px;
 }
 
 .optional-label {
