@@ -18,7 +18,7 @@ const Appointment = (props) => {
 
     return (
         <li className="consultation-item">
-            <span className="category">Mental Health </span>
+            <span className="category">{appointment.name} </span>
             <span className="date">{appointment.appointmentDate + ' ' + appointment.startTime}</span>
 
 

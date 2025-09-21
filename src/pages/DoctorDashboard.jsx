@@ -64,7 +64,7 @@ const DoctorDashboard = () => {
           <div className="stat-label">Total Patients</div>
         </div>
         <div className="stat-box">
-          <div className="stat-number">0</div>
+          <div className="stat-number">{appointments.length}</div>
           <div className="stat-label">Upcoming Appointments</div>
         </div>
         <div className="stat-box">

@@ -41,7 +41,7 @@ const UserDashboard = () => {
 
         <div className="stats-row">
           <div className="stat-box">
-            <div className="stat-number">2</div>
+            <div className="stat-number">{appointments.length}</div>
             <div className="stat-label">Appointments</div>
           </div>
           <div className="stat-box">
