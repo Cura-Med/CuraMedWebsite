@@ -139,7 +139,7 @@ const AddSchedule = (props) => {
                     className="add-slot-button"
                     onClick={backToDefault}
                 >
-                    Edit
+                    Edit Schedules
                 </button>
             </div>
             <div className="availability-container">

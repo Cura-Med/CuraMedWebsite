@@ -24,14 +24,14 @@ const Schedules = (props) => {
             {componentStep === 'default' &&
                 <>
                     <div className='schedules-header'>
-                        <h2>Upcoming Schedules</h2>
+                        <h2>Edit Schedules</h2>
                         <div style={{flex: 1}}/>
                         <button
                             type="button"
                             className="add-slot-button"
                             onClick={chooseAdd}
                         >
-                            Add
+                            Add Schedules
                         </button>
                     </div>
                     <>
