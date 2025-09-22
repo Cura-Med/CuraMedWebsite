@@ -10,10 +10,8 @@ import {useSelector} from "react-redux";
 
 const AddSchedule = (props) => {
 
-    const setComponentStep = props.setComponentStep;
     const setTick = props.setTick;
     const user = useSelector((state) => state.auth.user);
-    const handleChange = () => {};
     const [selectedDay, setSelectedDay] = useState('monday');
     const [timeSlot, setTimeSlot] = useState({ start: '09:00', end: '10:00' });
     const schedules = props.schedules;
@@ -25,33 +23,29 @@ const AddSchedule = (props) => {
         setSelectedDay(initialDaySelection)
     }, [])
 
-      useEffect(() => {
-            if (!Array.isArray(schedules) || schedules.length === 0) return;
+    useEffect(() => {
+        if (!Array.isArray(schedules) || schedules.length === 0) return;
 
-            const dayNames = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
-            const init = {
-                  monday: [], tuesday: [], wednesday: [], thursday: [],
-                  friday: [], saturday: [], sunday: [],
-                };
-            const toHHMM = (t = '') => t.toString().slice(0,5);
+        const dayNames = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+        const init = {
+            monday: [], tuesday: [], wednesday: [], thursday: [],
+            friday: [], saturday: [], sunday: [],
+        };
+        const toHHMM = (t = '') => t.toString().slice(0,5);
 
-                schedules.forEach(s => {
-                      const day = dayNames[s.dayOfWeek];
-                      if (!day) return;
-                      const slot = `${toHHMM(s.startTime)} - ${toHHMM(s.endTime)}`;
-                      if (!init[day].includes(slot)) init[day].push(slot);
-                    });
-                setFormData(prev => ({ ...prev, availabilitySlots: init }));
-        }, [schedules]);
+        schedules.forEach(s => {
+            const day = dayNames[s.dayOfWeek];
+            if (!day) return;
+            const slot = `${toHHMM(s.startTime)} - ${toHHMM(s.endTime)}`;
+            if (!init[day].includes(slot)) init[day].push(slot);
+        });
+        setFormData(prev => ({ ...prev, availabilitySlots: init }));
+    }, [schedules]);
 
     const handleDaySelect = (day) => {
         setInitialDaySelection(day);
         setSelectedDay(day);
     };
-
-    const backToDefault = () => {
-        setComponentStep('default')
-    }
 
     const handleTimeSlotChange = (e) => {
         const { name, value } = e.target;
@@ -121,7 +115,6 @@ const AddSchedule = (props) => {
 
             console.log("Schedules saved:", response.data);
             setTick(new Date().getTime())
-            setComponentStep('default')
         } catch (error) {
             console.error("Error saving schedules:", error);
         }
@@ -171,112 +164,105 @@ const AddSchedule = (props) => {
 
 
     return (
-    <form className="auth-form">
-        {/*<TimeZoneSelect value={formData.timeZone} onChange={handleChange} />*/}
+        <form className="auth-form">
 
-        <div className="form-group form-field">
-            <div className="select-label_schedule">
-                <FaClock className="field-icon" />
-                <p style={{marginLeft: '8px'}}>Consultation Availability</p>
-                <div style={{flex: 1}}/>
-{/*                <button
-                    type="button"
-                    className="add-slot-button"
-                    onClick={backToDefault}
-                >
-                    Edit Schedules
-                </button>*/}
-            </div>
-            <div className="availability-container">
-                <div className="day-selector">
-                    {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(day => (
-                        <button
-                            key={day}
-                            type="button"
-                            className={`day-button ${selectedDay === day ? 'selected' : ''}`}
-                            onClick={() => handleDaySelect(day)}
-                        >
-                            {day.charAt(0).toUpperCase() + day.slice(1, 3)}
-                        </button>
-                    ))}
+            <div className="form-group form-field">
+                <div className="select-label_schedule">
+                    <FaClock className="field-icon" />
+                    <p style={{marginLeft: '8px'}}>Consultation Availability</p>
+                    <div style={{flex: 1}}/>
+
                 </div>
-
-                <div className="time-slot-selector">
-                    <div className="time-inputs">
-                        <div className="time-input-group">
-                            <label>Start</label>
-                            <input
-                                type="time"
-                                name="start"
-                                value={timeSlot.start}
-                                onChange={handleTimeSlotChange}
-                                className="time-input"
-                            />
-                        </div>
-                        <div className="time-input-group">
-                            <label>End</label>
-                            <input
-                                type="time"
-                                name="end"
-                                value={timeSlot.end}
-                                onChange={handleTimeSlotChange}
-                                className="time-input"
-                            />
-                        </div>
-                        <button
-                            type="button"
-                            className="add-slot-button"
-                            onClick={addTimeSlot}
-                        >
-                            Add
-                        </button>
+                <div className="availability-container">
+                    <div className="day-selector">
+                        {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(day => (
+                            <button
+                                key={day}
+                                type="button"
+                                className={`day-button ${selectedDay === day ? 'selected' : ''}`}
+                                onClick={() => handleDaySelect(day)}
+                            >
+                                {day.charAt(0).toUpperCase() + day.slice(1, 3)}
+                            </button>
+                        ))}
                     </div>
 
-                    <div className="selected-slots">
-                        <h4>Selected time slots for {selectedDay.charAt(0).toUpperCase() + selectedDay.slice(1)}</h4>
-                        <div className="slots-wrap__outer">
-                            {formData.availabilitySlots[selectedDay].length > 0 ? (
-                                <div className="slots-wrap">
-                                    <ul className="slot-list">
-                                        {formData.availabilitySlots[selectedDay].map((slot, index) => (
-                                            <li key={index} className="slot-item">
-                                                <span>{slot}</span>
-                                                <button
-                                                    type="button"
-                                                    className="remove-slot-button"
-                                                    onClick={() => removeTimeSlot(selectedDay, slot)}
-                                                >
-                                                    ×
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-
-                                </div>
-
-                            ) : (
-                                <p className="no-slots-message">No time slots added yet</p>
-                            )}
-
-                            <div style={{flex: 1}}/>
+                    <div className="time-slot-selector">
+                        <div className="time-inputs">
+                            <div className="time-input-group">
+                                <label>Start</label>
+                                <input
+                                    type="time"
+                                    name="start"
+                                    value={timeSlot.start}
+                                    onChange={handleTimeSlotChange}
+                                    className="time-input"
+                                />
+                            </div>
+                            <div className="time-input-group">
+                                <label>End</label>
+                                <input
+                                    type="time"
+                                    name="end"
+                                    value={timeSlot.end}
+                                    onChange={handleTimeSlotChange}
+                                    className="time-input"
+                                />
+                            </div>
                             <button
                                 type="button"
                                 className="add-slot-button"
-                                onClick={addSchedules}
+                                onClick={addTimeSlot}
                             >
-                                Submit
+                                Add
                             </button>
                         </div>
 
+                        <div className="selected-slots">
+                            <h4>Selected time slots for {selectedDay.charAt(0).toUpperCase() + selectedDay.slice(1)}</h4>
+                            <div className="slots-wrap__outer">
+                                {formData.availabilitySlots[selectedDay].length > 0 ? (
+                                    <div className="slots-wrap">
+                                        <ul className="slot-list">
+                                            {formData.availabilitySlots[selectedDay].map((slot, index) => (
+                                                <li key={index} className="slot-item">
+                                                    <span>{slot}</span>
+                                                    <button
+                                                        type="button"
+                                                        className="remove-slot-button"
+                                                        onClick={() => removeTimeSlot(selectedDay, slot)}
+                                                    >
+                                                        ×
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                    </div>
+
+                                ) : (
+                                    <p className="no-slots-message">No time slots added yet</p>
+                                )}
+
+                                <div style={{flex: 1}}/>
+                                <button
+                                    type="button"
+                                    className="add-slot-button"
+                                    onClick={addSchedules}
+                                >
+                                    Submit
+                                </button>
+                            </div>
 
 
+
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
 
-    </form>)
+        </form>)
 
 
 };

@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { FaUser, FaStethoscope, FaEnvelope, FaCalendarAlt } from 'react-icons/fa';
 import './UserDashboard.css';
 import axios from "../api/axios.js";
-import ServiceCard from "../components/ServiceCard.jsx";
 import Appointment from "../components/atoms/Appointment.jsx";
 
 const UserDashboard = () => {
@@ -66,15 +65,7 @@ const UserDashboard = () => {
                   />
               ))}
 
-
-
-              {/*            <li className="consultation-item">
-              <span className="category">General</span>
-              <span className="date">Jun 10, 10:00 AM</span>
-            </li>
-*/}
             </ul>
-            <a href="#" className="view-all">View All</a>
 
             <h2>Track Your Vitals</h2>
           </div>
