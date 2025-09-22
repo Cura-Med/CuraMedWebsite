@@ -1,4 +1,3 @@
-
 import './Schedules.css';
 import React from "react";
 import AddSchedule from "../molecules/AddSchedule.jsx";
