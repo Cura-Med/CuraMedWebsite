@@ -21,7 +21,7 @@ const Schedules = (props) => {
     return (
         <div className='scheduless-wrapper'>
 
-            {componentStep === 'default' &&
+{/*            {componentStep === 'default' &&
                 <>
                     <div className='schedules-header'>
                         <h2>Edit Schedules</h2>
@@ -43,12 +43,12 @@ const Schedules = (props) => {
                         }
                     </>
                 </>
-            }
+            }*/}
 
-            {componentStep === 'add' &&
-                <AddSchedule setComponentStep={setComponentStep} setTick={setTick} />
-            }
+{/*            {componentStep === 'add' &&
 
+            }*/}
+            <AddSchedule setComponentStep={setComponentStep} setTick={setTick} schedules={schedules} />
 
         </div>
     )

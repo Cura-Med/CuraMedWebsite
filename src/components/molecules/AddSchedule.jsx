@@ -1,5 +1,5 @@
 import {FaClock} from "react-icons/fa";
-import React, {useState} from "react";
+import React, {useState , useEffect} from "react";
 import './AddSchedule.css';
 import axios from "../../api/axios.js";
 import {useSelector} from "react-redux";
@@ -16,6 +16,26 @@ const AddSchedule = (props) => {
     const handleChange = () => {};
     const [selectedDay, setSelectedDay] = useState('monday');
     const [timeSlot, setTimeSlot] = useState({ start: '09:00', end: '10:00' });
+    const schedules = props.schedules;
+
+      useEffect(() => {
+            if (!Array.isArray(schedules) || schedules.length === 0) return;
+
+            const dayNames = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+            const init = {
+                  monday: [], tuesday: [], wednesday: [], thursday: [],
+                  friday: [], saturday: [], sunday: [],
+                };
+            const toHHMM = (t = '') => t.toString().slice(0,5);
+
+                schedules.forEach(s => {
+                      const day = dayNames[s.dayOfWeek];
+                      if (!day) return;
+                      const slot = `${toHHMM(s.startTime)} - ${toHHMM(s.endTime)}`;
+                      if (!init[day].includes(slot)) init[day].push(slot);
+                    });
+                setFormData(prev => ({ ...prev, availabilitySlots: init }));
+        }, [schedules]);
 
     const handleDaySelect = (day) => {
         setSelectedDay(day);
@@ -114,7 +134,7 @@ const AddSchedule = (props) => {
         },
     });
 
-    const removeTimeSlot = (day, slot) => {
+    const removeTimeSlot = async (day, slot) => {
         setFormData(prev => ({
             ...prev,
             availabilitySlots: {
@@ -122,6 +142,23 @@ const AddSchedule = (props) => {
                 [day]: prev.availabilitySlots[day].filter(s => s !== slot)
             }
         }));
+        console.log(day, slot)
+        console.log(schedules)
+
+        let dayCode = dayMap[day];
+        for (let i = 0; i < schedules.length; i++) {
+            if (schedules[i].dayOfWeek === dayCode) {
+                if (slot === (schedules[i].startTime.toString().slice(0,5) + ' - ' + schedules[i].endTime.toString().slice(0,5))) {
+                    if (schedules[i].id) {
+                        try {
+                            const response = await axios.delete('/doctor-schedules/ ' + schedules[i].id)
+                            if (response?.data?.message) { setTick(new Date().getTime()) }
+                        } catch (e) {}
+                        break;
+                    }
+                }
+            }
+        }
     };
 
 
@@ -134,13 +171,13 @@ const AddSchedule = (props) => {
                 <FaClock className="field-icon" />
                 <p style={{marginLeft: '8px'}}>Consultation Availability</p>
                 <div style={{flex: 1}}/>
-                <button
+{/*                <button
                     type="button"
                     className="add-slot-button"
                     onClick={backToDefault}
                 >
                     Edit Schedules
-                </button>
+                </button>*/}
             </div>
             <div className="availability-container">
                 <div className="day-selector">
@@ -189,7 +226,8 @@ const AddSchedule = (props) => {
 
                     <div className="selected-slots">
                         <h4>Selected time slots for {selectedDay.charAt(0).toUpperCase() + selectedDay.slice(1)}</h4>
-                        {formData.availabilitySlots[selectedDay].length > 0 ? (
+                        <div className="slots-wrap__outer">
+                            {formData.availabilitySlots[selectedDay].length > 0 ? (
                                 <div className="slots-wrap">
                                     <ul className="slot-list">
                                         {formData.availabilitySlots[selectedDay].map((slot, index) => (
@@ -205,19 +243,25 @@ const AddSchedule = (props) => {
                                             </li>
                                         ))}
                                     </ul>
-                                    <div style={{flex: 1}}/>
-                                    <button
-                                        type="button"
-                                        className="add-slot-button"
-                                        onClick={addSchedules}
-                                    >
-                                        Submit
-                                    </button>
+
                                 </div>
 
-                        ) : (
-                            <p className="no-slots-message">No time slots added yet</p>
-                        )}
+                            ) : (
+                                <p className="no-slots-message">No time slots added yet</p>
+                            )}
+
+                            <div style={{flex: 1}}/>
+                            <button
+                                type="button"
+                                className="add-slot-button"
+                                onClick={addSchedules}
+                            >
+                                Submit
+                            </button>
+                        </div>
+
+
+
                     </div>
                 </div>
             </div>

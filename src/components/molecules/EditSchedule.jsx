@@ -1,6 +1,7 @@
 
 
 import React from "react";
+import SingleSchedule from "../atoms/SingleSchedule.jsx";
 
 const EditSchedule = (props) => {
 
@@ -11,7 +12,7 @@ const EditSchedule = (props) => {
         <div className="edit-schedule__wrapper">
             {schedules.map((schedule, index) => (
                 <div key={schedule.id}>
-                    {schedule.dayOfWeek}  {schedule.startTime}
+                    <SingleSchedule schedule={schedule} />
                 </div>
                 )
 

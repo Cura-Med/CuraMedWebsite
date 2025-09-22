@@ -170,6 +170,7 @@
     cursor: pointer;
     transition: background-color 0.3s;
     height: 40px;
+    margin-bottom: 8px;
 }
 
 .add-slot-button:hover {
@@ -301,6 +302,11 @@
 }
 
 .slots-wrap {
+    display: flex;
+    flex-direction: row;
+}
+
+.slots-wrap__outer {
     display: flex;
     flex-direction: row;
 }

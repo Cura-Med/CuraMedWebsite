@@ -15,6 +15,7 @@ const DoctorDashboard = () => {
   const [appointments, setAppointments] = useState([]);
 
   const [tick, setTick] = useState(0);
+  const [schedulesTick, setSchedulesTick] = useState(0);
 
   const [leftSectionSelection, setLeftSectionSelection] = useState('appointments')
 
@@ -28,6 +29,9 @@ const DoctorDashboard = () => {
           const response = await axios.get(`/doctor-schedules?DoctorId=${user.doctorId}`);
           console.log('Schedules: ', response)
           setSchedules(response.data.doctorSchedules)
+          setTimeout(() => {
+            setSchedulesTick(new Date().getTime())
+          }, 1)
         } catch (e) {}
       }
     }
@@ -83,7 +87,7 @@ const DoctorDashboard = () => {
               <Appointments appointments={appointments}/>
           }
           {leftSectionSelection === 'schedules' &&
-              <Schedules schedules={schedules} setTick={setTick} key={'schedules' + tick}/>
+              <Schedules schedules={schedules} setTick={setTick} key={'schedules' + schedulesTick}/>
           }
         </div>
 
