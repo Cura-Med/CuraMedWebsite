@@ -9,6 +9,8 @@ const Schedules = (props) => {
 
     let schedules = props.schedules;
     let setTick = props.setTick;
+    let initialDaySelection = props.initialDaySelection;
+    let setInitialDaySelection = props.setInitialDaySelection
 
 
     console.log('Sche: ', schedules)
@@ -48,7 +50,7 @@ const Schedules = (props) => {
 {/*            {componentStep === 'add' &&
 
             }*/}
-            <AddSchedule setComponentStep={setComponentStep} setTick={setTick} schedules={schedules} />
+            <AddSchedule setComponentStep={setComponentStep} setTick={setTick} schedules={schedules} initialDaySelection={initialDaySelection} setInitialDaySelection={setInitialDaySelection} />
 
         </div>
     )

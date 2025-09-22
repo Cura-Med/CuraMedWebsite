@@ -18,6 +18,13 @@ const AddSchedule = (props) => {
     const [timeSlot, setTimeSlot] = useState({ start: '09:00', end: '10:00' });
     const schedules = props.schedules;
 
+    let initialDaySelection = props.initialDaySelection;
+    let setInitialDaySelection = props.setInitialDaySelection;
+
+    useEffect(() => {
+        setSelectedDay(initialDaySelection)
+    }, [])
+
       useEffect(() => {
             if (!Array.isArray(schedules) || schedules.length === 0) return;
 
@@ -38,6 +45,7 @@ const AddSchedule = (props) => {
         }, [schedules]);
 
     const handleDaySelect = (day) => {
+        setInitialDaySelection(day);
         setSelectedDay(day);
     };
 

@@ -16,6 +16,7 @@ const DoctorDashboard = () => {
 
   const [tick, setTick] = useState(0);
   const [schedulesTick, setSchedulesTick] = useState(0);
+  const [initialDaySelection, setInitialDaySelection] = useState('monday');
 
   const [leftSectionSelection, setLeftSectionSelection] = useState('appointments')
 
@@ -87,7 +88,9 @@ const DoctorDashboard = () => {
               <Appointments appointments={appointments}/>
           }
           {leftSectionSelection === 'schedules' &&
-              <Schedules schedules={schedules} setTick={setTick} key={'schedules' + schedulesTick}/>
+              <Schedules schedules={schedules} setTick={setTick} key={'schedules' + schedulesTick}
+                         initialDaySelection={initialDaySelection} setInitialDaySelection={setInitialDaySelection}
+              />
           }
         </div>
 
