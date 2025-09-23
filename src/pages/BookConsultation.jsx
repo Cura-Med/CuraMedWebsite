@@ -89,6 +89,10 @@ const BookConsultation = () => {
 
   const selectedSpecialtyName = specialties.find(s => s.id === selectedSpecialty)?.name || '';
 
+  const takeBack = () => {
+    window.history.back();
+  }
+
   // Temporarily bypass auth for verification
   // if (!accessToken || !user) {
   //   navigate('/');
@@ -102,6 +106,7 @@ const BookConsultation = () => {
   return (
     <div className="book-consultation-container">
       <h1>Book a Consultation</h1>
+
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Consultation Type</label>
@@ -231,7 +236,19 @@ const BookConsultation = () => {
             placeholder="Describe your symptoms..."
           ></textarea>
         </div>
-        <button type="submit" className="book-button">Book Consultation</button>
+
+        <div className='bottom-buttons'>
+          <button type="submit" disabled={!selectedSlot}
+                  className={`book-button ${!selectedSlot ? "book-button--disabled" : ""}`}
+          >Book Consultation</button>
+          {window.history.length > 1 &&
+              <>
+                <div style={{width: '12px'}}/>
+                <div onClick={takeBack} className="book-button book-button__div">Back</div>
+              </>
+          }
+        </div>
+
       </form>
     </div>
   );

@@ -68,6 +68,7 @@ textarea {
   font-size: 1em;
   cursor: pointer;
   margin-top: 10px;
+  flex: 1;
 }
 
 .book-button:hover {
@@ -165,4 +166,21 @@ textarea {
 .slot-button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+.bottom-buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+.book-button__div {
+  text-align: center;
+}
+
+.book-button--disabled {
+  background-color: lightgray;
+}
+.book-button--disabled:hover {
+  background-color: lightgray;
+  cursor: default;
 }

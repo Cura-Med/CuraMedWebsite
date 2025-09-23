@@ -130,7 +130,7 @@ const Header = () => {
                     onClick={handleLogout}
                     id="user-inner-div-1"
                 >
-                  <a>Logout</a>
+                  <span>Logout</span>
                 </div>
 
                 <div
@@ -139,7 +139,7 @@ const Header = () => {
                     style={{ borderTop: 'solid 1px rgba(0, 0, 0, 0.05)' }}
                     onClick={() => setUserMenuOpen(false)}
                 >
-                  {user?.isDoctor ? <a onClick={() => openDashboard()}>Doctor Dashboard</a> : <a onClick={() => openDashboard()}>Dashboard</a>}
+                  {user?.isDoctor ? <span onClick={() => openDashboard()}>Doctor Dashboard</span> : <span onClick={() => openDashboard()}>Dashboard</span>}
                 </div>
               </div>
           )}

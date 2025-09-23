@@ -86,6 +86,16 @@
   color: var(--text-color);
 }
 
+.nav-item span {
+  flex: 1;
+  width: 100%;
+  display: inline-block;
+  font-weight: 500;
+}
+.nav-item span:hover {
+  color: var(--primary-color);
+}
+
 @media (max-width: 768px) {
   .menu-icon {
     display: block;
@@ -125,6 +135,13 @@
     display: block;
     padding: 15px 20px;
     border-bottom: 1px solid var(--light-gray);
+  }
+  .nav-item span {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--light-gray);
+    flex: 1;
+    width: 100%;
+    display: inline-block;
   }
 }
 
