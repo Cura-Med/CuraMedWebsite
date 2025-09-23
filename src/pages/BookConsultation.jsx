@@ -141,7 +141,7 @@ const BookConsultation = () => {
                 <div key={doctor.doctorId} className="doctor-group">
                   <h3 className="doctor-header">
                     <img src={doctor.doctorAvatar} alt={doctor.doctorName} className="doctor-avatar" />
-                    Dr. {doctor.doctorName}
+                    {doctor.doctorName}
                   </h3>
                   <div className="slots">
                     {doctor.slots.map((slot) => (
