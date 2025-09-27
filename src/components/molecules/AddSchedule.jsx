@@ -55,23 +55,6 @@ const AddSchedule = (props) => {
         }));
     };
 
-    const addTimeSlot = () => {
-        if (timeSlot.start && timeSlot.end) {
-            const newSlot = `${timeSlot.start} - ${timeSlot.end}`;
-
-            // Check if this slot already exists for the selected day
-            if (!formData.availabilitySlots[selectedDay].includes(newSlot)) {
-                setFormData(prev => ({
-                    ...prev,
-                    availabilitySlots: {
-                        ...prev.availabilitySlots,
-                        [selectedDay]: [...prev.availabilitySlots[selectedDay], newSlot]
-                    }
-                }));
-            }
-        }
-    };
-
     const dayMap = {
         sunday: 0,
         monday: 1,
@@ -83,6 +66,8 @@ const AddSchedule = (props) => {
     };
 
     const addSchedules = async () => {
+
+        const newSlot = `${timeSlot.start} - ${timeSlot.end}`;
         try {
             const schedules = [];
 
@@ -96,6 +81,15 @@ const AddSchedule = (props) => {
                     });
                 });
             });
+
+
+            if (!formData.availabilitySlots[selectedDay].includes(newSlot)) {
+                schedules.push({
+                    dayOfWeek: dayMap[selectedDay],
+                    startTime: timeSlot.start,
+                    endTime: timeSlot.end,
+                });
+            }
 
             let docId = user?.doctorId || 'debug'
             const payload = {
@@ -117,6 +111,18 @@ const AddSchedule = (props) => {
             setTick(new Date().getTime())
         } catch (error) {
             console.error("Error saving schedules:", error);
+        }
+
+
+        // Check if this slot already exists for the selected day
+        if (!formData.availabilitySlots[selectedDay].includes(newSlot)) {
+            setFormData(prev => ({
+                ...prev,
+                availabilitySlots: {
+                    ...prev.availabilitySlots,
+                    [selectedDay]: [...prev.availabilitySlots[selectedDay], newSlot]
+                }
+            }));
         }
     };
 
@@ -212,7 +218,7 @@ const AddSchedule = (props) => {
                             <button
                                 type="button"
                                 className="add-slot-button"
-                                onClick={addTimeSlot}
+                                onClick={addSchedules}
                             >
                                 Add
                             </button>
@@ -245,13 +251,6 @@ const AddSchedule = (props) => {
                                 )}
 
                                 <div style={{flex: 1}}/>
-                                <button
-                                    type="button"
-                                    className="add-slot-button"
-                                    onClick={addSchedules}
-                                >
-                                    Submit
-                                </button>
                             </div>
 
 
