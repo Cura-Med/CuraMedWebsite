@@ -21,6 +21,7 @@ import {closeAuthModal} from "./features/modal/modalSlice.js";
 
 import {fetchUserMe, logout} from "./features/auth/authSlice.js";
 import VideoCall3 from "./components/VideoCall3.jsx";
+import {updateMainClick} from "./features/utils/utilsSlice.js";
 
 function App() {
 
@@ -43,6 +44,8 @@ function App() {
       }
   }, [error])
 
+  const updateMainTick = () => { dispatch(updateMainClick()) }
+
   return (
     <div className="app">
       <Header />
@@ -52,7 +55,7 @@ function App() {
             </div>
         }
 
-      <main>
+      <main onClick={updateMainTick}>
         <Routes>
            <Route path="/" element={<HomePage />} />
            <Route path="/features" element={<FeaturesPage />} />

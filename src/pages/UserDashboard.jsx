@@ -10,6 +10,7 @@ const UserDashboard = () => {
   const navigate = useNavigate();
   const { user, accessToken } = useSelector((state) => state.auth);
 
+
   const [appointments, setAppointments] = useState([]);
 
 
@@ -30,6 +31,7 @@ const UserDashboard = () => {
 
 
   if (!accessToken || !user) {
+    navigate('/');
     return null;
   }
 

@@ -14,10 +14,20 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);     // mobile nav
   const [userMenuOpen, setUserMenuOpen] = useState(false); // user dropdown
 
+  const mainTick = useSelector(state => state.utils.mainClick)
+
+  useEffect(() => {
+    if (mainTick > 1) {
+      setIsMenuOpen(false)
+      setUserMenuOpen(false)
+    }
+  }, [mainTick]);
+
   const isLoggedIn = Boolean(user?.id || accessToken);
 
   const toggleMenu = () => setIsMenuOpen((v) => !v);
   const toggleUserMenu = () => setUserMenuOpen((v) => !v);
+
 
   const openDashboard = () => {
     if (user?.isDoctor) {
@@ -99,6 +109,7 @@ const Header = () => {
                     <div className="nav-item hide-from-wide" onClick={() => setIsMenuOpen(false)}>
                       {user?.isDoctor ? <a onClick={() => openDashboard()}>Doctor Dashboard</a> : <a onClick={() => openDashboard()}>Dashboard</a>}
                     </div>
+
                   </>
               )}
 
@@ -120,6 +131,7 @@ const Header = () => {
                   </li>
               )}
             </ul>
+
           </nav>
 
 
@@ -141,6 +153,7 @@ const Header = () => {
                 >
                   {user?.isDoctor ? <span onClick={() => openDashboard()}>Doctor Dashboard</span> : <span onClick={() => openDashboard()}>Dashboard</span>}
                 </div>
+
               </div>
           )}
 
@@ -150,6 +163,7 @@ const Header = () => {
             {isMenuOpen ? <FaTimes /> : <FaBars />}
           </div>
         </div>
+
       </header>
   );
 };
