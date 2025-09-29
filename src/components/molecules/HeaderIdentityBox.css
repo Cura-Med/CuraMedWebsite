@@ -1,0 +1,16 @@
+
+
+.header-identity__wrapper {
+    display: flex;
+    flex-direction: row;
+    height: 38px;
+}
+.my-name {
+    font-family: 'Inter', 'Roboto', sans-serif;
+    line-height: 1.6;
+    margin-left: 14px;
+    align-content: center;
+    font-weight: 500;
+    padding-top: 3px;
+}
+
