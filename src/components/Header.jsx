@@ -6,6 +6,7 @@ import './Header.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { openAuthModal } from '../features/modal/modalSlice';
 import { logout } from '../features/auth/authSlice';
+import Avatar from "./atoms/Avatar.jsx";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -127,7 +128,8 @@ const Header = () => {
                       style={{ cursor: 'pointer' }}
                       onClick={toggleUserMenu}
                   >
-                    <FaRegUser />
+                    <Avatar avatar={'mine'} size={'38'}/>
+                    {/*<FaRegUser />*/}
                   </li>
               )}
             </ul>
