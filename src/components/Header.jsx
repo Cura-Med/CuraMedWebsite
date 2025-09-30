@@ -112,6 +112,10 @@ const Header = () => {
                       {user?.isDoctor ? <a onClick={() => openDashboard()}>Doctor Dashboard</a> : <a onClick={() => openDashboard()}>Dashboard</a>}
                     </div>
 
+                    <div className="nav-item hide-from-wide">
+                      <a>Settings</a>
+                    </div>
+
                   </>
               )}
 
@@ -154,6 +158,12 @@ const Header = () => {
                     onClick={() => setUserMenuOpen(false)}
                 >
                   {user?.isDoctor ? <span onClick={() => openDashboard()}>Doctor Dashboard</span> : <span onClick={() => openDashboard()}>Dashboard</span>}
+                </div>
+
+                <div className="nav-item user-nav-item"
+                     style={{ borderTop: 'solid 1px rgba(0, 0, 0, 0.05)' }}
+                >
+                  <span>Settings</span>
                 </div>
 
               </div>
