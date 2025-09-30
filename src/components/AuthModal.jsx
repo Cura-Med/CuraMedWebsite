@@ -16,6 +16,8 @@ import { fetchUserMe, loginUser } from '../features/auth/authSlice';
 import { useDispatch, useSelector } from "react-redux";
 import { closeAuthModal } from '../features/modal/modalSlice';
 import { registerDoctor } from '../utils/doctorRegistration';
+import { registerPatient } from '../utils/patientRegistration';
+const API_BASE_URL = 'https://curamed-auth-api-973580931654.europe-north1.run.app';
 
 const AuthModal = ({ isOpen = true, onClose }) => {
   const dispatch = useDispatch();
@@ -246,7 +248,7 @@ const AuthModal = ({ isOpen = true, onClose }) => {
   };
 
   // Register patient function
-  const registerPatient = async (userData) => {
+  const registerPatientOld = async (userData) => {
     try {
       const response = await axios.post(
         'https://curamed-auth-api-973580931654.europe-north1.run.app/users/register',
@@ -323,14 +325,15 @@ const AuthModal = ({ isOpen = true, onClose }) => {
             sexTypeId: parseInt(formData.gender),
             countryId: parseInt(formData.country),
             city: formData.city,
-            timeZoneId: parseInt(formData.timeZone)
+            timeZoneId: parseInt(formData.timeZone),
+            photoId: formData.profilePhoto
           };
 
-          console.log('Registering patient with data:', registrationData);
-          
-          const result = await registerPatient(registrationData);
+          console.log('Registering patient with data:', formData);
+          const result = await registerPatient(formData);
           console.log('Patient registration successful:', result);
-          
+
+
           // Handle successful registration          
           navigate('/email-verification-pending', {
             state: {
@@ -715,6 +718,41 @@ const AuthModal = ({ isOpen = true, onClose }) => {
           loadingLabel="Loading titles..."
         />
       )}
+
+      {userType !== 'doctor' && (
+          <div className="form-group">
+            <label htmlFor="profilePhoto" className="select-label">Profile Photo</label>
+            <div className="profile-photo-upload">
+              <div
+                  className="profile-photo-preview"
+                  onClick={() => fileInputRef.current.click()}
+              >
+                {profilePhotoPreview ? (
+                    <img src={profilePhotoPreview} alt="Profile Preview" />
+                ) : (
+                    <FaUser className="profile-placeholder" />
+                )}
+              </div>
+              <button
+                  type="button"
+                  className="upload-button"
+                  onClick={() => fileInputRef.current.click()}
+              >
+                <FaUpload className="upload-icon" /> Upload Photo
+              </button>
+              <input
+                  type="file"
+                  id="profilePhoto"
+                  name="profilePhoto"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  className="file-input"
+                  required
+              />
+            </div>
+          </div>
+      )}
       
       <div className="form-group form-field">
         <input
@@ -782,7 +820,7 @@ const AuthModal = ({ isOpen = true, onClose }) => {
           placeholder="Date of Birth"
           required
         />
-        <FaCalendarAlt className="calendar-icon" />
+        {/*<FaCalendarAlt className="calendar-icon" />*/}
       </div>
       
       <GenderSelect formData={formData} handleChange={handleChange} />
@@ -916,7 +954,7 @@ const AuthModal = ({ isOpen = true, onClose }) => {
         ) : (
           <button 
             type="submit" 
-            className="submit-button"
+            className="submit-button submit-button__fix"
             onClick={handleSubmit}
             disabled={!validateStep3() || isSubmitting}
           >

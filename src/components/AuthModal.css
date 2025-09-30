@@ -827,3 +827,7 @@
     flex-direction: column;
   }
 }
+
+.submit-button__fix {
+  margin-top: 0;
+}
