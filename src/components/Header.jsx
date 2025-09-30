@@ -130,8 +130,6 @@ const Header = () => {
                       onClick={toggleUserMenu}
                   >
                     <HeaderIdentityBox/>
-                    {/*<Avatar avatar={'mine'} size={'38'}/>*/}
-                    {/*<FaRegUser />*/}
                   </li>
               )}
             </ul>
