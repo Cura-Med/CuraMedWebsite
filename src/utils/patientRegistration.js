@@ -80,3 +80,54 @@ export const registerPatient = async (formData) => {
         }
     }
 };
+
+
+export const uploadPhoto = async (file, userDetailId) => {
+    try {
+        if (!file) throw new Error('No file provided');
+
+        const base64Data = await fileToBase64(file);
+
+        const photoPayload = {
+            fileName: file.name,
+            contentType: file.type,
+            size: file.size,
+            data: base64Data,
+            filePath: `patients/profiles/${Date.now()}_${file.name}`,
+        };
+
+        const res = await axios.post(`${API_BASE_URL}/photos/add`, photoPayload, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        const photoId = res?.data?.id;
+        if (!photoId) throw new Error('Photo upload failed: no id returned');
+
+        console.log('Photo uploaded successfully:', photoId);
+
+
+        let photoPayload2 = {
+            photoId
+        }
+
+        const res2 = await axios.patch(`${API_BASE_URL}/user-details/` + userDetailId + '/photo' , photoPayload2, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        console.log('Image registration successful:', res2);
+
+
+    } catch (error) {
+        if (error.response) {
+            const msg =
+                error.response.data?.message ||
+                error.response.data?.error ||
+                `Upload failed: ${error.response.status}`;
+            throw new Error(msg);
+        } else if (error.request) {
+            throw new Error('Network error. Please check your connection and try again.');
+        } else {
+            throw new Error('Unexpected error during photo upload. Please try again.');
+        }
+    }
+};

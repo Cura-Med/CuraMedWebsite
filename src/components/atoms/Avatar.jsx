@@ -10,7 +10,6 @@ const Avatar = (props) => {
     if (!avatar?.startsWith('data:')) {
         avatar = useSelector(state => state.auth.user?.avatar) || '';
     }
-    console.log('Avatar: ', avatar)
 
     if (avatar?.length < 10) {
         return (

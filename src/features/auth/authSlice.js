@@ -45,7 +45,8 @@ const authSlice = createSlice({
         accessToken: tokenFromStorage || null,
         status: 'idle',
         error: null,
-        user: null
+        user: null,
+        userDetailId: ''
     },
     reducers: {
         logout: (state) => {
@@ -53,6 +54,7 @@ const authSlice = createSlice({
             state.status = 'idle';
             state.error = null;
             state.user = null;
+            state.userDetailId = '';
             localStorage.removeItem('accessToken');
             delete axios.defaults.headers.common['Authorization'];
         }
@@ -73,10 +75,12 @@ const authSlice = createSlice({
             })
             .addCase(fetchUserMe.fulfilled, (state, action) => {
                 state.user = action.payload;
+                state.userDetailId = action.payload.userDetailId;
                 state.error = null;
             })
             .addCase(fetchUserMe.rejected, (state, action) => {
                 state.user = null;
+                state.userDetailId = '';
                 state.error = action.payload;
                 state.accessToken = null;
                 localStorage.removeItem('accessToken');

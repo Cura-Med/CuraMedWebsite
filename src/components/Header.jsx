@@ -30,6 +30,13 @@ const Header = () => {
   const toggleMenu = () => setIsMenuOpen((v) => !v);
   const toggleUserMenu = () => setUserMenuOpen((v) => !v);
 
+  const openSettings = () => {
+    if (user?.isDoctor) {
+      window.location.href = "/doctor-dashboard";
+    } else {
+      window.location.href = "/settings";
+    }
+  }
 
   const openDashboard = () => {
     if (user?.isDoctor) {
@@ -163,7 +170,7 @@ const Header = () => {
                 <div className="nav-item user-nav-item"
                      style={{ borderTop: 'solid 1px rgba(0, 0, 0, 0.05)' }}
                 >
-                  <span>Settings</span>
+                  <span onClick={() => openSettings()} >Settings</span>
                 </div>
 
               </div>

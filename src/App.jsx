@@ -22,6 +22,7 @@ import {closeAuthModal} from "./features/modal/modalSlice.js";
 import {fetchUserMe, logout} from "./features/auth/authSlice.js";
 import VideoCall3 from "./components/VideoCall3.jsx";
 import {updateMainClick} from "./features/utils/utilsSlice.js";
+import Settings from "./pages/Settings.jsx";
 
 function App() {
 
@@ -70,6 +71,8 @@ function App() {
 
             <Route path="/video-call/:callId" element={<VideoCall3 />} />
            <Route path="/book-consultation" element={<BookConsultation />} />
+
+            <Route path="/settings" element={<Settings />} />
          </Routes>
       </main>
       <Footer />

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaClock } from 'react-icons/fa';
+import './TimeZoneSelect.css';
 
 const TimeZoneSelect = ({ value, onChange, name = 'timeZone', required = true }) => {
   const [timeZones, setTimeZones] = useState([]);

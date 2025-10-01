@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { closeAuthModal } from '../features/modal/modalSlice';
 import { registerDoctor } from '../utils/doctorRegistration';
 import { registerPatient } from '../utils/patientRegistration';
-const API_BASE_URL = 'https://curamed-auth-api-973580931654.europe-north1.run.app';
+
 
 const AuthModal = ({ isOpen = true, onClose }) => {
   const dispatch = useDispatch();
@@ -313,21 +313,6 @@ const AuthModal = ({ isOpen = true, onClose }) => {
       } else {
         // Handle registration
         if (userType === 'patient') {
-          // Convert date format from YYYY-MM-DD to ISO string
-          const birthdayISO = new Date(formData.dateOfBirth).toISOString();
-
-          const registrationData = {
-            email: formData.email,
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            password: formData.password,
-            birthday: birthdayISO,
-            sexTypeId: parseInt(formData.gender),
-            countryId: parseInt(formData.country),
-            city: formData.city,
-            timeZoneId: parseInt(formData.timeZone),
-            photoId: formData.profilePhoto
-          };
 
           console.log('Registering patient with data:', formData);
           const result = await registerPatient(formData);
