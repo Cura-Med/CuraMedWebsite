@@ -6,7 +6,6 @@ import './Header.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { openAuthModal } from '../features/modal/modalSlice';
 import { logout } from '../features/auth/authSlice';
-import Avatar from "./atoms/Avatar.jsx";
 import HeaderIdentityBox from "./molecules/HeaderIdentityBox.jsx";
 
 const Header = () => {

@@ -1,11 +1,13 @@
 import React, {useEffect, useRef, useState} from 'react'
 import CountrySelect from "../components/CountrySelect.jsx";
 import axios from "../api/axios.js";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import TimeZoneSelect from "../components/TimeZoneSelect.jsx";
 import './Settings.css';
 import {FaUpload, FaUser} from "react-icons/fa";
 import {uploadPhoto} from "../utils/patientRegistration.js";
+import {fetchUserMe} from "../features/auth/authSlice.js";
+import {useNavigate} from "react-router-dom";
 
 
 const Settings = () => {
@@ -16,6 +18,8 @@ const Settings = () => {
     const [timeZoneId, setTimeZoneId] = useState(0)
     const [mounting, setMounting] = useState(true);
     const [profilePhotoPreview, setProfilePhotoPreview] = useState('');
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const fileInputRef = useRef(null);
 
@@ -30,8 +34,10 @@ const Settings = () => {
         } catch(e) {
             console.log('error: ', e)
         }
+    }
 
-
+    const takeBack = () => {
+        window.history.back();
     }
 
     useEffect(() => {
@@ -67,9 +73,24 @@ const Settings = () => {
             reader.readAsDataURL(file);
         }
         uploadPhoto(file, userDetailId).then(r => {
-            console.log('UPDAAT')
+            dispatch(fetchUserMe());
         })
     };
+
+    const submitChanges = async (e) => {
+        console.log('pressed')
+        e.preventDefault();
+        try {
+            await axios.put('/user-details/' + userDetailId , {
+                countryId: countryCode,
+                city,
+                timeZoneId
+            });
+            navigate('/dashboard');
+        } catch (error) {
+            console.error('Error saving changes:', error);
+        }
+    }
 
     if (mounting) {
         return (
@@ -81,7 +102,7 @@ const Settings = () => {
 
     return (
         <div className='settings-wrapper'>
-            <form className="auth-form">
+            <form className="auth-form" onSubmit={submitChanges}>
                 <div className="form-group">
                     <label htmlFor="profilePhoto" className="select-label">Profile Photo</label>
                     <div className="profile-photo-upload">
@@ -110,7 +131,6 @@ const Settings = () => {
                             onChange={handleFileChange}
                             accept="image/*"
                             className="file-input"
-                            required
                         />
                     </div>
                 </div>
@@ -139,6 +159,18 @@ const Settings = () => {
                     />
 
                     <TimeZoneSelect value={timeZoneId} onChange={handleTimeZoneChange} />
+                </div>
+
+                <div className='bottom-buttons'>
+                    <button type="submit"
+                            className={`save-button`}
+                    >Save</button>
+                    {window.history.length > 1 &&
+                        <>
+                            <div style={{width: '12px'}}/>
+                            <div onClick={takeBack} className="save-button">Back</div>
+                        </>
+                    }
                 </div>
             </form>
         </div>
