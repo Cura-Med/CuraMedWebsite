@@ -1,5 +1,5 @@
 .consultation-item {
-    background-color: #e6ffed;
+    background-color: white;
     border-radius: 0.5rem;
     padding: 0.5rem 1rem;
     margin-bottom: 0.5rem;
@@ -12,25 +12,32 @@
 
 .category {
     font-weight: bold;
-    color: #27ae60;
 }
 
 .date {
     color: #666;
+    font-size: 14px;
+    padding-left: 2px;
+    padding-top: 4px;
 }
 
 .call-button {
-    background-color: white;
     border-radius: 3px;
     display: flex;
-    flex-direction: row;
+    align-items: center;
+    justify-content: center;
     max-height: 28px;
-    padding: 5px 10px 4px;
     cursor: pointer;
+    background-color: #dadada;
+    margin-right: 8px;
+}
+.call-button p {
+    margin: 0;
+    font-size: 15px;
 }
 
-.call-button p {
-    margin-left: 8px;
-    justify-self: center;
-    margin-top: -3px;
+
+.appointment-doctor-wrapper {
+    display: flex;
+    flex-direction: column;
 }

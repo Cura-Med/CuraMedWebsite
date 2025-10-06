@@ -1,7 +1,7 @@
 import React from "react";
-import {FaCheckDouble} from 'react-icons/fa';
 import './Appointment.css';
 import { useNavigate } from 'react-router-dom';
+import DoctorIdentityBox from "../molecules/DoctorIdentityBox.jsx";
 
 
 const Appointment = (props) => {
@@ -17,14 +17,16 @@ const Appointment = (props) => {
     // /video-call/callId
 
     return (
-        <li className="consultation-item">
-            <span className="category">{appointment.name} </span>
-            <span className="date">{appointment.appointmentDate + ' ' + appointment.startTime}</span>
+        <li className="consultation-item cm-item-border">
+            <div className='appointment-doctor-wrapper'>
+                <DoctorIdentityBox appointment={appointment}/>
+                <span className="date">{appointment.appointmentDate + ' ' + appointment.startTime}</span>
+            </div>
 
 
-            <div className="call-button" onClick={goToCall}>
-                <FaCheckDouble style={{color: 'green'}} />
-                <p>Join Call</p>
+
+            <div className="call-button cm-item-border__darker" onClick={goToCall}>
+                <p>Join call</p>
             </div>
         </li>
     )

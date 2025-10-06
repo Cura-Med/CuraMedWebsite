@@ -32,7 +32,7 @@ const BookConsultation = () => {
     const fetchSlots = async () => {
       if (selectedSpecialty && selectedDate) {
         try {
-          const response = await axios.get(`/appointments/available-slots?SpecialtyId=${selectedSpecialty}&AppointmentDate=${selectedDate}`);
+          const response = await axios.get(`/appointments/available-slots?SpecialtyId=${selectedSpecialty}&AppointmentDate=${selectedDate}&PatientId=${user.id}`);
           setAvailableSlots(response.data.availableSlots);
         } catch (error) {
           console.error('Error fetching slots:', error);

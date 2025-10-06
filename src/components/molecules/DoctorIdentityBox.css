@@ -1,0 +1,24 @@
+.doctor-identity-box-wrapper {
+    display: flex;
+    flex-direction: row;
+    height: 42px;
+    padding: 2px;
+}
+
+.name-speciality-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 18px;
+    padding-left: 9px;
+}
+
+.doctor-name {
+    font-weight: 600;
+}
+
+.doctor-speciality {
+    letter-spacing: -0.69px;
+    opacity: 0.69;
+    font-weight: 500;
+}
