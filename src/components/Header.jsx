@@ -31,7 +31,7 @@ const Header = () => {
 
   const openSettings = () => {
     if (user?.isDoctor) {
-      window.location.href = "/doctor-dashboard";
+      window.location.href = "/doctor-settings";
     } else {
       window.location.href = "/settings";
     }

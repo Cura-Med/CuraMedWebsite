@@ -23,6 +23,7 @@ import {fetchUserMe, logout} from "./features/auth/authSlice.js";
 import VideoCall3 from "./components/VideoCall3.jsx";
 import {updateMainClick} from "./features/utils/utilsSlice.js";
 import Settings from "./pages/Settings.jsx";
+import DoctorSettings from "./pages/DoctorSettings.jsx";
 
 function App() {
 
@@ -73,6 +74,7 @@ function App() {
            <Route path="/book-consultation" element={<BookConsultation />} />
 
             <Route path="/settings" element={<Settings />} />
+            <Route path="/doctor-settings" element={<DoctorSettings />} />
          </Routes>
       </main>
       <Footer />
