@@ -10,55 +10,69 @@ const SymptomCheckerPage = () => {
   const [analysisComplete, setAnalysisComplete] = useState(false);
   const [results, setResults] = useState(null);
 
-  const handleSymptomChange = (e) => {
+  const handleSymptomChange = (e) => 
+  {
     setSymptoms(e.target.value);
   };
 
-  const handleAnalyzeSymptoms = () => {
+  const handleAnalyzeSymptoms = async () => 
+  {
     if (!symptoms.trim()) return;
     
     setIsAnalyzing(true);
     
-    // Simulate analysis process
-    setTimeout(() => {
-      setIsAnalyzing(false);
-      setAnalysisComplete(true);
-      
-      // Mock results - in a real app, this would come from an API
+    try 
+    {
+      const response = await fetch(
+        "https://curamed-auth-api-973580931654.europe-north1.run.app/chatbot/send-message",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userInput: symptoms,
+          }),
+        }
+      );
+
+      if (!response.ok) 
+      {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // The API returns { response: "..." }
       setResults({
-        possibleConditions: [
-          {
-            name: 'Common Cold',
-            probability: 'High',
-            description: 'A viral infection of the upper respiratory tract.'
-          },
-          {
-            name: 'Seasonal Allergies',
-            probability: 'Medium',
-            description: 'An immune system response to allergens like pollen or dust.'
-          },
-          {
-            name: 'Migraine',
-            probability: 'Low',
-            description: 'A headache disorder characterized by recurrent headaches.'
-          }
-        ],
-        recommendations: [
-          'Rest and stay hydrated',
-          'Over-the-counter pain relievers may help with symptoms',
-          'If symptoms persist for more than 7 days, consult a healthcare professional'
-        ]
+        apiResponse: data.response,
       });
-    }, 2000);
+
+      setAnalysisComplete(true);
+    } 
+    catch (error) 
+    {
+      console.error("Error calling symptom checker API:", error);
+      setResults({
+        apiResponse: "There was an error analyzing your symptoms. Please try again.",
+      });
+      setAnalysisComplete(true);
+    } 
+    finally 
+    {
+      setIsAnalyzing(false);
+    }
   };
 
-  const resetAnalysis = () => {
+  const resetAnalysis = () => 
+  {
     setSymptoms('');
     setAnalysisComplete(false);
     setResults(null);
   };
 
-  const features = [
+  const features = 
+  [
     {
       icon: <FaBrain />,
       title: 'AI-Powered Analysis',
@@ -83,7 +97,7 @@ const SymptomCheckerPage = () => {
           <h1 className="page-title">AI Symptom Checker</h1>
         </div>
       </section>
-      
+    
       <section className="section features-section">
         <div className="container">
           <div className="features-grid">
@@ -97,13 +111,13 @@ const SymptomCheckerPage = () => {
           </div>
         </div>
       </section>
-      
+    
       <section className="section checker-section">
         <div className="container">
           {!analysisComplete ? (
             <div className="symptom-input-container">
               <h2 className="section-subtitle">Check Your Symptoms</h2>
-              
+            
               <div className="form-group">
                 <label htmlFor="symptoms">Describe your symptoms</label>
                 <textarea
@@ -115,42 +129,56 @@ const SymptomCheckerPage = () => {
                   rows="6"
                 ></textarea>
               </div>
-              
+            
               <button 
                 className="btn analyze-btn" 
                 onClick={handleAnalyzeSymptoms}
                 disabled={isAnalyzing || !symptoms.trim()}
-              >
+                >
                 {isAnalyzing ? 'Analyzing...' : 'Analyze Symptoms'}
               </button>
             </div>
           ) : (
             <div className="analysis-results">
               <h2 className="section-subtitle">Analysis Results</h2>
-              
               <div className="results-container">
-                <h3>Possible Conditions</h3>
-                <div className="conditions-list">
-                  {results.possibleConditions.map((condition, index) => (
-                    <div key={index} className="condition-item">
-                      <div className="condition-header">
-                        <h4>{condition.name}</h4>
-                        <span className={`probability ${condition.probability.toLowerCase()}`}>
-                          {condition.probability} probability
-                        </span>
-                      </div>
-                      <p>{condition.description}</p>
-                    </div>
-                  ))}
-                </div>
-                
-                <h3>Recommendations</h3>
-                <ul className="recommendations-list">
-                  {results.recommendations.map((recommendation, index) => (
-                    <li key={index}>{recommendation}</li>
-                  ))}
-                </ul>
-                
+                <h3>AI Advice</h3>
+                {results?.apiResponse.split("\n\n").map((block, i) => {
+                  // Check if block looks like a step with bold
+                  if (block.startsWith("**")) {
+                    const lines = block.split("\n").filter(Boolean);
+                    return (
+                      <ul key={i}>
+                        {lines.map((line, idx) => {
+                          const match = line.match(/\*\*(.*?)\*\*:\s*(.*)/);
+                          if (match) {
+                            const [, title, desc] = match;
+                            return (
+                              <li key={idx}>
+                                <strong>{title}:</strong> {desc}
+                              </li>
+                            );
+                          }
+                          return <li key={idx}>{line}</li>;
+                        })}
+                      </ul>
+                    );
+                  } else {
+                    // Regular paragraph
+                    const parts = block.split(/(\*\*.*?\*\*)/g);
+                    return (
+                      <p key={i}>
+                        {parts.map((part, idx) =>
+                          part.startsWith("**") && part.endsWith("**") ? (
+                            <strong key={idx}>{part.slice(2, -2)}</strong>
+                          ) : (
+                            part
+                          )
+                        )}
+                      </p>
+                    );
+                  }
+                })}
                 <div className="disclaimer">
                   <p>
                     This analysis is based on the symptoms you provided and is for informational purposes only.
@@ -163,12 +191,13 @@ const SymptomCheckerPage = () => {
                   <Link to="/consultation" className="btn btn-primary">Book Consultation with a Doctor</Link>
 
                 </div>
+                
               </div>
             </div>
           )}
         </div>
       </section>
-      
+    
       <section className="section notice-section">
         <div className="container">
           <div className="notice-container">
@@ -191,6 +220,7 @@ const SymptomCheckerPage = () => {
       </section>
     </div>
   );
+
 };
 
 export default SymptomCheckerPage;
