@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 
 const utilsSlice = createSlice({
-    name: 'chat',
+    name: 'utils',
     initialState: {
         mainClick: 1
     },

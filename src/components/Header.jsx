@@ -9,6 +9,19 @@ import { logout } from '../features/auth/authSlice';
 import HeaderIdentityBox from "./molecules/HeaderIdentityBox.jsx";
 
 const Header = () => {
+
+  const openMenu = () => setIsMenuOpen(true)
+  const closeMenu = () => setIsMenuOpen(false)
+
+
+
+  useEffect(() => {
+    const onResize = () => setIsMenuOpen(false);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+
   const dispatch = useDispatch();
   const { user, accessToken } = useSelector((state) => state.auth);
 
@@ -17,12 +30,19 @@ const Header = () => {
 
   const mainTick = useSelector(state => state.utils.mainClick)
 
+
+
+  const signInClick = () => {
+    dispatch(openAuthModal())
+  }
+
   useEffect(() => {
     if (mainTick > 1) {
       setIsMenuOpen(false)
       setUserMenuOpen(false)
     }
-  }, [mainTick]);
+  }, [mainTick, user]);
+
 
   const isLoggedIn = Boolean(user?.id || accessToken);
 
@@ -58,7 +78,7 @@ const Header = () => {
   }, []);
 
   return (
-      <header className="header">
+/*      <header className="header">
         <div className="container header-container">
           <Link to="/" className="logo" onClick={() => setIsMenuOpen(false)}>
             CuraMed
@@ -182,7 +202,128 @@ const Header = () => {
           </div>
         </div>
 
+      </header>*/
+
+
+
+      <header className="header">
+        <div className="container header-container">
+
+          <div style={{ flex: 1 }} />
+
+
+          {isMenuOpen &&
+              <nav className={'nav active'}>
+                <ul className="nav-list">
+
+                  <li className="nav-item">
+                    <span>Features</span>
+                  </li>
+                  <li className="nav-item">
+                    <span>Services</span>
+                  </li>
+                  <li className="nav-item">
+                    <span>About</span>
+                  </li>
+                  <li className="nav-item">
+                    <span>Contact</span>
+                  </li>
+
+
+
+                  {!user ? (
+                      <li
+                          className="nav-item"
+                          onClick={() => signInClick()}
+                      >
+                        <span className='no-bottom-border'>Sign in</span>
+                      </li>
+                  ) : (
+
+                        <li
+                            className="nav-item"
+                            onClick={() => {
+                              setIsMenuOpen(false);
+                              handleLogout();
+                            }}
+                        >
+                          <span className='no-bottom-border'>Logout</span>
+                        </li>
+
+
+
+                  )}
+                </ul>
+              </nav>
+          }
+
+
+          {!isMenuOpen &&
+              <nav className={'temp-hidden-fix nav'}>
+                <ul className="nav-list">
+                  <div style={{flex: 1}}/>
+
+                  <li className="nav-item">
+                    <span>Features</span>
+                  </li>
+                  <li className="nav-item">
+                    <span>Services</span>
+                  </li>
+                  <li className="nav-item">
+                    <span>About</span>
+                  </li>
+                  <li className="nav-item">
+                    <span>Contact</span>
+                  </li>
+
+
+                  {!user ? (
+                     <div
+                         className="nav-item"
+                         onClick={() => signInClick()}
+                        >
+                          <span>Sign in</span>
+                     </div>
+                  ) : (
+                    <>
+
+                      <div
+                          className="nav-item"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            handleLogout();
+                          }}
+                      >
+                        <span>Logout</span>
+                      </div>
+
+
+                      <li
+                          className="nav-item the-user-icon"
+                          style={{ cursor: 'pointer' }}
+                          onClick={toggleUserMenu}
+                      >
+                        <HeaderIdentityBox/>
+                      </li>
+                    </>
+
+                  )}
+                </ul>
+              </nav>
+          }
+
+
+
+          <div className="menu-icon" onClick={toggleMenu}>
+            {isMenuOpen ? <FaTimes /> : <FaBars />}
+          </div>
+
+        </div>
+
       </header>
+
+
+
   );
 };
 
