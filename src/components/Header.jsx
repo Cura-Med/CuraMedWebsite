@@ -1,368 +1,169 @@
 // src/components/Header.jsx
-import React, { useEffect, useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { FaBars, FaRegUser, FaTimes } from 'react-icons/fa';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { FaBars, FaTimes } from 'react-icons/fa';
 import './Header.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { openAuthModal } from '../features/modal/modalSlice';
 import { logout } from '../features/auth/authSlice';
 import HeaderIdentityBox from "./molecules/HeaderIdentityBox.jsx";
+import { useNavigate } from 'react-router-dom';
 
-const Header = () => {
-
-  const openMenu = () => setIsMenuOpen(true)
-  const closeMenu = () => setIsMenuOpen(false)
-
-
-
-  useEffect(() => {
-    const onResize = () => setIsMenuOpen(false);
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
-
-
+function Header() {
   const dispatch = useDispatch();
-  const { user, accessToken } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);     // mobile nav
-  const [userMenuOpen, setUserMenuOpen] = useState(false); // user dropdown
+  // Select ONLY primitives (no user object refs)
+  const { isLoggedIn, isDoctor, authReady } = useSelector(
+      s => ({
+        isLoggedIn: Boolean(s.auth.accessToken),
+        isDoctor: Boolean(s.auth.user?.isDoctor),
+        authReady: s.auth.status === 'succeeded' || s.auth.status === 'failed',
+      }),
+      shallowEqual
+  );
 
-  const mainTick = useSelector(state => state.utils.mainClick)
+  // LOCAL UI STATE
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const rootRef = useRef(null);
 
 
-
-  const signInClick = () => {
-    dispatch(openAuthModal())
-  }
-
+  // EFFECTS
   useEffect(() => {
-      setIsMenuOpen(false)
-      setUserMenuOpen(false)
-  }, [mainTick, user]);
-
-
-  const isLoggedIn = Boolean(user?.id || accessToken);
-
-  const toggleMenu = () => setIsMenuOpen((v) => !v);
-  const toggleUserMenu = () => setUserMenuOpen((v) => !v);
-
-  const openSettings = () => {
-    if (user?.isDoctor) {
-      window.location.href = "/doctor-settings";
-    } else {
-      window.location.href = "/settings";
-    }
-  }
-
-  const openDashboard = () => {
-    if (user?.isDoctor) {
-      window.location.href = "/doctor-dashboard";
-    } else {
-      window.location.href = "/dashboard";
-    }
-  }
-
-  const handleLogout = () => {
-    dispatch(logout());
-    window.location.href = '/';
-  };
-
-
-  useEffect(() => {
-    const onResize = () => setUserMenuOpen(false);
+    const onResize = () => {
+      setIsMenuOpen(false);
+      setUserMenuOpen(false);
+    };
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
+
+  // Close when clicking outside
+  useEffect(() => {
+    const onDocClick = (e) => {
+      if (!rootRef.current) return;
+      if (!rootRef.current.contains(e.target)) {
+        setIsMenuOpen(false);
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener('pointerdown', onDocClick);
+    return () => document.removeEventListener('pointerdown', onDocClick);
+  }, []);
+
+
+  // HANDLERS (stable via useCallback)
+  const toggleMenu = useCallback(() => setIsMenuOpen(v => !v), []);
+  const toggleUserMenu = useCallback(() => setUserMenuOpen(v => !v), []);
+  const signInClick = useCallback(() => dispatch(openAuthModal()), [dispatch]);
+
+  const openSettings = useCallback(() => {
+    navigate(isDoctor ? '/doctor-settings' : '/settings');
+  }, [navigate, isDoctor]);
+
+  const openDashboard = useCallback(() => {
+    navigate(isDoctor ? '/doctor-dashboard' : '/dashboard');
+  }, [navigate, isDoctor]);
+
+  const handleLogout = useCallback(() => {
+    dispatch(logout());
+    navigate('/');
+  }, [dispatch, navigate]);
+
+  const naviFeatures = useCallback(() => {
+    navigate('/features')
+  }, [navigate])
+  const naviServices = useCallback(() => {
+    navigate('/services')
+  }, [navigate])
+  const naviAbout = useCallback(() => {
+    navigate('/about')
+  }, [navigate])
+  const naviContact = useCallback(() => {
+    navigate('/contact')
+  }, [navigate])
 
   return (
-/*      <header className="header">
+      <header className="header" ref={rootRef}>
         <div className="container header-container">
-          <Link to="/" className="logo" onClick={() => setIsMenuOpen(false)}>
-            CuraMed
-          </Link>
-
+          <h2>CuraMed</h2>
           <div style={{ flex: 1 }} />
 
-          <nav className={`nav ${isMenuOpen ? 'active' : ''}`}>
-            <ul className="nav-list">
-              <li className="nav-item" onClick={() => setIsMenuOpen(false)}>
-                <NavLink to="/features" className={({ isActive }) => (isActive ? 'active' : '')}>
-                  Features
-                </NavLink>
-              </li>
-
-              <li className="nav-item" onClick={() => setIsMenuOpen(false)}>
-                <NavLink to="/services" className={({ isActive }) => (isActive ? 'active' : '')}>
-                  Services
-                </NavLink>
-              </li>
-
-              <li className="nav-item" onClick={() => setIsMenuOpen(false)}>
-                <NavLink to="/about" className={({ isActive }) => (isActive ? 'active' : '')}>
-                  About
-                </NavLink>
-              </li>
-
-              <li className="nav-item" onClick={() => setIsMenuOpen(false)}>
-                <NavLink to="/contact" className={({ isActive }) => (isActive ? 'active' : '')}>
-                  Contact
-                </NavLink>
-              </li>
-
-              {!isLoggedIn ? (
-                  <div
-                      className="nav-item hide-from-wide"
-                      onClick={() => {
-                        dispatch(openAuthModal());
-                        setIsMenuOpen(false);
-                      }}
-                  >
-                    <a>Sign in</a>
-                  </div>
-              ) : (
-                  <>
-                    <div
-                        className="nav-item hide-from-wide"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          handleLogout();
-                        }}
-                    >
-                      <a>Logout</a>
-                    </div>
-
-                    <div className="nav-item hide-from-wide" onClick={() => setIsMenuOpen(false)}>
-                      {user?.isDoctor ? <a onClick={() => openDashboard()}>Doctor Dashboard</a> : <a onClick={() => openDashboard()}>Dashboard</a>}
-                    </div>
-
-                    <div className="nav-item hide-from-wide">
-                      <a>Settings</a>
-                    </div>
-
-                  </>
-              )}
-
-              {!isLoggedIn ? (
-                  <li
-                      className="nav-item the-user-icon"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => dispatch(openAuthModal())}
-                  >
-                    <a>Sign in</a>
-                  </li>
-              ) : (
-                  <li
-                      className="nav-item the-user-icon"
-                      style={{ cursor: 'pointer' }}
-                      onClick={toggleUserMenu}
-                  >
-                    <HeaderIdentityBox/>
-                  </li>
-              )}
-            </ul>
-
-          </nav>
-
-
-          {isLoggedIn && (
-              <div className={`user-nav ${userMenuOpen ? 'active' : ''}`} id="user-div">
-                <div
-                    className="nav-item user-nav-item"
-                    onClick={handleLogout}
-                    id="user-inner-div-1"
-                >
-                  <span>Logout</span>
-                </div>
-
-                <div
-                    className="nav-item user-nav-item"
-                    id="user-inner-div-3"
-                    style={{ borderTop: 'solid 1px rgba(0, 0, 0, 0.05)' }}
-                    onClick={() => setUserMenuOpen(false)}
-                >
-                  {user?.isDoctor ? <span onClick={() => openDashboard()}>Doctor Dashboard</span> : <span onClick={() => openDashboard()}>Dashboard</span>}
-                </div>
-
-                <div className="nav-item user-nav-item"
-                     style={{ borderTop: 'solid 1px rgba(0, 0, 0, 0.05)' }}
-                >
-                  <span onClick={() => openSettings()} >Settings</span>
-                </div>
-
-              </div>
-          )}
-
-          <div style={{ minWidth: '42px' }} />
-
-          <div className="menu-icon" onClick={toggleMenu}>
-            {isMenuOpen ? <FaTimes /> : <FaBars />}
-          </div>
-        </div>
-
-      </header>*/
-
-
-
-      <header className="header">
-        <div className="container header-container">
-
-          <div style={{ flex: 1 }} />
-
-
-          {isMenuOpen &&
-              <nav className={'nav active'}>
+          {isMenuOpen && (
+              <nav className="nav active">
                 <ul className="nav-list">
+                  <li className="nav-item" onClick={naviFeatures}><span>Features</span></li>
+                  <li className="nav-item" onClick={naviServices}><span>Services</span></li>
+                  <li className="nav-item" onClick={naviAbout}><span>About</span></li>
+                  <li className="nav-item" onClick={naviContact}><span>Contact</span></li>
 
-                  <li className="nav-item">
-                    <span>Features</span>
-                  </li>
-                  <li className="nav-item">
-                    <span>Services</span>
-                  </li>
-                  <li className="nav-item">
-                    <span>About</span>
-                  </li>
-                  <li className="nav-item">
-                    <span>Contact</span>
-                  </li>
-
-
-
-                  {!user ? (
-                      <li
-                          className="nav-item"
-                          onClick={() => signInClick()}
-                      >
-                        <span className='no-bottom-border'>Sign in</span>
+                  {!isLoggedIn ? (
+                      <li className="nav-item" onClick={signInClick}>
+                        <span className="no-bottom-border">Sign in</span>
                       </li>
                   ) : (
-
-                        <li
-                            className="nav-item"
-                            onClick={() => {
-                              setIsMenuOpen(false);
-                              handleLogout();
-                            }}
-                        >
-                          <span className='no-bottom-border'>Logout</span>
+                      <>
+                        <li className="nav-item" onClick={() => { setIsMenuOpen(false); handleLogout(); }}>
+                          <span>Logout</span>
                         </li>
-
-
-
+                        <li className="nav-item" onClick={() => { setIsMenuOpen(false); openDashboard(); }}>
+                          <span>{isDoctor ? 'Doctor Dashboard' : 'Dashboard'}</span>
+                        </li>
+                        <li className="nav-item" onClick={() => { setIsMenuOpen(false); openSettings(); }}>
+                          <span className="no-bottom-border">Settings</span>
+                        </li>
+                      </>
                   )}
                 </ul>
               </nav>
-          }
+          )}
 
-
-          {!isMenuOpen &&
-              <nav className={'temp-hidden-fix nav'}>
+          {!isMenuOpen && (
+              <nav className="temp-hidden-fix nav">
                 <ul className="nav-list">
-                  <div style={{flex: 1}}/>
+                  <div style={{ flex: 1 }} />
+                  <li className="nav-item top-line-item" onClick={naviFeatures}><span>Features</span></li>
+                  <li className="nav-item top-line-item" onClick={naviServices}><span>Services</span></li>
+                  <li className="nav-item top-line-item" onClick={naviAbout}><span>About</span></li>
+                  <li className="nav-item top-line-item" onClick={naviContact}><span>Contact</span></li>
 
-
-
-
-                  {!user ? (
-                      <>
-                        <li className="nav-item">
-                          <span>Features</span>
-                        </li>
-                        <li className="nav-item">
-                          <span>Services</span>
-                        </li>
-                        <li className="nav-item">
-                          <span>About</span>
-                        </li>
-                        <li className="nav-item">
-                          <span>Contact</span>
-                        </li>
-
-                        <div
-                            className="nav-item"
-                            onClick={() => signInClick()}
-                        >
-                          <span>Sign in</span>
-                        </div>
-                      </>
-
+                  {!isLoggedIn ? (
+                      <div className="nav-item top-line-item" onClick={signInClick}>
+                        <span>Sign in</span>
+                      </div>
                   ) : (
-                    <>
                       <li
                           className="nav-item the-user-icon"
                           style={{ cursor: 'pointer' }}
                           onClick={toggleUserMenu}
                       >
-                        <HeaderIdentityBox/>
+                        <HeaderIdentityBox />
                       </li>
-                    </>
-
                   )}
                 </ul>
               </nav>
-          }
-
-
-
-
+          )}
 
           <div className="menu-icon" onClick={toggleMenu}>
             {isMenuOpen ? <FaTimes /> : <FaBars />}
           </div>
-
         </div>
 
-
-        {userMenuOpen ? (
-
-            <nav className={'user-nav'}>
+        {isLoggedIn && userMenuOpen && (
+            <nav className="user-nav">
               <ul className="user-nav-list">
-
-{/*                <li className="nav-item">
-                  <span>Features</span>
+                <li className="user-nav-item" onClick={handleLogout}><span>Logout</span></li>
+                <li className="user-nav-item" onClick={openDashboard}>
+                  <span>{isDoctor ? 'Doctor Dashboard' : 'Dashboard'}</span>
                 </li>
-                <li className="nav-item">
-                  <span>Services</span>
+                <li className="user-nav-item" onClick={openSettings}>
+                  <span className="no-bottom-border">Settings</span>
                 </li>
-                <li className="nav-item">
-                  <span>About</span>
-                </li>
-                <li className="nav-item">
-                  <span>Contact</span>
-                </li>*/}
-
-
-                <li
-                    className="user-nav-item"
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      handleLogout();
-                    }}
-                >
-                  <span>Logout</span>
-                </li>
-
-                <li className="user-nav-item" onClick={() => setIsMenuOpen(false)}>
-                  {user?.isDoctor ? <span onClick={() => openDashboard()}>Doctor Dashboard</span> : <span onClick={() => openDashboard()}>Dashboard</span>}
-                </li>
-
-                <li className="user-nav-item">
-                  <span className='no-bottom-border'>Settings</span>
-                </li>
-
-
               </ul>
             </nav>
-
-        ) : (<></>)}
-
-
+        )}
       </header>
-
-
-
   );
-};
+}
 
-export default Header;
+export default React.memo(Header);
