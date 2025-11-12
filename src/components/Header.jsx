@@ -37,10 +37,8 @@ const Header = () => {
   }
 
   useEffect(() => {
-    if (mainTick > 1) {
       setIsMenuOpen(false)
       setUserMenuOpen(false)
-    }
   }, [mainTick, user]);
 
 
@@ -263,41 +261,34 @@ const Header = () => {
                 <ul className="nav-list">
                   <div style={{flex: 1}}/>
 
-                  <li className="nav-item">
-                    <span>Features</span>
-                  </li>
-                  <li className="nav-item">
-                    <span>Services</span>
-                  </li>
-                  <li className="nav-item">
-                    <span>About</span>
-                  </li>
-                  <li className="nav-item">
-                    <span>Contact</span>
-                  </li>
+
 
 
                   {!user ? (
-                     <div
-                         className="nav-item"
-                         onClick={() => signInClick()}
+                      <>
+                        <li className="nav-item">
+                          <span>Features</span>
+                        </li>
+                        <li className="nav-item">
+                          <span>Services</span>
+                        </li>
+                        <li className="nav-item">
+                          <span>About</span>
+                        </li>
+                        <li className="nav-item">
+                          <span>Contact</span>
+                        </li>
+
+                        <div
+                            className="nav-item"
+                            onClick={() => signInClick()}
                         >
                           <span>Sign in</span>
-                     </div>
+                        </div>
+                      </>
+
                   ) : (
                     <>
-
-                      <div
-                          className="nav-item"
-                          onClick={() => {
-                            setIsMenuOpen(false);
-                            handleLogout();
-                          }}
-                      >
-                        <span>Logout</span>
-                      </div>
-
-
                       <li
                           className="nav-item the-user-icon"
                           style={{ cursor: 'pointer' }}
@@ -314,11 +305,58 @@ const Header = () => {
 
 
 
+
+
           <div className="menu-icon" onClick={toggleMenu}>
             {isMenuOpen ? <FaTimes /> : <FaBars />}
           </div>
 
         </div>
+
+
+        {userMenuOpen ? (
+
+            <nav className={'user-nav'}>
+              <ul className="user-nav-list">
+
+{/*                <li className="nav-item">
+                  <span>Features</span>
+                </li>
+                <li className="nav-item">
+                  <span>Services</span>
+                </li>
+                <li className="nav-item">
+                  <span>About</span>
+                </li>
+                <li className="nav-item">
+                  <span>Contact</span>
+                </li>*/}
+
+
+                <li
+                    className="user-nav-item"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      handleLogout();
+                    }}
+                >
+                  <span>Logout</span>
+                </li>
+
+                <li className="user-nav-item" onClick={() => setIsMenuOpen(false)}>
+                  {user?.isDoctor ? <span onClick={() => openDashboard()}>Doctor Dashboard</span> : <span onClick={() => openDashboard()}>Dashboard</span>}
+                </li>
+
+                <li className="user-nav-item">
+                  <span className='no-bottom-border'>Settings</span>
+                </li>
+
+
+              </ul>
+            </nav>
+
+        ) : (<></>)}
+
 
       </header>
 

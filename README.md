@@ -11,12 +11,6 @@ P.S. VideoCall.jsx needs the 'APP_ID'
 
 Please see readme from https://github.com/Cura-Med/GoogleCloudDeployReactStarter on how to deploy the website to google cloud
 
-Commands:
-npnm install
-to install all libraries and dependencies
-
-pnpm run dev         
-to run it locally
 
 pnpm run build       
 to build dist folder with static files           
