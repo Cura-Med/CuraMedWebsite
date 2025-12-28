@@ -7,12 +7,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getChatToken } from '../features/chat/chatSlice';
 
 // ======== ⚠️ FRONTEND-ONLY PROTOTYPE (DO NOT SHIP LIKE THIS) =========
-const APP_ID                = import.meta.env.VITE_AGORA_APP_ID;          // 32-hex App ID
+const APP_ID = 'adc2fc405c484b869c82a205eb6a8cd9';          // 32-hex App ID
 // Bot UIDs must be unique in the channel and not collide with humans
 const PUB_BOT_UID = '99002';
 
-const TRANSCRIBE_LANGS  = ['en-US'];        // source recognition
-const TRANSLATE_SOURCE  = 'en-US';
+const TRANSCRIBE_LANGS = ['en-US'];        // source recognition
+const TRANSLATE_SOURCE = 'en-US';
 const TRANSLATE_TARGETS = ['es-ES'];        // <— Spanish per request
 // =====================================================================
 
@@ -21,19 +21,19 @@ const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
 export default function VideoCall3() {
     const { callId } = useParams();
     const dispatch = useDispatch();
-    const navigate  = useNavigate();
+    const navigate = useNavigate();
 
-    const authUser  = useSelector(s => s.auth.user);
-    const rtcToken  = useSelector(s => s.chat.token);
+    const authUser = useSelector(s => s.auth.user);
+    const rtcToken = useSelector(s => s.chat.token);
 
     const [channel, setChannel] = useState('');
-    const [joined,  setJoined]  = useState(false);
+    const [joined, setJoined] = useState(false);
 
     const [agentId, setAgentId] = useState(null);
 
-    const localVideoRef  = useRef(null);
+    const localVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
-    const localTracks    = useRef({ videoTrack: null, audioTrack: null });
+    const localTracks = useRef({ videoTrack: null, audioTrack: null });
 
     // Require auth
     useEffect(() => {
@@ -45,7 +45,7 @@ export default function VideoCall3() {
 
     // Cleanup on unmount
     useEffect(() => {
-        return () => { leaveChannel(); tryStopAgent().catch(() => {}); };
+        return () => { leaveChannel(); tryStopAgent().catch(() => { }); };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -81,7 +81,7 @@ export default function VideoCall3() {
         });
 
         client.off('user-unpublished');
-        client.on('user-unpublished', () => {});
+        client.on('user-unpublished', () => { });
 
         // listen for STT subtitle packets from PUB_BOT_UID
         client.off('stream-message');
@@ -89,7 +89,7 @@ export default function VideoCall3() {
             if (String(uid) !== String(PUB_BOT_UID)) return;
             try {
                 const text = await gunzipToText(payload);
-                const obj  = JSON.parse(text);
+                const obj = JSON.parse(text);
                 // Robust best-effort parsing (schema can vary slightly)
                 const en = pickEnglish(obj);
                 const es = pickTranslation(obj, 'es-ES');
@@ -154,13 +154,14 @@ export default function VideoCall3() {
 
     // ============== v7 STT REST (Join/Stop) – PROTOTYPE ONLY =================
     const basicAuthHeader = () => {
-        return `Basic NjVhMDNhM2Y4ZGY1NGQ5OWE4OTU2ZjBmYmNkNmRhNTY6ZGE2ZWU2NzYxZmNiNDYzMzk2NjAxMTNlNWVlYTQ2NjE=`;
+        return `Basic NWI0YTRiZTcwNzNmNDE1NmE0NGVhYjFlNmZhMTM1Mzc6YzY3MmQ3ZTE4NGM3NDVhN2FkMzZjOWM5ZDYyZDJjYWQ=`;
     };
 
     async function v7Join({ appId, channelName, pubBotUid, languages, translateSource, translateTargets }) {
         const url = `https://api.agora.io/api/speech-to-text/v1/projects/${encodeURIComponent(appId)}/join`;
         const body = {
             name: `stt-agent-${Date.now()}`,
+            maxIdleTime: 600,
             languages,
             rtcConfig: {
                 channelName,
@@ -222,7 +223,7 @@ export default function VideoCall3() {
             }
             // shape 2: { text:"..." }
             if (o?.text) return String(o.text).trim();
-        } catch {}
+        } catch { }
         return '';
     };
 
@@ -234,13 +235,13 @@ export default function VideoCall3() {
             if (found?.texts?.length) return (found.texts.find(Boolean) || '').trim();
             // Sometimes translation is in an array of altText
             if (found?.text) return String(found.text).trim();
-        } catch {}
+        } catch { }
         return '';
     };
 
     // ================= UI =================
-    const [micOn, setMicOn]   = useState(true);
-    const [camOn, setCamOn]   = useState(true);
+    const [micOn, setMicOn] = useState(true);
+    const [camOn, setCamOn] = useState(true);
     const [screenOn, setScreenOn] = useState(false);
 
     const toggleMic = async () => {
@@ -296,7 +297,7 @@ export default function VideoCall3() {
                 </div>
                 <button className="vc-btn" onClick={() => {
                     const ch = channel || generateChannel();
-                    navigator.clipboard?.writeText(ch).catch(() => {});
+                    navigator.clipboard?.writeText(ch).catch(() => { });
                 }}>
                     Copy Channel
                 </button>
