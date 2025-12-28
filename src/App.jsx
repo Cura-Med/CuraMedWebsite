@@ -20,11 +20,12 @@ import {closeAuthModal} from "./features/modal/modalSlice.js";
 
 
 import {fetchUserMe, logout} from "./features/auth/authSlice.js";
-import VideoCall3 from "./components/VideoCall3.jsx";
+// import VideoCall3 from "./components/VideoCall3.jsx";
 import {updateMainClick} from "./features/utils/utilsSlice.js";
 import Settings from "./pages/Settings.jsx";
 import DoctorSettings from "./pages/DoctorSettings.jsx";
-import VideoCall4 from "./components/VideoCall4.jsx";
+// import VideoCall4 from "./components/VideoCall4.jsx";
+import VideoCall5 from "./components/VideoCall5.jsx";
 
 function App() {
 
@@ -71,7 +72,7 @@ function App() {
            <Route path="/dashboard" element={<UserDashboard />} />
            <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
 
-            <Route path="/video-call/:callId" element={<VideoCall4 />} />
+            <Route path="/video-call/:callId" element={<VideoCall5 />} />
            <Route path="/book-consultation" element={<BookConsultation />} />
 
             <Route path="/settings" element={<Settings />} />
