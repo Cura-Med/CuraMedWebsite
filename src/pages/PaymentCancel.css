@@ -1,0 +1,14 @@
+.payment-cancel {
+  padding: 2rem;
+  text-align: center;
+}
+
+.payment-cancel section {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.payment-cancel p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}

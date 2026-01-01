@@ -2,7 +2,7 @@ import React from 'react';
 import { FaCheck } from 'react-icons/fa';
 import './PricingCard.css';
 
-const PricingCard = ({ title, price, features }) => {
+const PricingCard = ({ title, price, features, onClick }) => {
   return (
     <div className="pricing-card">
       <h3 className="pricing-title">{title}</h3>
@@ -17,7 +17,7 @@ const PricingCard = ({ title, price, features }) => {
         ))}
       </ul>
       
-      <button className="btn pricing-btn">Choose Plan</button>
+      <button className="btn pricing-btn" onClick={onClick}>Choose Plan</button>
     </div>
   );
 };

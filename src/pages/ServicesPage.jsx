@@ -98,6 +98,29 @@ const ServicesPage = () => {
     }
   ];
 
+  const handleChoosePlan = async (plan) => {
+    const request = {
+      plan: plan.title,
+      amount: parseInt(plan.price) * 100 // assuming amount in cents
+    };
+    try {
+      const response = await fetch('https://curamed-auth-api-973580931654.europe-north1.run.app/stripe-checkout/create-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(request)
+      });
+      if (response.redirected) {
+        window.location.href = response.url;
+      } else {
+        console.error('Failed to create session');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   return (
     <div className="services-page">
       <section className="page-header">
@@ -126,11 +149,12 @@ const ServicesPage = () => {
           <h2 className="section-title">Pricing Plans</h2>
           <div className="pricing-grid">
             {pricingPlans.map((plan, index) => (
-              <PricingCard 
+              <PricingCard
                 key={index}
                 title={plan.title}
                 price={plan.price}
                 features={plan.features}
+                onClick={() => handleChoosePlan(plan)}
               />
             ))}
           </div>

@@ -1,0 +1,23 @@
+.payment-success {
+  padding: 2rem;
+  text-align: center;
+}
+
+.payment-success section {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.payment-success p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+.payment-success a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.payment-success a:hover {
+  text-decoration: underline;
+}

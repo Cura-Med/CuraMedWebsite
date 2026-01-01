@@ -25,6 +25,9 @@ import {updateMainClick} from "./features/utils/utilsSlice.js";
 import Settings from "./pages/Settings.jsx";
 import DoctorSettings from "./pages/DoctorSettings.jsx";
 
+import PaymentSuccess from "./pages/PaymentSuccess.jsx";
+import PaymentCancel from "./pages/PaymentCancel.jsx";
+
 function App() {
 
   const dispatch = useDispatch();
@@ -75,6 +78,8 @@ function App() {
 
             <Route path="/settings" element={<Settings />} />
             <Route path="/doctor-settings" element={<DoctorSettings />} />
+            <Route path="/success" element={<PaymentSuccess />} />
+            <Route path="/cancel" element={<PaymentCancel />} />
          </Routes>
       </main>
       <Footer />
