@@ -100,8 +100,7 @@ const ServicesPage = () => {
 
   const handleChoosePlan = async (plan) => {
     const request = {
-      plan: plan.title,
-      amount: parseInt(plan.price) * 100 // assuming amount in cents
+      paymentId: parseInt(plan.price)
     };
     try {
       const response = await fetch('https://curamed-auth-api-973580931654.europe-north1.run.app/stripe-checkout/create-session', {
@@ -111,11 +110,10 @@ const ServicesPage = () => {
         },
         body: JSON.stringify(request)
       });
-      if (response.redirected) {
-        window.location.href = response.url;
-      } else {
-        console.error('Failed to create session');
-      }
+      
+      const data = await response.json();
+
+      window.location.href = data.url;
     } catch (error) {
       console.error('Error:', error);
     }
