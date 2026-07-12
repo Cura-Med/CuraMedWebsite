@@ -82,6 +82,59 @@ export const registerPatient = async (formData) => {
 };
 
 
+export const updatePatient = async (userDetailId, formData) => {
+    try {
+        // First update user details with country, city, timeZone
+        const updatePayload = {
+            countryId: parseInt(formData.country),
+            city: formData.city,
+            timeZoneId: parseInt(formData.timeZone),
+        };
+
+        await axios.put(`${API_BASE_URL}/user-details/${userDetailId}`, updatePayload, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        // Upload profile photo if provided
+        if (formData.profilePhoto) {
+            const base64Data = await fileToBase64(formData.profilePhoto);
+            const photoPayload = {
+                fileName: formData.profilePhoto.name,
+                contentType: formData.profilePhoto.type,
+                size: formData.profilePhoto.size,
+                data: base64Data,
+                filePath: `patients/profiles/${Date.now()}_${formData.profilePhoto.name}`,
+                userDetailId: userDetailId,
+            };
+
+            const photoRes = await axios.post(`${API_BASE_URL}/photos/add`, photoPayload, {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            const photoId = photoRes?.data?.id;
+            if (!photoId) throw new Error('Photo upload failed: no id returned');
+
+            // Associate photo with user details
+            await axios.patch(`${API_BASE_URL}/user-details/${userDetailId}/photo`, { photoId }, {
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
+
+        return { success: true };
+    } catch (error) {
+        if (error.response) {
+            const msg =
+                error.response.data?.message ||
+                error.response.data?.error ||
+                `Update failed: ${error.response.status}`;
+            throw new Error(msg);
+        } else if (error.request) {
+            throw new Error('Network error. Please check your connection and try again.');
+        } else {
+            throw new Error('Unexpected error during update. Please try again.');
+        }
+    }
+};
+
 export const uploadPhoto = async (file, userDetailId) => {
     try {
         if (!file) throw new Error('No file provided');

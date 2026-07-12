@@ -1,0 +1,190 @@
+.registration-complete-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+.registration-complete-page .auth-modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  padding: 0;
+}
+
+.registration-complete-page .auth-header {
+  padding: 30px 30px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.registration-complete-page .auth-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.registration-complete-page .auth-form {
+  padding: 30px;
+}
+
+.registration-complete-page .form-group {
+  margin-bottom: 20px;
+}
+
+.registration-complete-page .form-field input,
+.registration-complete-page .form-field select,
+.registration-complete-page .form-field textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.registration-complete-page .form-field input:focus,
+.registration-complete-page .form-field select:focus,
+.registration-complete-page .form-field textarea:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.registration-complete-page .select-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.registration-complete-page .profile-photo-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.registration-complete-page .profile-photo-preview {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid #e0e0e0;
+  transition: border-color 0.3s ease;
+  overflow: hidden;
+}
+
+.registration-complete-page .profile-photo-preview:hover {
+  border-color: #007bff;
+}
+
+.registration-complete-page .profile-photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.registration-complete-page .profile-placeholder {
+  font-size: 40px;
+  color: #ccc;
+}
+
+.registration-complete-page .upload-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #f8f9fa;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.registration-complete-page .upload-button:hover {
+  background-color: #e9ecef;
+  border-color: #007bff;
+}
+
+.registration-complete-page .upload-icon {
+  color: #666;
+}
+
+.registration-complete-page .file-input {
+  display: none;
+}
+
+.registration-complete-page .phone-group {
+  display: flex;
+  gap: 10px;
+}
+
+.registration-complete-page .code-group,
+.registration-complete-page .phone-number-group {
+  flex: 1;
+}
+
+.registration-complete-page .code-group input {
+  width: 100%;
+}
+
+.registration-complete-page .phone-number-group input {
+  width: 100%;
+}
+
+.registration-complete-page .date-group input[type="date"] {
+  width: 100%;
+}
+
+.registration-complete-page .submit-button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.registration-complete-page .submit-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0056b3, #004085);
+  transform: translateY(-1px);
+}
+
+.registration-complete-page .submit-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.registration-complete-page .error-message {
+  color: #dc3545;
+  font-size: 14px;
+  margin-top: 5px;
+  text-align: center;
+}
+
+.registration-complete-page .loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  color: #666;
+}
